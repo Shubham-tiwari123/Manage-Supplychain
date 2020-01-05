@@ -4,7 +4,7 @@ import com.project.server.entity.ServerKeys;
 
 public interface ConnectDeviceInterface {
 
-    boolean connectUsingSocket(long port) throws Exception;
+    boolean connectUsingSocket(int port) throws Exception;
 
     String readClientData() throws Exception;
 
@@ -18,9 +18,9 @@ public interface ConnectDeviceInterface {
 
     boolean verifyClientKeys(String clientKeys) throws Exception;
 
-    boolean storeKeys(String keys, Object object) throws Exception;
+    boolean storeClientKeys(String keys) throws Exception;
 
-    String calculateHash() throws Exception;
+    String calculateHash(String data) throws Exception;
 
     ServerKeys generateKeys() throws Exception;
 
