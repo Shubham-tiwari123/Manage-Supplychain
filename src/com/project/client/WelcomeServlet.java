@@ -14,7 +14,6 @@ import java.net.Socket;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
-//+221781332456
 @WebServlet(name = "WelcomeServlet",urlPatterns = {"/welcome"})
 public class WelcomeServlet extends HttpServlet {
 
@@ -92,6 +91,7 @@ public class WelcomeServlet extends HttpServlet {
     private static boolean storeDb() throws Exception {
         return true;
     }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
         int count = 0;
         String resString = "";
