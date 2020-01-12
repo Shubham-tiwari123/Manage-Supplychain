@@ -1,6 +1,7 @@
 package com.project.client.requestAPI;
 
 import com.project.client.entity.ClientKeys;
+import com.project.client.entity.ServerKeys;
 import com.project.client.services.TransferBlock;
 import org.json.simple.JSONObject;
 import javax.servlet.ServletException;
@@ -27,16 +28,16 @@ public class TransferBlockReqAPI extends HttpServlet {
             String blockString = transferBlock.prepareBlock(quantity, productName);
             String currentBlockHash = transferBlock.calBlockHash(blockString);
 
-            blockString = transferBlock.manipulateBlock(blockString,currentBlockHash);
+            String manipulateBlock = transferBlock.manipulateBlock(blockString,currentBlockHash);
 
-            ClientKeys keys = transferBlock.getKeysFromDatabase();
-            ArrayList<byte[]> encryptedBlock = transferBlock.encryptBlock(keys,blockString);
-
+            //encrypt block using server public key
+            ServerKeys keys = transferBlock.getKeysFromDatabase();
+            ArrayList<byte[]> encryptedBlock = transferBlock.encryptBlock(keys,manipulateBlock);
             // attach the signature of client signature
 
             JSONObject result = new JSONObject();
-            result.put("block",blockString);
-            result.put("hash",currentBlockHash);
+            result.put("block",manipulateBlock);
+            result.put("encryptedBlock",encryptedBlock);
 
             writer.println(result.toJSONString());
         }
