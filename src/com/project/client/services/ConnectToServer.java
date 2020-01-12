@@ -1,6 +1,9 @@
 package com.project.client.services;
 
+import com.project.client.dao.Database;
 import com.project.client.entity.ClientKeys;
+import com.project.client.entity.ServerKeys;
+import com.project.client.utils.VariableClass;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -8,6 +11,7 @@ import javax.ws.rs.client.Client;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.math.BigInteger;
 import java.net.Socket;
 import java.security.*;
 import java.security.spec.RSAPrivateKeySpec;
@@ -16,9 +20,10 @@ import java.util.Random;
 
 public class ConnectToServer implements ConnectToServerInterface {
 
-    private static Socket socket;
+    public static Socket socket;
     private static DataOutputStream out;
     private CommonFunction commonFunction = new CommonFunction();
+    private Database database = new Database();
 
     @Override
     public boolean openSocket(String address, int port) throws Exception {
@@ -62,8 +67,16 @@ public class ConnectToServer implements ConnectToServerInterface {
     }
 
     @Override
-    public String prepareKeys() throws Exception {
-        ClientKeys keys = commonFunction.getKeysFromDB("");   //specify collection name
+    public String prepareKeysToSend() throws Exception {
+        /*ClientKeys keys = database.getClientKeys(VariableClass.STORE_KEYS);   //specify collection name
+        if (keys == null){
+            keys = generateKeys();
+            database.storeClientKeys(keys,VariableClass.STORE_KEYS);
+        }*/
+        ClientKeys keys = new ClientKeys();
+        keys.setPublicKeyExpo(new BigInteger("65537"));
+        keys.setPublicKeyModules(new BigInteger("4214777907657253113000721125232472745151580275285647620895837240116389083817917878012365856944153092973868671924564389124521775170086968208302639999087780442035711202814704935797100667846856044291609671826055542255797138350990715705296927176437820167719797414475944743179643064967001415309590173778978994981565503683209815493080469926827684603043186212402541461555174760220150526056039715051302004523664386280764941286651600519216673399923121960013752645423519522577190537942240232410245814356233811170598121245760218272339690452606653687518633839603065406334786701945064057361092780039613315761236874042648446366066611886311596584361240596079231203346311092661161817519019821952137525442766196358670410972718999957615697381937635782535051583752394240837340159209718878221683849030276452271788676950559026334485190010556958833951179653367985903385866522528207314896706713176659703852530064861393257095252259354783203190648803"));
+
         String pubModHash = calculateHash(keys.getPublicKeyModules().toString());
         String pubExpoHash = calculateHash(keys.getPublicKeyExpo().toString());
         JSONObject object = new JSONObject();
@@ -75,21 +88,30 @@ public class ConnectToServer implements ConnectToServerInterface {
     }
 
     @Override
-    public boolean verifyServerKeys(String clientKeys) throws Exception {
+    public boolean verifyServerKeys(String serverKeys) throws Exception {
         System.out.println("Verifying keys");
-        Object object = new JSONParser().parse(clientKeys);
+        Object object = new JSONParser().parse(serverKeys);
         JSONObject jsonObject = (JSONObject) object;
-        String modHash = (String) jsonObject.get("modHashC");
-        String expoHash = (String) jsonObject.get("expoHashC");
-        String modValue = (String) jsonObject.get("modValueC");
-        String expoValue = (String) jsonObject.get("expoValueC");
+        String modHash = (String) jsonObject.get("modHashS");
+        String expoHash = (String) jsonObject.get("expoHashS");
+        String modValue = (String) jsonObject.get("modValueS");
+        String expoValue = (String) jsonObject.get("expoValueS");
 
         return modHash.equals(calculateHash(modValue)) && expoHash.equals(calculateHash(expoValue));
     }
 
     @Override
-    public boolean storeServerKeys(String keys) throws Exception {
-        return false;
+    public boolean storeServerKeys(String serverKeys) throws Exception {
+        System.out.println("Storing server keys");
+        Object object = new JSONParser().parse(serverKeys);
+        JSONObject jsonObject = (JSONObject) object;
+        String modValue = (String) jsonObject.get("modValueS");
+        String expoValue = (String) jsonObject.get("expoValueS");
+        ServerKeys keys = new ServerKeys();
+        keys.setPublicKeyModules(new BigInteger(modValue));
+        keys.setPublicKeyExpo(new BigInteger(expoValue));
+        //boolean status = database.storeServerKeys(keys, VariableClass.STORE_KEYS);
+        return true;
     }
 
     @Override
@@ -117,5 +139,10 @@ public class ConnectToServer implements ConnectToServerInterface {
         clientKeys.setPrivateKeyExpo(rsaPrivateKeySpec.getPrivateExponent());
         clientKeys.setPrivateKeyModules(rsaPrivateKeySpec.getModulus());
         return clientKeys;
+    }
+
+    @Override
+    public boolean deleteServerKeys() throws Exception {
+        return database.deleteServerKeys(VariableClass.STORE_KEYS);
     }
 }

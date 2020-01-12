@@ -15,6 +15,4 @@ public interface CommonFunctionInterface {
     <T> T convertJsonToJava(String jsonString, Class<T> obj) throws Exception;
 
     String convertJavaToJson(Object object) throws Exception;
-
-    ClientKeys getKeysFromDB(String collectionName) throws Exception;
 }

@@ -14,7 +14,7 @@ public interface ConnectToServerInterface {
 
     String verifyNetwork()  throws Exception;
 
-    String prepareKeys() throws Exception;
+    String prepareKeysToSend() throws Exception;
 
     boolean verifyServerKeys(String clientKeys) throws Exception;
 
@@ -23,4 +23,6 @@ public interface ConnectToServerInterface {
     String calculateHash(String data) throws Exception;
 
     ClientKeys generateKeys() throws Exception;
+
+    boolean deleteServerKeys() throws Exception;
 }

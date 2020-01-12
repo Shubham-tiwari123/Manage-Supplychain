@@ -76,10 +76,4 @@ public class CommonFunction implements CommonFunctionInterface {
         }
         return jsonResult;
     }
-
-    @Override
-    public ClientKeys getKeysFromDB(String collectionName) throws Exception {
-        ClientKeys keys = new ClientKeys();
-        return null;
-    }
 }
