@@ -3,7 +3,7 @@ package com.project.server.services;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
-public class ExtraFunction implements ExtraFunctionInterface{
+public class CommonFunctions implements CommonFunctionsInterface {
     @Override
     public String generateSignature() throws Exception {
         return null;

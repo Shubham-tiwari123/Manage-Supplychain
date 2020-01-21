@@ -3,7 +3,7 @@ package com.project.server.requestAPI;
 import com.project.server.services.ConnectToDevice;
 
 public class SocketThread extends Thread {
-    ConnectToDevice connect = new ConnectToDevice();
+    private ConnectToDevice connect = new ConnectToDevice();
     @Override
     public void run(){
         try {
@@ -98,6 +98,12 @@ public class SocketThread extends Thread {
 
         }catch (Exception e){
             e.printStackTrace();
+            System.out.println("catch socket...closing con");
+            try {
+                connect.closeConnections();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 

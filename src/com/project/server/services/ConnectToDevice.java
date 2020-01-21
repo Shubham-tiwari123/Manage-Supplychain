@@ -14,7 +14,7 @@ import java.net.Socket;
 public class ConnectToDevice implements ConnectDeviceInterface {
     public static Socket socket = null;
     private static DataOutputStream out = null;
-    private ExtraFunction extraFunction = new ExtraFunction();
+    private CommonFunctions extraFunction = new CommonFunctions();
     private Database database = new Database();
     public static ServerSocket server;
 
