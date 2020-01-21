@@ -31,10 +31,10 @@ public class ConnectToServerReqAPI extends HttpServlet {
                         while (ConnectToServer.socket.isConnected()) {
                             System.out.println("waiting for response");
                             resString = connect.readServerData();
-                            System.out.println("resp:" + resString);
                             switch (count) {
                                 case 0:
                                     if (resString.equals("200")) {
+                                        System.out.println("Network is secured");
                                         String clientKeys = connect.prepareKeysToSend();
                                         if (connect.sendData(clientKeys)) {
                                             System.out.println("Client keys send...");

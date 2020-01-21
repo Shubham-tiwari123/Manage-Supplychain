@@ -57,6 +57,7 @@ public class ConnectToServer implements ConnectToServerInterface {
 
     @Override
     public String verifyNetwork() throws Exception {
+        System.out.println("Verifying network....");
         Random random = new Random();
         int data = 1000 + random.nextInt(5000);
         String hashData = calculateHash(String.valueOf(data));
@@ -68,6 +69,7 @@ public class ConnectToServer implements ConnectToServerInterface {
 
     @Override
     public String prepareKeysToSend() throws Exception {
+        System.out.println("Sending client keys to server");
         /*ClientKeys keys = database.getClientKeys(VariableClass.STORE_KEYS);   //specify collection name
         if (keys == null){
             keys = generateKeys();
