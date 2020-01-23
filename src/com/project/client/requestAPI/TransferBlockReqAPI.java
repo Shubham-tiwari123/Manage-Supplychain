@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-@WebServlet(name = "TransferBlockReqAPI", urlPatterns = {"/send_block"})
+@WebServlet(name = "TransferBlockReqAPI", urlPatterns = {"/send-block","/prepare-block"})
 public class TransferBlockReqAPI extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
@@ -49,6 +49,6 @@ public class TransferBlockReqAPI extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        request.getRequestDispatcher("/prepareblock.jsp").forward(request,response);
     }
 }
