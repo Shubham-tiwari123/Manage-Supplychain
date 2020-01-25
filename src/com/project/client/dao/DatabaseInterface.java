@@ -18,4 +18,6 @@ public interface DatabaseInterface {
     ClientKeys getClientKeys(String collectionName) throws Exception;
 
     boolean deleteServerKeys(String collectionName) throws Exception;
+
+    boolean checkKeysExists(String collectionName) throws Exception;
 }

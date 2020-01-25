@@ -19,10 +19,11 @@ import java.util.TreeSet;
 public class Database implements DatabaseInterface {
 
     private static MongoDatabase database;
+    private static MongoClient client;
 
     @Override
     public boolean createDbConn(){
-        MongoClient client = new MongoClient(VariableClass.IP_ADDRESS, VariableClass.PORT_NUMBER);
+        client = new MongoClient(VariableClass.IP_ADDRESS, VariableClass.PORT_NUMBER);
         database = client.getDatabase(VariableClass.DATABASE_NAME);
         return true;
     }
@@ -58,20 +59,22 @@ public class Database implements DatabaseInterface {
 
                 if (!list.isEmpty()) {
                     for (Document val : list) {
-                        System.out.println("getting server keys if");
-                        String publicKeyModules = val.getString("serverMod");
-                        String publicKeyExpo = val.getString("serverExpo");
+                        System.out.println("getting server keys ");
+                        String publicKeyModules = val.getString("serverPubMod");
+                        String publicKeyExpo = val.getString("serverPubExpo");
 
                         System.out.println("setting server keys");
                         keys.setPublicKeyExpo(new BigInteger(publicKeyExpo));
                         keys.setPublicKeyModules(new BigInteger(publicKeyModules));
                     }
+                    client.close();
                     return keys;
                 } else {
+                    client.close();
                     return null;
                 }
-
             }
+            client.close();
         }
         return null;
     }
@@ -123,11 +126,11 @@ public class Database implements DatabaseInterface {
 
                 if (!list.isEmpty()) {
                     for (Document val : list) {
-                        System.out.println("getting client keys if");
+                        System.out.println("getting client keys ");
                         String publicKeyModules = val.getString("clientPubMod");
                         String publicKeyExpo = val.getString("clientPubExpo");
 
-                        System.out.println("setting server keys");
+                        System.out.println("setting client keys");
                         keys.setPublicKeyExpo(new BigInteger(publicKeyExpo));
                         keys.setPublicKeyModules(new BigInteger(publicKeyModules));
                     }
@@ -152,4 +155,25 @@ public class Database implements DatabaseInterface {
         }
         return false;
     }
+
+    @Override
+    public boolean checkKeysExists(String collectionName) throws Exception {
+        if(createDbConn()){
+            if(checkCollection(collectionName)){
+                MongoCollection collection = database.getCollection(collectionName);
+                System.out.println("getting keys from db");
+                List<Document> list = (List<Document>) collection.find(new Document("clientKeys",
+                        "Client Keys")).into(new ArrayList<Document>());
+
+                List<Document> list2 = (List<Document>) collection.find(new Document("serverKeys",
+                        "Server Keys")).into(new ArrayList<Document>());
+
+                return list.size() == 1 && list2.size() == 1;
+            }
+            return false;
+        }
+        return false;
+    }
+
+
 }
