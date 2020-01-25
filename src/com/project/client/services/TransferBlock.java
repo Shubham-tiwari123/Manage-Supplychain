@@ -20,13 +20,16 @@ public class TransferBlock implements TransferBlockInterface {
     private Database database = new Database();
 
     @Override
-    public String prepareBlock(long quantity,String itemName) throws Exception {
+    public String prepareBlock(long blockID, long quantity,String itemName,String supplierName,long price)
+            throws Exception {
         BlockStructure block = new BlockStructure();
-        block.setBlockID(generateBlockID());
+        block.setBlockID(blockID);
         block.setTime(Time.valueOf(LocalTime.now()));
         block.setDate(Date.valueOf(LocalDate.now()));
         block.setQuantity(quantity);
         block.setItemName(itemName);
+        block.setSupplierName(supplierName);
+        block.setPrice(price);
         System.out.println(commonFunction.convertJavaToJson(block));
         return commonFunction.convertJavaToJson(block);
     }
@@ -84,12 +87,6 @@ public class TransferBlock implements TransferBlockInterface {
                 "8264984594667207800284393305405960764426157612868044024959964625132135588775223613878204" +
                 "956629775917990376133094007028768999476925638443013347851308497785909789529885037030483"));
         return keys;
-    }
-
-    @Override
-    public long generateBlockID() {
-        Random random = new Random();
-        return 1000+random.nextInt(999);
     }
 
     public String manipulateBlock(String value,String hash){

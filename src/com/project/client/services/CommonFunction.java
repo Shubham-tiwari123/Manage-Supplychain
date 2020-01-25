@@ -1,7 +1,9 @@
 package com.project.client.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.client.dao.Database;
 import com.project.client.entity.ClientKeys;
+import com.project.client.utils.VariableClass;
 
 import javax.crypto.Cipher;
 import java.io.IOException;
@@ -16,6 +18,8 @@ import java.security.spec.RSAPublicKeySpec;
 
 public class CommonFunction implements CommonFunctionInterface {
     private ObjectMapper mapper = new ObjectMapper();
+
+    Database database = new Database();
 
     @Override
     public String calculateHash(String value) throws Exception {
@@ -58,22 +62,19 @@ public class CommonFunction implements CommonFunctionInterface {
     @Override
     public <T> T convertJsonToJava(String jsonString, Class<T> obj) throws Exception {
         T result=null;
-        try {
-            result = mapper.readValue(jsonString,obj);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        result = mapper.readValue(jsonString,obj);
         return result;
     }
 
     @Override
     public String convertJavaToJson(Object object) throws Exception {
         String jsonResult = null;
-        try {
-            jsonResult = mapper.writeValueAsString(object);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        jsonResult = mapper.writeValueAsString(object);
         return jsonResult;
+    }
+
+    @Override
+    public boolean checkIfKeysExists() throws Exception {
+        return database.checkKeysExists(VariableClass.STORE_KEYS);
     }
 }

@@ -15,4 +15,6 @@ public interface CommonFunctionInterface {
     <T> T convertJsonToJava(String jsonString, Class<T> obj) throws Exception;
 
     String convertJavaToJson(Object object) throws Exception;
+
+    boolean checkIfKeysExists() throws Exception;
 }
