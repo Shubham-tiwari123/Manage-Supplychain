@@ -23,9 +23,15 @@ public class TransferBlockReqAPI extends HttpServlet {
             // Prepare block
             String productQun = request.getParameter("productQun");
             String productName = request.getParameter("productName");
-            long quantity = Long.parseLong(productQun);
+            String blockId = request.getParameter("blockID");
+            String supplierName = request.getParameter("supplierName");
+            String itemPrice = request.getParameter("price");
 
-            String blockString = transferBlock.prepareBlock(quantity, productName);
+            long quantity = Long.parseLong(productQun);
+            long price = Long.parseLong(itemPrice);
+            long blockID = Long.parseLong(blockId);
+
+            String blockString = transferBlock.prepareBlock(blockID,quantity,productName,supplierName,price);
             String currentBlockHash = transferBlock.calBlockHash(blockString);
 
             String manipulateBlock = transferBlock.manipulateBlock(blockString,currentBlockHash);
