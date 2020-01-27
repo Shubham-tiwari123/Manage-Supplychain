@@ -129,10 +129,14 @@ public class Database implements DatabaseInterface {
                         System.out.println("getting client keys ");
                         String publicKeyModules = val.getString("clientPubMod");
                         String publicKeyExpo = val.getString("clientPubExpo");
+                        String privateKeyModules = val.getString("clientPriMod");
+                        String privateKeyExpo = val.getString("clientPriExpo");
 
                         System.out.println("setting client keys");
                         keys.setPublicKeyExpo(new BigInteger(publicKeyExpo));
                         keys.setPublicKeyModules(new BigInteger(publicKeyModules));
+                        keys.setPrivateKeyExpo(new BigInteger(privateKeyExpo));
+                        keys.setPrivateKeyModules(new BigInteger(privateKeyModules));
                     }
                     return keys;
                 }
