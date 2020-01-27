@@ -11,7 +11,7 @@ public interface TransferBlockInterface {
 
     String calBlockHash(String data) throws Exception;
 
-    ArrayList<byte[]> encryptBlock(ServerKeys keys,String encryptString) throws Exception;
+    ArrayList<byte[]> encryptBlock(ClientKeys keys,String encryptString) throws Exception;
 
-    ServerKeys getKeysFromDatabase() throws Exception;
+    ClientKeys getKeysFromDatabase() throws Exception;
 }
