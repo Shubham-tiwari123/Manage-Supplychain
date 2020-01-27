@@ -1,8 +1,8 @@
 package com.project.client.utils;
 
 public final class VariableClass {
-    final static public String DATABASE_NAME="client_pc_db";
-    final static public String STORE_KEYS="storeKeys";
+    final static public String DATABASE_NAME="shipChainClient";
+    final static public String STORE_KEYS="storeClientKeys";
     final static public String IP_ADDRESS="127.0.0.1";
     final static public int PORT_NUMBER = 27017;
 

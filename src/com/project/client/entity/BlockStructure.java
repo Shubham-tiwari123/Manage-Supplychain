@@ -7,7 +7,7 @@ import java.sql.Date;
 import java.sql.Time;
 
 @JsonPropertyOrder(value = {
-        "blockID","date","time","quantity","itemName"
+        "blockID","date","time","quantity","itemName","price","supplierName"
 })
 public class BlockStructure implements Serializable {
     private long blockID;
@@ -15,6 +15,8 @@ public class BlockStructure implements Serializable {
     private Time time;
     private long quantity;
     private String itemName;
+    private long price;
+    private String supplierName;
 
     public long getBlockID() {
         return blockID;
@@ -54,5 +56,21 @@ public class BlockStructure implements Serializable {
 
     public void setItemName(String itemName) {
         this.itemName = itemName;
+    }
+
+    public long getPrice() {
+        return price;
+    }
+
+    public void setPrice(long price) {
+        this.price = price;
+    }
+
+    public String getSupplierName() {
+        return supplierName;
+    }
+
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
     }
 }
