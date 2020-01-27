@@ -24,7 +24,7 @@ public class GetBlockIDReqAPI extends HttpServlet {
             e.printStackTrace();
         }
         PrintWriter writer = response.getWriter();
-        writer.println("id");
+        writer.println(123456789);
 
     }
 }
