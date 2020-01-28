@@ -7,17 +7,17 @@ import java.util.ArrayList;
 
 public interface DatabaseInterface {
 
-    boolean verifySignature(String signature,long deviceID) throws Exception;
+    boolean verifySignature(String signature) throws Exception;
 
-    boolean createDbConnection(String collectionName) throws Exception;
+    boolean createDbConnection() throws Exception;
 
     boolean checkCollection(String collectionName) throws Exception;
 
     boolean storeSignature(String signature,long deviceID) throws Exception;
 
-    boolean storeClientKeys(ClientKeys keys, String collectionName) throws Exception;
+    boolean storeClientKeys(ClientKeys keys, String collectionName,String signature) throws Exception;
 
-    boolean getClientKeys(String collectionName, String deviceSignature) throws Exception;
+    ClientKeys getClientKeys(String collectionName, String deviceSignature) throws Exception;
 
     boolean storeServerKeys(ServerKeys keys, String collectionName) throws Exception;
 

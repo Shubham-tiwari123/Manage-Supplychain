@@ -1,25 +1,59 @@
 package com.project.server.dao;
 
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoIterable;
 import com.project.server.entity.ClientKeys;
 import com.project.server.entity.ServerKeys;
+import com.project.server.services.ConnectToDevice;
+import com.project.server.utils.VariableClass;
+import org.bson.Document;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Database implements DatabaseInterface {
+
+    private static MongoClient client;
+    private static MongoDatabase database;
+    private static MongoIterable<String> iterable;
+    private static MongoCollection collection;
+    private static Set<String> colName;
+
+//    private ConnectToDevice connectToDevice = new ConnectToDevice();
+
     @Override
-    public boolean verifySignature(String signature, long deviceID) throws Exception {
+    public boolean verifySignature(String signature) throws Exception {
         return false;
     }
 
     @Override
-    public boolean createDbConnection(String collectionName) throws Exception {
-        return false;
+    public boolean createDbConnection() throws Exception {
+        client = new MongoClient(VariableClass.IP_ADDRESS, VariableClass.PORT_NUMBER);
+        database = client.getDatabase(VariableClass.DATABASE_NAME);
+        return true;
     }
 
     @Override
     public boolean checkCollection(String collectionName) throws Exception {
-        return false;
+        System.out.println("Checking if collection exists or not.....");
+        iterable = database.listCollectionNames();
+        colName = new TreeSet<String>();
+        for (String col : iterable) {
+            colName.add(col);
+        }
+        if (!colName.contains(collectionName)) {
+            System.out.println("collection does not exists:");
+            System.out.println("Creating new collection");
+            database.createCollection(collectionName);
+            return true;
+        }
+        System.out.println("exists");
+        return true;
     }
 
     @Override
@@ -28,28 +62,102 @@ public class Database implements DatabaseInterface {
     }
 
     @Override
-    public boolean storeClientKeys(ClientKeys keys, String collectionName) throws Exception {
+    public boolean storeClientKeys(ClientKeys keys, String collectionName,String signature)
+            throws Exception {
+
+        if (createDbConnection()) {
+            if (checkCollection(collectionName)) {
+                System.out.println("Storing keys");
+                Document document = new Document("userName", signature)
+                        .append("publicKeyModules", keys.getClientPubKeyMod().toString())
+                        .append("publicKeyExpo", keys.getClientPubKeyExpo().toString());
+                database.getCollection(collectionName).insertOne(document);
+                return true;
+            }
+            return false;
+        }
         return false;
     }
 
     @Override
-    public boolean getClientKeys(String collectionName, String deviceSignature) throws Exception {
-        return false;
+    public ClientKeys getClientKeys(String collectionName, String deviceSignature) throws Exception {
+        ClientKeys keys = new ClientKeys();
+        if (createDbConnection()) {
+            if (checkCollection(collectionName)) {
+                MongoCollection<Document> collection = database.getCollection(collectionName);
+                System.out.println("getting client keys from db");
+                List<Document> list = collection.find(new Document("userName", deviceSignature))
+                        .into(new ArrayList<Document>());
+
+                System.out.println("list:" + list.size());
+                if (!list.isEmpty()) {
+                    for (Document val : list) {
+                        String publicKeyModules = val.getString("publicKeyModules");
+                        String publicKeyExpo = val.getString("publicKeyExpo");
+
+                        System.out.println("setting server keys");
+                        keys.setClientPubKeyMod(new BigInteger(publicKeyModules));
+                        keys.setClientPubKeyExpo(new BigInteger(publicKeyExpo));
+                    }
+                    return keys;
+                }
+                return null;
+            }
+            return null;
+        }
+        return null;
     }
 
     @Override
     public boolean storeServerKeys(ServerKeys keys, String collectionName) throws Exception {
+        if (createDbConnection()) {
+            if (checkCollection(collectionName)) {
+                collection = database.getCollection(collectionName);
+                List<Document> user = (List<Document>) collection.find(new Document("keys", "serverKeys")).
+                        into(new ArrayList<Document>());
+                if (user.isEmpty()) {
+                    Document document = new Document("keys", "serverKeys")
+                            .append("publicKeyModules", keys.getPublicKeyModules().toString())
+                            .append("publicKeyExpo", keys.getPublicKeyExpo().toString())
+                            .append("privateKeyModules", keys.getPrivateKeyModules().toString())
+                            .append("privateKeyExpo", keys.getPrivateKeyExpo().toString());
+                    database.getCollection(collectionName).insertOne(document);
+                    return true;
+                }
+                return false;
+            }
+        }
         return false;
     }
 
     @Override
     public ServerKeys getServerKeys(String collectionName) throws Exception {
         ServerKeys keys = new ServerKeys();
-        keys.setPrivateKeyExpo(new BigInteger("3588706178236569238928639398053350689304491852258872217849909359186028406170673870162595778708174479975095284049232373192647879793722523154244227188139468151219566909371288963903593564966206280170901977619322693577032697777774141596151473675932423531731695611983866648746668939855175137359136836858791001693109514267215071244409667559650860677464880556395419665802552176172312428932955859732559538221607947926198105706360263853599170072821613006586926852311262892228639866395069073759328843149393710929383919142164612116762980114442396588258722512951970719180347257510390315980692213681172745936555730554326479670367176652197763126268340667647327645694743640120744240070437353982407109707527093678638342296532303708765250716861648351613317081033184420294726907507332737319844138076528635263325640987176797326746711399018827246255539663318639697593856442650188510417370547486181646621359307980239990292407352904419775849540593"));
-        keys.setPrivateKeyModules(new BigInteger("4214777907657253113000721125232472745151580275285647620895837240116389083817917878012365856944153092973868671924564389124521775170086968208302639999087780442035711202814704935797100667846856044291609671826055542255797138350990715705296927176437820167719797414475944743179643064967001415309590173778978994981565503683209815493080469926827684603043186212402541461555174760220150526056039715051302004523664386280764941286651600519216673399923121960013752645423519522577190537942240232410245814356233811170598121245760218272339690452606653687518633839603065406334786701945064057361092780039613315761236874042648446366066611886311596584361240596079231203346311092661161817519019821952137525442766196358670410972718999957615697381937635782535051583752394240837340159209718878221683849030276452271788676950559026334485190010556958833951179653367985903385866522528207314896706713176659703852530064861393257095252259354783203190648803"));
-        keys.setPublicKeyExpo(new BigInteger("65537"));
-        keys.setPublicKeyModules(new BigInteger("4214777907657253113000721125232472745151580275285647620895837240116389083817917878012365856944153092973868671924564389124521775170086968208302639999087780442035711202814704935797100667846856044291609671826055542255797138350990715705296927176437820167719797414475944743179643064967001415309590173778978994981565503683209815493080469926827684603043186212402541461555174760220150526056039715051302004523664386280764941286651600519216673399923121960013752645423519522577190537942240232410245814356233811170598121245760218272339690452606653687518633839603065406334786701945064057361092780039613315761236874042648446366066611886311596584361240596079231203346311092661161817519019821952137525442766196358670410972718999957615697381937635782535051583752394240837340159209718878221683849030276452271788676950559026334485190010556958833951179653367985903385866522528207314896706713176659703852530064861393257095252259354783203190648803"));
-        return keys;
+        if (createDbConnection()) {
+            if (checkCollection(collectionName)) {
+                collection = database.getCollection(collectionName);
+                List<Document> list = (List<Document>) collection.find(new Document("keys", "serverKeys")).
+                        into(new ArrayList<Document>());
+                if (!list.isEmpty()) {
+                    for (Document val : list) {
+                        System.out.println("getting server keys if");
+                        String publicKeyModules = val.getString("publicKeyModules");
+                        String publicKeyExpo = val.getString("publicKeyExpo");
+                        String privateKeyModules = val.getString("privateKeyModules");
+                        String privateKeyExpo = val.getString("privateKeyExpo");
+
+                        System.out.println("setting server keys");
+                        keys.setPrivateKeyExpo(new BigInteger(privateKeyExpo));
+                        keys.setPrivateKeyModules(new BigInteger(privateKeyModules));
+                        keys.setPublicKeyExpo(new BigInteger(publicKeyExpo));
+                        keys.setPublicKeyModules(new BigInteger(publicKeyModules));
+                    }
+                    return keys;
+                }
+            }
+            return null;
+        }
+        return null;
     }
 
     @Override
