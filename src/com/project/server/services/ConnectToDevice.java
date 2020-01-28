@@ -1,15 +1,21 @@
 package com.project.server.services;
 
 import com.project.server.dao.Database;
+import com.project.server.entity.ClientKeys;
 import com.project.server.entity.ServerKeys;
+import com.project.server.utils.VariableClass;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.*;
+import java.security.spec.RSAPrivateKeySpec;
+import java.security.spec.RSAPublicKeySpec;
 
 public class ConnectToDevice implements ConnectDeviceInterface {
     public static Socket socket = null;
@@ -62,7 +68,12 @@ public class ConnectToDevice implements ConnectDeviceInterface {
 
     @Override
     public String getServerKeys() throws Exception {
-        ServerKeys keys = database.getServerKeys("");
+        ServerKeys keys = database.getServerKeys(VariableClass.STORE_KEYS);
+        if(keys==null){
+            keys = generateKeys();
+            if(!database.storeServerKeys(keys,VariableClass.STORE_KEYS))
+                return null;
+        }
         String pubModHash = calculateHash(keys.getPublicKeyModules().toString());
         String pubExpoHash = calculateHash(keys.getPublicKeyExpo().toString());
         JSONObject object = new JSONObject();
@@ -82,12 +93,27 @@ public class ConnectToDevice implements ConnectDeviceInterface {
         String expoHash = (String) jsonObject.get("expoHash");
         String modValue = (String) jsonObject.get("modValue");
         String expoValue = (String) jsonObject.get("expoValue");
-        return modHash.equals(calculateHash(modValue)) && expoHash.equals(calculateHash(expoValue));
+        String clientSignature = (String) jsonObject.get("signature");
+        String signatureHash = (String) jsonObject.get("sigHash");
+
+        return modHash.equals(calculateHash(modValue)) && expoHash.equals(calculateHash(expoValue))
+                && signatureHash.equals(calculateHash(clientSignature));
     }
 
     @Override
-    public boolean storeClientKeys(String keys) throws Exception {
-        return true;
+    public boolean storeClientKeys(String clientKeys) throws Exception {
+        Object object = new JSONParser().parse(clientKeys);
+        JSONObject jsonObject = (JSONObject) object;
+
+        String clientSignature = (String) jsonObject.get("signature");
+        String modValue = (String) jsonObject.get("modValue");
+        String expoValue = (String) jsonObject.get("expoValue");
+        ClientKeys keys = new ClientKeys();
+
+        keys.setClientPubKeyExpo(new BigInteger(expoValue));
+        keys.setClientPubKeyMod(new BigInteger(modValue));
+
+        return database.storeClientKeys(keys,VariableClass.STORE_KEYS,clientSignature);
     }
 
     @Override
@@ -97,6 +123,23 @@ public class ConnectToDevice implements ConnectDeviceInterface {
 
     @Override
     public ServerKeys generateKeys() throws Exception {
-        return null;
+        System.out.println("generating keys: "+getClass());
+        ServerKeys serverKeys = new ServerKeys();
+        KeyPairGenerator keyPair = KeyPairGenerator.getInstance("RSA");
+        keyPair.initialize(3072);//3072
+        KeyPair pair = keyPair.generateKeyPair();
+        PrivateKey privateKey = pair.getPrivate();
+        PublicKey publicKey = pair.getPublic();
+        // Generating key-pair
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        RSAPublicKeySpec rsaPublicKeySpec = keyFactory.getKeySpec(publicKey, RSAPublicKeySpec.class);
+        RSAPrivateKeySpec rsaPrivateKeySpec = keyFactory.getKeySpec(privateKey, RSAPrivateKeySpec.class);
+        //Setting public keys
+        serverKeys.setPublicKeyExpo(rsaPublicKeySpec.getPublicExponent());
+        serverKeys.setPublicKeyModules(rsaPublicKeySpec.getModulus());
+        //Setting private keys
+        serverKeys.setPrivateKeyExpo(rsaPrivateKeySpec.getPrivateExponent());
+        serverKeys.setPrivateKeyModules(rsaPrivateKeySpec.getModulus());
+        return serverKeys;
     }
 }
