@@ -11,11 +11,13 @@ public class SocketThread extends Thread {
             int statusCode = 200;
             String clientData = "";
             String clientKeys="";
+            System.out.println("run function");
             if(connect.connectUsingSocket(4000)){
+                System.out.println("connected");
                 Thread.sleep(2000);
                 while (ConnectToDevice.socket.isConnected()){
                     clientData = connect.readClientData();
-                    //System.out.println("Data from client:" + clientData);
+                    System.out.println("Data from client:" + clientData);
                     switch (count) {
                         case 0:
                             if (connect.verifyNetwork(clientData)) {

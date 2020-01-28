@@ -12,9 +12,8 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-@WebServlet(name = "ConnectDeviceResAPI",urlPatterns = {"/connect-device"})
+@WebServlet(name = "ConnectDeviceReqAPI",urlPatterns = {"/connect-server"})
 public class ConnectDeviceReqAPI extends HttpServlet {
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
         try {
             System.out.println("Server hit");
@@ -22,9 +21,10 @@ public class ConnectDeviceReqAPI extends HttpServlet {
             SocketThread socketThread = new SocketThread();
             socketThread.start();
             JSONObject resObject = new JSONObject();
+            System.out.println("preparing response");
             resObject.put("status", 200);
             System.out.println("Sending socket status.....");
-            writer.println(resObject.toString());
+            writer.println(resObject);
         }catch (Exception e){
             e.printStackTrace();
         }
