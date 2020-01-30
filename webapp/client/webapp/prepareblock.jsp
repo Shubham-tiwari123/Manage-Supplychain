@@ -233,7 +233,6 @@
 
         <button id="getBlockID" onclick="getBlockID()">GET ID</button>
         <div id="prepare-block">
-            <form>
             <div id="caption">
                 <p style="margin-top: 48px;">Block ID</p>
                 <p style="margin-top: 48px">Product Name</p>
@@ -242,24 +241,25 @@
                 <p style="margin-top: 48px">Price</p>
             </div>
             <div id="input-box">
-                <input id="setBlockID" disabled><br>
-                <select class="minimal">
+                <input id="setBlockID" disabled required><br>
+                <select class="minimal" id="product-name">
+                    <option>Select product</option>
                     <option>Product Name</option>
                     <option>Product Name</option>
                     <option>Product Name</option>
                     <option>Product Name</option>
                 </select><br>
-                <input type="number"><br>
-                <select class="minimal">
-                    <option>Suplier Name</option>
-                    <option>Suplier Name</option>
-                    <option>Suplier Name</option>
-                    <option>Suplier Name</option>
+                <input id="qunt" type="number" max="100" min="10" required><br>
+                <select class="minimal" id="supplier-name">
+                    <option>Select supplier</option>
+                    <option>Supplier Name</option>
+                    <option>Supplier Name</option>
+                    <option>Supplier Name</option>
+                    <option>Supplier Name</option>
                 </select><br>
-                <input type="number" ><br>
+                <input type="number" id="price" required><br>
             </div>
-                <button type="submit" id="send-btn">SEND</button>
-            </form>
+                <button type="submit" onclick="sendBlockData()" id="send-btn">SEND</button>
         </div>
     </div>
 </div>
@@ -270,21 +270,74 @@
     var modal = document.getElementById("myModal");
     var btn = document.getElementById("myBtn");
 
-    document.getElementById("setBlockID").value = ""
+    document.getElementById("setBlockID").value = "";
     function getBlockID() {
         modal.style.display = "block";
         console.log("called");
         var response = $.get('/get-id');
         response.success(function (result) {
             modal.style.display = "none";
-            alert(result)
+            alert(result);
             document.getElementById("setBlockID").value = result;
-            document.getElementById("setBlockID").disabled = true
-        })
+            document.getElementById("getBlockID").disabled = true;
+            document.getElementById("getBlockID").style.backgroundColor = "grey";
+        });
         response.error(function (jqXHR, textStatus, errorThrown) {
             modal.style.display = "none";
             alert("Server error...pls wait")
         })
+    }
+    
+    function sendBlockData() {
+        var blockId = document.getElementById("setBlockID").value;
+        var productName = document.getElementById("product-name").value;
+        var qunt = document.getElementById("qunt").value;
+        var supplier = document.getElementById("supplier-name").value;
+        var price = document.getElementById("price").value;
+
+        console.log("block",blockId,productName,qunt,supplier,price);
+        if((blockId.length===0) || (qunt.length===0) || (price.length===0)){
+            console.log("if");
+            alert("Fill the form")
+        }
+        else if((productName==='Select product')||(supplier==='Select supplier')){
+            console.log("if");
+            alert("Product or supplier name is not valid")
+        }
+        else{
+            modal.style.display = "block";
+            console.log("else");
+            var response = $.post('/send-block',{
+                productQun:qunt,
+                productName:productName,
+                blockID:blockId,
+                supplierName:supplier,
+                price:price
+            });
+
+            response.success(function (result) {
+                if(result==200) {
+                    modal.style.display = "none";
+                    alert("Data send");
+                    document.getElementById("setBlockID").value = " ";
+                    document.getElementById("product-name").value = "Select product";
+                    document.getElementById("qunt").value = "";
+                    document.getElementById("qunt").style.borderColor = "none";
+                    document.getElementById("supplier-name").value = "Select supplier";
+                    document.getElementById("price").value = 0;
+                    document.getElementById("getBlockID").disabled = false;
+                    document.getElementById("getBlockID").style.backgroundColor = "#57B846";
+                }else{
+                    modal.style.display = "none";
+                    alert("Some error occurred...pls try again")
+                }
+            });
+
+            response.error(function (jqXHR, textStatus, errorThrown) {
+                alert("Server error...pls wait");
+            })
+        }
+
     }
 </script>
 </html>
