@@ -129,11 +129,10 @@
                 </div>
             </div>
             <div id="user_input" style="margin-left: 22px">
-                <form method="post" action="/dashboard">
                     <div id="form_fill">
                         <img src="static/images/email.png" style="float: left; height:18px; width: 18px;
                         margin-top: 8px; margin-left: 8px">
-                        <input type="email" placeholder="Email" name="userEmail" style=" width: 200px;
+                        <input type="text" id="useremail" placeholder="Email" name="userEmail" style=" width: 200px;
                         height: 100%;border: none; background-color: transparent;float: right;
                         margin-right: 10px;color: #464646; font: bold 16px Arial, Helvetica, sans-serif;">
                     </div>
@@ -141,16 +140,36 @@
                     <div id="form_fill">
                         <img src="static/images/pass.png" style="float: left; height:18px; width: 18px;
                         margin-top: 8px; margin-left: 8px">
-                        <input type="password" placeholder="Password" style=" width: 200px; height: 100%;
+                        <input type="password" id="pass" placeholder="Password" style=" width: 200px; height: 100%;
                         border: none; background-color: transparent;float: right; margin-right: 10px;
                         color: #464646; font: bold 16px Arial, Helvetica, sans-serif;" name="userPass">
                     </div>
 
-                    <button type="submit" id="submitBtn">LOGIN</button>
-                </form>
+                    <button onclick="loginUser()" id="submitBtn">LOGIN</button>
             </div>
         </div>
     </div>
 </div>
+
+<script src="http://code.jquery.com/jquery-latest.min.js "></script>
+<script>
+
+    function loginUser() {
+        console.log(document.getElementById("useremail").value);
+        console.log(document.getElementById("pass").value);
+
+        var response = $.post('/login-user',{
+                email:document.getElementById("useremail").value,
+                pass:document.getElementById("pass").value
+            });
+
+        response.success(function (result) {
+            window.location.replace('/dashboard');
+        });
+        response.error(function (jqXHR, textStatus, errorThrown) {
+            alert("Server error...pls wait")
+        })
+    }
+</script>
 </body>
 </html>
