@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.HttpURLConnection;
 
-@WebServlet(name = "TransferBlockResAPI")
-public class TransferBlockResAPI extends HttpServlet {
+@WebServlet(name = "SendBlockResAPI")
+public class SendBlockResAPI extends HttpServlet {
 
     private static int statusCode;
 

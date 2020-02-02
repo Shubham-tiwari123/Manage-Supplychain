@@ -1,9 +1,7 @@
 package com.project.client.services;
 
 import com.project.client.dao.Database;
-import com.project.client.entity.BlockStructure;
-import com.project.client.entity.ClientKeys;
-import com.project.client.entity.ServerKeys;
+import com.project.client.entity.*;
 import com.project.client.utils.VariableClass;
 
 import java.math.BigInteger;
@@ -31,6 +29,45 @@ public class TransferBlock implements TransferBlockInterface {
         block.setItemName(itemName);
         block.setSupplierName(supplierName);
         block.setPrice(price);
+        System.out.println(commonFunction.convertJavaToJson(block));
+        return commonFunction.convertJavaToJson(block);
+    }
+
+    public String prepareBlock2(long blockID, long quantity,long temp,long machineNo)
+            throws Exception {
+        BlockStructurePC2 block = new BlockStructurePC2();
+        block.setBlockID(blockID);
+        block.setTime(Time.valueOf(LocalTime.now()));
+        block.setDate(Date.valueOf(LocalDate.now()));
+        block.setQuantity(quantity);
+        block.setTemperature(temp);
+        block.setMachineNumber(machineNo);
+        System.out.println(commonFunction.convertJavaToJson(block));
+        return commonFunction.convertJavaToJson(block);
+    }
+
+    public String prepareBlock3(long blockID, long quantity,String boxRange,long totalBoxes)
+            throws Exception {
+        BlockStructurePC3 block = new BlockStructurePC3();
+        block.setBlockID(blockID);
+        block.setTime(Time.valueOf(LocalTime.now()));
+        block.setDate(Date.valueOf(LocalDate.now()));
+        block.setQuantity(quantity);
+        block.setBoxNumberRange(boxRange);
+        block.setTotalBoxes(totalBoxes);
+        System.out.println(commonFunction.convertJavaToJson(block));
+        return commonFunction.convertJavaToJson(block);
+    }
+
+    public String prepareBlock4(long blockID, long totalCarton,String exporterName,String cartonNumber)
+            throws Exception {
+        BlockStructurePC4 block = new BlockStructurePC4();
+        block.setBlockID(blockID);
+        block.setTime(Time.valueOf(LocalTime.now()));
+        block.setDate(Date.valueOf(LocalDate.now()));
+        block.setTotalCarton(totalCarton);
+        block.setExporterName(exporterName);
+        block.setCartonNumber(cartonNumber);
         System.out.println(commonFunction.convertJavaToJson(block));
         return commonFunction.convertJavaToJson(block);
     }

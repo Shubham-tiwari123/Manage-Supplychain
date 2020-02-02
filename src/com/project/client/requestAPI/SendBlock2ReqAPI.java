@@ -2,11 +2,11 @@ package com.project.client.requestAPI;
 
 import com.project.client.entity.ClientKeys;
 import com.project.client.entity.SerializeRecord;
-import com.project.client.entity.ServerKeys;
-import com.project.client.responseAPI.TransferBlockResAPI;
+import com.project.client.responseAPI.SendBlockResAPI;
 import com.project.client.services.CommonFunction;
 import com.project.client.services.TransferBlock;
 import org.json.simple.JSONObject;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,8 +21,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-@WebServlet(name = "TransferBlockReqAPI", urlPatterns = {"/send-block","/prepare-block"})
-public class TransferBlockReqAPI extends HttpServlet {
+@WebServlet(name = "SendBlock2ReqAPI", urlPatterns = {"/send-block2","/prepare-block2"})
+public class SendBlock2ReqAPI extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
         try {
@@ -31,16 +31,17 @@ public class TransferBlockReqAPI extends HttpServlet {
             PrintWriter writer = response.getWriter();
             // Prepare block
             String productQun = request.getParameter("productQun");
-            String productName = request.getParameter("productName");
             String blockId = request.getParameter("blockID");
-            String supplierName = request.getParameter("supplierName");
-            String itemPrice = request.getParameter("price");
+            String machineNo = request.getParameter("machineNo");
+            String temp = request.getParameter("temp");
 
             long quantity = Long.parseLong(productQun);
-            long price = Long.parseLong(itemPrice);
+            long temperature = Long.parseLong(temp);
             long blockID = Long.parseLong(blockId);
+            long machineNumber = Long.parseLong(machineNo);
 
-            String blockString = transferBlock.prepareBlock(blockID,quantity,productName,supplierName,price);
+            String blockString = transferBlock.prepareBlock2(blockID,quantity,temperature,machineNumber);
+
             String currentBlockHash = transferBlock.calBlockHash(blockString);
             String manipulateBlock = transferBlock.manipulateBlock(blockString,currentBlockHash);
             System.out.println(manipulateBlock);
@@ -62,7 +63,7 @@ public class TransferBlockReqAPI extends HttpServlet {
             result.put("signature","signature");
             //writer.println(result.toJSONString());
 
-            URL url = new URL("http://localhost:8080/accept-block");
+            URL url = new URL("http://localhost:8080/second-block");
             HttpURLConnection conn= (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
@@ -75,17 +76,21 @@ public class TransferBlockReqAPI extends HttpServlet {
                 System.out.println("server hit");
             }
 
-            TransferBlockResAPI resAPI = new TransferBlockResAPI();
+            SendBlockResAPI resAPI = new SendBlockResAPI();
             resAPI.response(response,conn);
         }
         catch (Exception e){
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
             e.printStackTrace();
         }
-
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/prepareblock.jsp").forward(request,response);
+        request.getRequestDispatcher("/prepareblock2.jsp").forward(request,response);
     }
 }
