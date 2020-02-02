@@ -1,4 +1,3 @@
-<%@ page import="javax.swing.*" %>
 <html>
 <head>
     <style>
@@ -94,7 +93,7 @@
         }
         #prepare-block{
             width: 50%;
-            height: 75%;
+            height: 65%;
             margin-top: 120px;
             background-color: white;
             border-radius: 25px;
@@ -154,7 +153,6 @@
             height: 32px;
             width: 90px;
             border-radius: 20px;
-            margin-right: 80px;
             background-color: #57B846;
             border: none;
             color: white;
@@ -200,7 +198,7 @@
 <div id="lower_body">
     <div id="side-nav">
         <div id="navbar" style="position: static">
-            <%@include file="sidenav.jsp" %>
+            <%@include file="sidenav.jsp"%>
         </div>
     </div>
     <div id="form-area">
@@ -216,31 +214,24 @@
         <div id="prepare-block">
             <div id="caption">
                 <p style="margin-top: 48px;">Block ID</p>
-                <p style="margin-top: 48px">Product Name</p>
                 <p style="margin-top: 48px">Quantity</p>
-                <p style="margin-top: 48px">Suplier Name</p>
-                <p style="margin-top: 48px">Price</p>
+                <p style="margin-top: 48px">Machine No</p>
+                <p style="margin-top: 48px">Temperature</p>
             </div>
             <div id="input-box">
                 <input id="setBlockID" disabled required><br>
-                <select class="minimal" id="product-name">
-                    <option>Select product</option>
-                    <option>Product Name</option>
-                    <option>Product Name</option>
-                    <option>Product Name</option>
-                    <option>Product Name</option>
-                </select><br>
                 <input id="qunt" type="number" max="100" min="10" required><br>
-                <select class="minimal" id="supplier-name">
-                    <option>Select supplier</option>
-                    <option>Supplier Name</option>
-                    <option>Supplier Name</option>
-                    <option>Supplier Name</option>
-                    <option>Supplier Name</option>
+                <select class="minimal" id="machine-number">
+                    <option>Select machine no</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
                 </select><br>
-                <input type="number" id="price" required><br>
+                <input type="number" id="temperature" required><br>
             </div>
-                <button type="submit" onclick="sendBlockData()" id="send-btn">SEND</button>
+                <button type="submit"  style="margin-left: 15px"
+                        onclick="sendBlockData()" id="send-btn">SEND</button>
         </div>
     </div>
 </div>
@@ -271,29 +262,27 @@
     
     function sendBlockData() {
         var blockId = document.getElementById("setBlockID").value;
-        var productName = document.getElementById("product-name").value;
         var qunt = document.getElementById("qunt").value;
-        var supplier = document.getElementById("supplier-name").value;
-        var price = document.getElementById("price").value;
+        var machineNo = document.getElementById("machine-number").value;
+        var temp = document.getElementById("temperature").value;
 
-        console.log("block",blockId,productName,qunt,supplier,price);
-        if((blockId.length===0) || (qunt.length===0) || (price.length===0)){
+        console.log("block",blockId,qunt,machineNo,temp);
+        if((blockId.length===0) || (qunt.length===0) || (temp.length===0)){
             console.log("if");
             alert("Fill the form")
         }
-        else if((productName==='Select product')||(supplier==='Select supplier')){
+        else if(machineNo==='Select machine no'){
             console.log("if");
-            alert("Product or supplier name is not valid")
+            alert("Machine number is not valid")
         }
         else{
             modal.style.display = "block";
             console.log("else");
-            var response = $.post('/send-block',{
+            var response = $.post('/send-block2',{
                 productQun:qunt,
-                productName:productName,
                 blockID:blockId,
-                supplierName:supplier,
-                price:price
+                machineNo:machineNo,
+                temp:temp
             });
 
             response.success(function (result) {
@@ -301,20 +290,22 @@
                     modal.style.display = "none";
                     alert("Data send");
                     document.getElementById("setBlockID").value = " ";
-                    document.getElementById("product-name").value = "Select product";
                     document.getElementById("qunt").value = "";
                     document.getElementById("qunt").style.borderColor = "none";
-                    document.getElementById("supplier-name").value = "Select supplier";
-                    document.getElementById("price").value = 0;
+                    document.getElementById("machine-number").value = "Select supplier";
+                    document.getElementById("temperature").value = 0;
                     document.getElementById("getBlockID").disabled = false;
                     document.getElementById("getBlockID").style.backgroundColor = "#57B846";
                 }else{
+                    for (var i=0;i<30;i++);
                     modal.style.display = "none";
                     alert("Some error occurred...pls try again")
                 }
             });
 
             response.error(function (jqXHR, textStatus, errorThrown) {
+                for (var i=0;i<30;i++);
+                modal.style.display = "none";
                 alert("Server error...pls wait");
             })
         }
