@@ -1,6 +1,6 @@
 package com.project.server.services;
 
-import com.project.server.dao.Database;
+import com.project.server.dao.MongoDB;
 import com.project.server.entity.ClientKeys;
 import com.project.server.entity.ServerKeys;
 import com.project.server.utils.VariableClass;
@@ -21,7 +21,7 @@ public class ConnectToDevice implements ConnectDeviceInterface {
     public static Socket socket = null;
     private static DataOutputStream out = null;
     private CommonFunctions extraFunction = new CommonFunctions();
-    private Database database = new Database();
+    private MongoDB database = new MongoDB();
     public static ServerSocket server;
 
     @Override

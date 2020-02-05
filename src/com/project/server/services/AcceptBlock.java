@@ -1,8 +1,7 @@
 package com.project.server.services;
 
-import com.project.server.dao.Database;
-import com.project.server.entity.BlockStructure;
-import com.project.server.entity.ClientKeys;
+import com.project.server.dao.MongoDB;
+import com.project.server.entity.*;
 import com.project.server.utils.VariableClass;
 
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.ArrayList;
 public class AcceptBlock implements AcceptBlockInterface {
 
     private CommonFunctions commonFunctions = new CommonFunctions();
-    private Database database = new Database();
+    private MongoDB database = new MongoDB();
 
     @Override
     public boolean verifyDeviceSignature(String signature) throws Exception {
@@ -35,6 +34,30 @@ public class AcceptBlock implements AcceptBlockInterface {
     @Override
     public boolean verifyData(String data,String currentBlockHash) throws Exception {
         BlockStructure blockStructure = commonFunctions.convertJsonToJava(data,BlockStructure.class);
+        String blockString = commonFunctions.convertJavaToJson(blockStructure);
+        System.out.println("block:"+blockString);
+        String hash = calCurrentBlockHash(blockString);
+        return hash.equals(currentBlockHash);
+    }
+
+    public boolean verifyData2(String data,String currentBlockHash) throws Exception {
+        BlockStructure2 blockStructure = commonFunctions.convertJsonToJava(data,BlockStructure2.class);
+        String blockString = commonFunctions.convertJavaToJson(blockStructure);
+        System.out.println("block:"+blockString);
+        String hash = calCurrentBlockHash(blockString);
+        return hash.equals(currentBlockHash);
+    }
+
+    public boolean verifyData3(String data,String currentBlockHash) throws Exception {
+        BlockStructure3 blockStructure = commonFunctions.convertJsonToJava(data,BlockStructure3.class);
+        String blockString = commonFunctions.convertJavaToJson(blockStructure);
+        System.out.println("block:"+blockString);
+        String hash = calCurrentBlockHash(blockString);
+        return hash.equals(currentBlockHash);
+    }
+
+    public boolean verifyData4(String data,String currentBlockHash) throws Exception {
+        BlockStructure4 blockStructure = commonFunctions.convertJsonToJava(data, BlockStructure4.class);
         String blockString = commonFunctions.convertJavaToJson(blockStructure);
         System.out.println("block:"+blockString);
         String hash = calCurrentBlockHash(blockString);
