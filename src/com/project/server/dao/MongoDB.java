@@ -6,7 +6,6 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import com.project.server.entity.ClientKeys;
 import com.project.server.entity.ServerKeys;
-import com.project.server.services.ConnectToDevice;
 import com.project.server.utils.VariableClass;
 import org.bson.Document;
 
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class Database implements DatabaseInterface {
+public class MongoDB implements MongoDBInterface {
 
     private static MongoClient client;
     private static MongoDatabase database;

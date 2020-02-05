@@ -5,7 +5,7 @@ import com.project.server.entity.ServerKeys;
 
 import java.util.ArrayList;
 
-public interface DatabaseInterface {
+public interface MongoDBInterface {
 
     boolean verifySignature(String signature) throws Exception;
 
