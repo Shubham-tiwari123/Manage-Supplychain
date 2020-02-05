@@ -1,6 +1,5 @@
 package com.project.server.requestAPI;
 
-import com.project.server.entity.BlockStructure;
 import com.project.server.entity.ClientKeys;
 import com.project.server.entity.DeserializeValues;
 import com.project.server.services.AcceptBlock;
@@ -17,8 +16,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "AcceptBlockReqAPI", urlPatterns = {"/first-block"})
-public class AcceptBlockReqAPI extends HttpServlet {
+@WebServlet(name = "AcceptBlock3ReqAPI", urlPatterns = {"/third-block"})
+public class AcceptBlock3ReqAPI extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -53,7 +52,7 @@ public class AcceptBlockReqAPI extends HttpServlet {
             PrintWriter writer = response.getWriter();
             JSONObject resultObj = new JSONObject();
 
-            if(acceptBlock.verifyData(decryptString,currentHashBlock)){
+            if(acceptBlock.verifyData3(decryptString,currentHashBlock)){
                 System.out.println("Data is secured");
                 resultObj.put("status",200);
             }else{
