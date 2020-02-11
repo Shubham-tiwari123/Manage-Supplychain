@@ -15,7 +15,11 @@ public class ReturnIDReqAPI extends HttpServlet {
             throws ServletException, IOException {
         //String signature = request.getParameter("signature");
         SqlDB sqlDB = new SqlDB();
-        sqlDB.getProductID();
+        //sqlDB.getProductID();
+        long id=1234;
+        //sqlDB.insertInDb("block1");
+        System.out.println("calling createNewProductID");
+        sqlDB.createNewProductID();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
