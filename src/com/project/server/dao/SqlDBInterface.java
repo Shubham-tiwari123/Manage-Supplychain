@@ -5,6 +5,7 @@ import java.sql.Connection;
 public interface SqlDBInterface {
     boolean createDbConnection();
     boolean closeDbConnection(Connection connection);
-    void getProductID();
+    Long getProductID(String blockNumber);
     void getBlockNumber();
+    boolean createNewProductID();
 }
