@@ -19,12 +19,12 @@ public class TransferBlock implements TransferBlockInterface {
     private Database database = new Database();
 
     @Override
-    public String prepareBlock(long blockID, long quantity,String itemName,String supplierName,long price)
+    public String prepareBlock(long blockID, long quantity,String itemName,String supplierName,long price,String date)
             throws Exception {
         BlockStructure block = new BlockStructure();
         block.setBlockID(blockID);
         block.setTime(Time.valueOf(LocalTime.now()));
-        block.setDate(Date.valueOf(LocalDate.now()));
+        block.setDate(date);
         block.setQuantity(quantity);
         block.setItemName(itemName);
         block.setSupplierName(supplierName);
@@ -33,12 +33,12 @@ public class TransferBlock implements TransferBlockInterface {
         return commonFunction.convertJavaToJson(block);
     }
 
-    public String prepareBlock2(long blockID, long quantity,long temp,long machineNo)
+    public String prepareBlock2(long blockID, long quantity,long temp,long machineNo,String date)
             throws Exception {
         BlockStructurePC2 block = new BlockStructurePC2();
         block.setBlockID(blockID);
         block.setTime(Time.valueOf(LocalTime.now()));
-        block.setDate(Date.valueOf(LocalDate.now()));
+        block.setDate(date);
         block.setQuantity(quantity);
         block.setTemperature(temp);
         block.setMachineNumber(machineNo);
@@ -46,12 +46,12 @@ public class TransferBlock implements TransferBlockInterface {
         return commonFunction.convertJavaToJson(block);
     }
 
-    public String prepareBlock3(long blockID, long quantity,String boxRange,long totalBoxes)
+    public String prepareBlock3(long blockID, long quantity,String boxRange,long totalBoxes,String date)
             throws Exception {
         BlockStructurePC3 block = new BlockStructurePC3();
         block.setBlockID(blockID);
         block.setTime(Time.valueOf(LocalTime.now()));
-        block.setDate(Date.valueOf(LocalDate.now()));
+        block.setDate(date);
         block.setQuantity(quantity);
         block.setBoxNumberRange(boxRange);
         block.setTotalBoxes(totalBoxes);
@@ -59,12 +59,12 @@ public class TransferBlock implements TransferBlockInterface {
         return commonFunction.convertJavaToJson(block);
     }
 
-    public String prepareBlock4(long blockID, long totalCarton,String exporterName,String cartonNumber)
+    public String prepareBlock4(long blockID, long totalCarton,String exporterName,String cartonNumber,String date)
             throws Exception {
         BlockStructurePC4 block = new BlockStructurePC4();
         block.setBlockID(blockID);
         block.setTime(Time.valueOf(LocalTime.now()));
-        block.setDate(Date.valueOf(LocalDate.now()));
+        block.setDate(date);
         block.setTotalCarton(totalCarton);
         block.setExporterName(exporterName);
         block.setCartonNumber(cartonNumber);

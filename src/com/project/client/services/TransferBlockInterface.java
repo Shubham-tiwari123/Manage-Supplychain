@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public interface TransferBlockInterface {
 
-    String prepareBlock(long blockID, long quantity,String itemName,String supplierName,long price)
+    String prepareBlock(long blockID, long quantity,String itemName,String supplierName,long price,String date)
             throws Exception;
 
     String calBlockHash(String data) throws Exception;

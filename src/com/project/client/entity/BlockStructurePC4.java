@@ -10,7 +10,7 @@ import java.sql.Time;
 })
 public class BlockStructurePC4 implements Serializable {
     private long blockID;
-    private Date date;
+    private String date;
     private Time time;
     private long totalCarton;
     private String cartonNumber;
@@ -24,11 +24,11 @@ public class BlockStructurePC4 implements Serializable {
         this.blockID = blockID;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
