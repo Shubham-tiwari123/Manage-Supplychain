@@ -16,7 +16,7 @@ public class SendBlockResAPI extends HttpServlet {
 
     private static int statusCode;
 
-    public void response(HttpServletResponse response, HttpURLConnection conn){
+    public void readResponse(HttpServletResponse response, HttpURLConnection conn){
         System.out.println("reading response");
         try {
             InputStream inputStream = conn.getInputStream();
@@ -30,13 +30,16 @@ public class SendBlockResAPI extends HttpServlet {
             JSONObject object = (JSONObject) jsonParser.parse(output.toString());
             long status = (long) object.get("status");
 
+            JSONObject object1 = new JSONObject();
             if(status==200){
                 statusCode = 200;
+                object.put("statusCode",statusCode);
             }else{
                 statusCode = 404;
+                object.put("statusCode",statusCode);
             }
-            Thread.sleep(2000);
-            doPost(response);
+            PrintWriter writer = response.getWriter();
+            writer.println(object.toJSONString());
         } catch (Exception e) {
             e.printStackTrace();
         }

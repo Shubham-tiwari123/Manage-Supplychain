@@ -10,8 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
-@WebServlet(name = "LoginReqAPI",urlPatterns = {"/dashboard","/login-user"})
+@WebServlet(name = "LoginReqAPI",urlPatterns = {"/login"})
 
 public class LoginReqAPI extends HttpServlet {
 
@@ -24,13 +25,18 @@ public class LoginReqAPI extends HttpServlet {
             System.out.println("value" + email + "   " + pass);
 
             Cookie cookie;
+            JSONObject jsonObject = new JSONObject();
             //check if keys or not exists
             if (commonFunction.checkIfKeysExists()) {
-                cookie = new Cookie("keyStatus","true");
+                cookie = new Cookie("loginStatus","true");
+                jsonObject.put("statusCode",200);
             }else{
                 cookie = new Cookie("keyStatus","false");
+                jsonObject.put("statusCode",400);
             }
             response.addCookie(cookie);
+            PrintWriter printWriter = response.getWriter();
+            printWriter.println(jsonObject.toString());
         }catch (Exception e){
             System.out.println(e);
         }
@@ -38,7 +44,5 @@ public class LoginReqAPI extends HttpServlet {
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("fjhghfgdfdsasertgv");
-        request.getRequestDispatcher("/dashboard.jsp").forward(request,response);
     }
 }

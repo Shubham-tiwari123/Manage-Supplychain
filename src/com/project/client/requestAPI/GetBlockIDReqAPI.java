@@ -17,14 +17,7 @@ public class GetBlockIDReqAPI extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         PrintWriter writer = response.getWriter();
         writer.println(123456789);
-
     }
 }

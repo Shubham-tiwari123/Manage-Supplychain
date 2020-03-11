@@ -21,10 +21,10 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-@WebServlet(name = "SendBlock2ReqAPI", urlPatterns = {"/send-block2","/prepare-block2"})
+@WebServlet(name = "SendBlock2ReqAPI", urlPatterns = {"/send-block2"})
 public class SendBlock2ReqAPI extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response){
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             TransferBlock transferBlock = new TransferBlock();
             CommonFunction commonFunction = new CommonFunction();
@@ -34,13 +34,13 @@ public class SendBlock2ReqAPI extends HttpServlet {
             String blockId = request.getParameter("blockID");
             String machineNo = request.getParameter("machineNo");
             String temp = request.getParameter("temp");
-
+            String date = request.getParameter("date");
             long quantity = Long.parseLong(productQun);
             long temperature = Long.parseLong(temp);
             long blockID = Long.parseLong(blockId);
             long machineNumber = Long.parseLong(machineNo);
 
-            String blockString = transferBlock.prepareBlock2(blockID,quantity,temperature,machineNumber);
+            String blockString = transferBlock.prepareBlock2(blockID,quantity,temperature,machineNumber,date);
 
             String currentBlockHash = transferBlock.calBlockHash(blockString);
             String manipulateBlock = transferBlock.manipulateBlock(blockString,currentBlockHash);
@@ -77,20 +77,20 @@ public class SendBlock2ReqAPI extends HttpServlet {
             }
 
             SendBlockResAPI resAPI = new SendBlockResAPI();
-            resAPI.response(response,conn);
+            resAPI.readResponse(response,conn);
         }
         catch (Exception e){
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
+            System.out.println("Something went wrong try again......");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("statusCode",400);
+            PrintWriter printWriter = response.getWriter();
+            printWriter.println(jsonObject.toString());
             e.printStackTrace();
         }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/prepareblock2.jsp").forward(request,response);
+
     }
 }
