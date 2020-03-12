@@ -8,30 +8,6 @@
             overflow-y: hidden;
         }
 
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            padding-top: 150px; /* Location of the box */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        }
-
-        /* Modal Content */
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 35%;
-            height: 80px;
-        }
-
         #header {
             height: 10%;
             width: 100%;
@@ -173,31 +149,74 @@
             text-underline: none;
             color: #20509E;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 14%;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: white;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 25%;
+            height: 120px;
+            border-radius: 20px;
+        }
+
+        #popup-text {
+            font: bold 24px Arial, Helvetica, sans-serif;
+            color: rgba(92, 93, 94, 0.78);
+            text-align: center;
+            width: 100%;
+            height: fit-content;
+            margin-top: 30px;
+        }
+
+        #confirm-btn {
+            background-color: #57B846;
+            border: #57B846;
+            color: white;
+            margin-left: 40%;
+            height: 30px;
+            width: 60px;
+            border-radius: 40px;
+            font: bold 16px Arial, Helvetica, sans-serif;
+            box-shadow: 5px 5px 10px rgba(65, 65, 65, 0.69);
+        }
     </style>
 </head>
-<title>
-    ShipChain
-</title>
 <body>
+<div id="popup-msg" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <p id="popup-text">Patient ID: 58452945</p>
+        <button id="confirm-btn">OK</button>
+    </div>
+</div>
 <div id="header">
     <div id="company_name">
         <b>ShipChain</b>
     </div>
     <div id="people-img">
-        <img src="static/images/person.png" style="width: 55px; height: 55px">
+        <img src="static/images/person.png" style="width: 45px; height: 45px; border-radius: 50%;
+        border: 1px solid grey; margin-top: 5px">
     </div>
 </div>
 <div id="lower_body">
     <div id="side-nav">
         <div id="navbar" style="position: static">
             <%@include file="sidenav.jsp" %>
-        </div>
-    </div>
-
-    <div id="myModal" class="modal">
-        <!-- Modal content -->
-        <div class="modal-content">
-            <p>Waiting for response..</p>
         </div>
     </div>
 
@@ -235,46 +254,73 @@
 <script src="http://code.jquery.com/jquery-latest.min.js "></script>
 <script>
 
-    var modal = document.getElementById("myModal");
-    var btn = document.getElementById("myBtn");
-    var jsonString = document.cookie.split("=");
+    let modal = document.getElementById("popup-msg");
+    document.getElementById("popup-text").innerText = "Getting Keys...";
+    document.getElementById("confirm-btn").style.visibility="hidden";
+    let conform_btn = document.getElementById("confirm-btn");
 
-    if(jsonString[1]==='true'){
-        console.log("if");
-        modal.style.display="block";
-        var response = $.get('/get-keys');
+    setTimeout(function () {
+        modal.style.display = "block";
+    },500);
+
+    conform_btn.onclick = function(){
+        document.getElementById("popup-text").style.color = "rgba(92, 93, 94, 0.78)";
+        modal.style.display = "none";
+
+    };
+
+    let response = $.get('/get-keys');
+
+    setTimeout(function () {
         response.success(function (result) {
-            modal.style.display = "none";
-            var obj = jQuery.parseJSON(result);
-            alert("Setting Keys");
-            document.getElementById("pc-key").innerText = obj.PC;
-            document.getElementById("server-key").innerText = obj.Server;
-            document.getElementById("connectBtn").disabled = true;
-            document.getElementById("connectBtn").style.backgroundColor = "grey";
+            let obj = jQuery.parseJSON(result);
+            if(obj.statusCode===200) {
+                document.getElementById("popup-text").innerText = "Setting Keys";
+                document.getElementById("pc-key").innerText = obj.PC;
+                document.getElementById("server-key").innerText = obj.Server;
+                document.getElementById("connectBtn").disabled = true;
+                document.getElementById("connectBtn").style.backgroundColor = "grey";
+            }
+            setTimeout(function () {
+                modal.style.display = "none";
+            },1500);
+
         });
+
         response.error(function (jqXHR, textStatus, errorThrown) {
-            modal.style.display = "none";
-            alert("Server error...cannot display keys now")
+            document.getElementById("popup-text").innerText = "Server error... refresh page";
+            document.getElementById("popup-text").style.color = "#BA0606";
+            document.getElementById("confirm-btn").style.visibility ="visible";
         })
-    }
+    },3000);
+
 
     function connectToServer() {
         modal.style.display = "block";
+        document.getElementById("popup-text").innerText = "Connecting to server";
+        document.getElementById("confirm-btn").style.visibility="hidden";
         console.log("called");
-        var response = $.get('/connect-device');
-        response.success(function (result) {
-            modal.style.display = "none";
-            var obj = jQuery.parseJSON(result);
-            alert("Setting Keys");
-            document.getElementById("pc-key").innerText = obj.PC;
-            document.getElementById("server-key").innerText = obj.Server;
-            document.getElementById("connectBtn").disabled = true;
-            document.getElementById("connectBtn").style.backgroundColor = "grey";
-        });
-        response.error(function (jqXHR, textStatus, errorThrown) {
-            modal.style.display = "none";
-            alert("Server error...pls wait")
-        })
+        let res = $.get('/connect-server');
+
+        setTimeout(function () {
+            res.success(function (result) {
+                var obj = jQuery.parseJSON(result);
+                document.getElementById("popup-text").innerText = "Setting keys";
+                document.getElementById("pc-key").innerText = obj.PC;
+                document.getElementById("server-key").innerText = obj.Server;
+                document.getElementById("connectBtn").disabled = true;
+                document.getElementById("connectBtn").style.backgroundColor = "grey";
+                setTimeout(function () {
+                    modal.style.display = "none";
+                },1000);
+            });
+            res.error(function (jqXHR, textStatus, errorThrown) {
+                document.getElementById("popup-text").innerText = "Server error... try again";
+                document.getElementById("popup-text").style.color = "#BA0606";
+                document.getElementById("confirm-btn").style.visibility ="visible";
+            })
+
+        },3000)
     }
 </script>
 </html>
