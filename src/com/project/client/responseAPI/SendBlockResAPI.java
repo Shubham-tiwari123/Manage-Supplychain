@@ -14,8 +14,6 @@ import java.net.HttpURLConnection;
 @WebServlet(name = "SendBlockResAPI")
 public class SendBlockResAPI extends HttpServlet {
 
-    private static int statusCode;
-
     public void readResponse(HttpServletResponse response, HttpURLConnection conn){
         System.out.println("reading response");
         try {
@@ -31,22 +29,18 @@ public class SendBlockResAPI extends HttpServlet {
             long status = (long) object.get("status");
 
             JSONObject object1 = new JSONObject();
+            int statusCode;
             if(status==200){
                 statusCode = 200;
-                object.put("statusCode",statusCode);
+                object.put("statusCode", statusCode);
             }else{
                 statusCode = 404;
-                object.put("statusCode",statusCode);
+                object.put("statusCode", statusCode);
             }
             PrintWriter writer = response.getWriter();
-            writer.println(object.toJSONString());
+            writer.println(object1.toJSONString());
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void doPost(HttpServletResponse response) throws ServletException, IOException {
-        PrintWriter writer = response.getWriter();
-        writer.println(statusCode);
     }
 }

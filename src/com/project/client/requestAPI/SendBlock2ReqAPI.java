@@ -35,6 +35,7 @@ public class SendBlock2ReqAPI extends HttpServlet {
             String machineNo = request.getParameter("machineNo");
             String temp = request.getParameter("temp");
             String date = request.getParameter("date");
+
             long quantity = Long.parseLong(productQun);
             long temperature = Long.parseLong(temp);
             long blockID = Long.parseLong(blockId);
@@ -87,10 +88,5 @@ public class SendBlock2ReqAPI extends HttpServlet {
             printWriter.println(jsonObject.toString());
             e.printStackTrace();
         }
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
     }
 }
