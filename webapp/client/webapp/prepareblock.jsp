@@ -251,7 +251,7 @@
                     <option value="">Product Name</option>
                     <option value="">Product Name</option>
                 </select><br>
-                <input id="qunt" type="number" max="100" min="10" required><br>
+                <input id="qunt" type="number" max="100"  required><br>
                 <select class="minimal" id="supplier-name">
                     <option value="1">Select supplier</option>
                     <option>Supplier Name</option>
@@ -269,9 +269,15 @@
 <script src="http://code.jquery.com/jquery-latest.min.js "></script>
 <script>
 
-    var modal = document.getElementById("popup-msg");
-    var btn = document.getElementById("confirm-btn");
+    let modal = document.getElementById("popup-msg");
+    let btn = document.getElementById("confirm-btn");
+
     document.getElementById("setBlockID").value = "";
+    document.getElementById("product-name").selectedIndex = 0;
+    document.getElementById("qunt").value=0;
+    document.getElementById("supplier-name").selectedIndex = 0;
+    document.getElementById("price").value=0;
+
     let conform_btn = document.getElementById("confirm-btn");
 
     conform_btn.onclick = function(){
@@ -286,16 +292,24 @@
 
         console.log("called");
         setTimeout(function () {
-            var response = $.get('/get-id');
+            let response = $.get('/get-id');
             response.success(function (result) {
-                modal.style.display = "none";
-                document.getElementById("setBlockID").value = result;
-                document.getElementById("getBlockID").disabled = true;
-                document.getElementById("getBlockID").style.backgroundColor = "grey";
+                const resultObj = jQuery.parseJSON(result);
+                if (resultObj.statusCode=== 200) {
+                    modal.style.display = "none";
+                    document.getElementById("setBlockID").value = resultObj.productID;
+                    document.getElementById("getBlockID").disabled = true;
+                    document.getElementById("getBlockID").style.backgroundColor = "grey";
+                }else{
+                    document.getElementById("popup-text").innerText = "Server error...try again";
+                    document.getElementById("popup-text").style.color = "#BA0606";
+                    document.getElementById("confirm-btn").style.visibility ="visible";
+                }
             });
             response.error(function (jqXHR, textStatus, errorThrown) {
-                modal.style.display = "none";
-                alert("Server error...pls wait")
+                document.getElementById("popup-text").innerText = "Server error...try again";
+                document.getElementById("popup-text").style.color = "#BA0606";
+                document.getElementById("confirm-btn").style.visibility ="visible";
             })
         },1500);
     }
@@ -315,64 +329,22 @@
         today = dd + '/' + mm + '/' + yyyy;
         console.log("daate:",today);
 
-        var blockId = document.getElementById("setBlockID").value;
-        var productName = document.getElementById("product-name").value;
-        var qunt = document.getElementById("qunt").value;
-        var supplier = document.getElementById("supplier-name").value;
-        var price = document.getElementById("price").value;
+        let blockId = document.getElementById("setBlockID").value;
+        let productName = document.getElementById("product-name").value;
+        let qunt = document.getElementById("qunt").value;
+        let supplier = document.getElementById("supplier-name").value;
+        let price = document.getElementById("price").value;
 
         console.log("block",blockId,productName,qunt,supplier,price);
-        /*if((blockId.length===0) || (qunt.length===0) || (price.length===0)){
-            console.log("if");
-            alert("Fill the form")
-        }
-        else if((productName==='Select product')||(supplier==='Select supplier')){
-            console.log("if");
-            alert("Product or supplier name is not valid")
-        }
-        else{
-            modal.style.display = "block";
-            console.log("else");
-            var response = $.post('/send-block',{
-                productQun:qunt,
-                productName:productName,
-                blockID:blockId,
-                supplierName:supplier,
-                price:price
-            });
-
-            response.success(function (result) {
-                if(result==200) {
-                    modal.style.display = "none";
-                    alert("Data send");
-                    document.getElementById("setBlockID").value = " ";
-                    document.getElementById("product-name").value = "Select product";
-                    document.getElementById("qunt").value = "";
-                    document.getElementById("qunt").style.borderColor = "none";
-                    document.getElementById("supplier-name").value = "Select supplier";
-                    document.getElementById("price").value = 0;
-                    document.getElementById("getBlockID").disabled = false;
-                    document.getElementById("getBlockID").style.backgroundColor = "#57B846";
-                }else{
-                    modal.style.display = "none";
-                    alert("Some error occurred...pls try again")
-                }
-            });
-
-            response.error(function (jqXHR, textStatus, errorThrown) {
-                alert("Server error...pls wait");
-            })
-        }
-*/
 
         let flag = await validateForm(blockId,productName,qunt, supplier,price);
         if(flag){
             modal.style.display = "block";
             document.getElementById("popup-text").innerText = "Submitting record...";
             document.getElementById("confirm-btn").style.visibility="hidden";
-            
+
             console.log("valid")
-            var response = $.post('/send-block',{
+            let response = $.post('/send-block',{
                 productQun:qunt,
                 productName:productName,
                 blockID:blockId,
@@ -432,13 +404,22 @@
             document.getElementById("qunt").focus();
             return false;
         }
+        if(qunt<=0){
+            alert("Quantity can not be less then 10");
+            document.getElementById("qunt").focus();
+            return false;
+        }
         if(price===""||isNaN(price)){
             alert("Please provide valid price");
             document.getElementById("price").focus();
             return false;
         }
+        if(price<=0){
+            alert("Price cannot be less then 1");
+            document.getElementById("price").focus();
+            return false;
+        }
         return true;
     }
-
 </script>
 </html>
