@@ -1,35 +1,14 @@
 <html>
 <head>
+    <title>
+        Prepare Block
+    </title>
     <style>
         body {
             margin: 0;
             background-color: #F1F4F6;
             overflow-x: hidden;
             overflow-y: hidden;
-        }
-
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            padding-top: 150px; /* Location of the box */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        }
-
-        /* Modal Content */
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 35%;
-            height: 80px;
         }
 
         #header {
@@ -180,13 +159,61 @@
         input[type=number] {
             -moz-appearance:textfield;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 14%;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.2);
+        }
 
+        /* Modal Content */
+        .modal-content {
+            background-color: white;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 25%;
+            height: 120px;
+            border-radius: 20px;
+        }
+
+        #popup-text {
+            font: bold 24px Arial, Helvetica, sans-serif;
+            color: rgba(92, 93, 94, 0.78);
+            text-align: center;
+            width: 100%;
+            height: fit-content;
+            margin-top: 30px;
+        }
+
+        #confirm-btn {
+            background-color: #57B846;
+            border: #57B846;
+            color: white;
+            margin-left: 40%;
+            height: 30px;
+            width: 60px;
+            border-radius: 40px;
+            font: bold 16px Arial, Helvetica, sans-serif;
+            box-shadow: 5px 5px 10px rgba(65, 65, 65, 0.69);
+        }
     </style>
 </head>
-<title>
-    ShipChain
-</title>
 <body>
+<div id="popup-msg" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <p id="popup-text">Patient ID: 58452945</p>
+        <button id="confirm-btn">OK</button>
+    </div>
+</div>
 <div id="header">
     <div id="company_name">
         <b>ShipChain</b>
@@ -204,13 +231,6 @@
     </div>
     <div id="form-area">
 
-        <div id="myModal" class="modal">
-            <!-- Modal content -->
-            <div class="modal-content">
-                <p>Waiting for response..</p>
-            </div>
-        </div>
-
         <button id="getBlockID" onclick="getBlockID()">GET ID</button>
         <div id="prepare-block">
             <div id="caption">
@@ -221,8 +241,8 @@
             </div>
             <div id="input-box">
                 <input id="setBlockID" disabled required><br>
-                <input id="qunt" type="number" max="100" min="10" required><br>
-                <input id="total-boxes" type="number" max="100" min="10" required><br>
+                <input id="qunt" type="number" required><br>
+                <input id="total-boxes" type="number" required><br>
                 <input type="text" id="box-number" placeholder="Eg: 10-100" required><br>
             </div>
                 <button type="submit" style="margin-left: 15px"
@@ -234,73 +254,146 @@
 <script src="http://code.jquery.com/jquery-latest.min.js "></script>
 <script>
 
-    var modal = document.getElementById("myModal");
-    var btn = document.getElementById("myBtn");
+    let modal = document.getElementById("popup-msg");
+    let btn = document.getElementById("confirm-btn");
 
     document.getElementById("setBlockID").value = "";
+    document.getElementById("qunt").value=0;
+    document.getElementById("total-boxes").value = 0;
+    document.getElementById("box-number").value=0;
+
+    let conform_btn = document.getElementById("confirm-btn");
+
+    conform_btn.onclick = function(){
+        document.getElementById("popup-text").style.color = "rgba(92, 93, 94, 0.78)";
+        modal.style.display = "none";
+    };
+
     function getBlockID() {
         modal.style.display = "block";
+        document.getElementById("popup-text").innerText = "Getting product id....";
+        conform_btn.style.visibility="hidden";
+
         console.log("called");
-        var response = $.get('/get-id');
-        response.success(function (result) {
-            modal.style.display = "none";
-            alert(result);
-            document.getElementById("setBlockID").value = result;
-            document.getElementById("getBlockID").disabled = true;
-            document.getElementById("getBlockID").style.backgroundColor = "grey";
-        });
-        response.error(function (jqXHR, textStatus, errorThrown) {
-            modal.style.display = "none";
-            alert("Server error...pls wait")
-        })
+        setTimeout(function () {
+            let response = $.get('/get-id');
+            response.success(function (result) {
+                const resultObj = jQuery.parseJSON(result);
+                if (resultObj.statusCode=== 200) {
+                    modal.style.display = "none";
+                    document.getElementById("setBlockID").value = resultObj.productID;
+                    document.getElementById("getBlockID").disabled = true;
+                    document.getElementById("getBlockID").style.backgroundColor = "grey";
+                }else{
+                    document.getElementById("popup-text").innerText = "Server error...try again";
+                    document.getElementById("popup-text").style.color = "#BA0606";
+                    document.getElementById("confirm-btn").style.visibility ="visible";
+                }
+            });
+            response.error(function (jqXHR, textStatus, errorThrown) {
+                document.getElementById("popup-text").innerText = "Server error...try again";
+                document.getElementById("popup-text").style.color = "#BA0606";
+                document.getElementById("confirm-btn").style.visibility ="visible";
+            })
+        },1500);
     }
-    
-    function sendBlockData() {
-        var blockId = document.getElementById("setBlockID").value;
-        var qunt = document.getElementById("qunt").value;
-        var totalBoxes = document.getElementById("total-boxes").value;
-        var boxNumbers = document.getElementById("box-number").value;
+
+    async function sendBlockData() {
+        let today = new Date();
+        let dd = today.getDate();
+        let mm = today.getMonth() + 1; //January is 0!
+
+        let yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        today = dd + '/' + mm + '/' + yyyy;
+        console.log("date:",today);
+
+        let blockId = document.getElementById("setBlockID").value;
+        let qunt = document.getElementById("qunt").value;
+        let totalBoxes = document.getElementById("total-boxes").value;
+        let boxNumbers = document.getElementById("box-number").value;
 
         console.log("block",blockId,qunt,totalBoxes,boxNumbers);
-        if((blockId.length===0) || (qunt.length===0) || (totalBoxes.length===0) || (boxNumbers.length==0)){
-            console.log("if");
-            alert("Fill the form")
-        }
-        else{
+        let flag = await validate(blockId,qunt,totalBoxes,boxNumbers);
+
+        if(flag){
             modal.style.display = "block";
-            console.log("else");
-            var response = $.post('/send-block3',{
+            document.getElementById("popup-text").innerText = "Submitting record...";
+            document.getElementById("confirm-btn").style.visibility="hidden";
+            console.log("valid");
+
+            let response = $.post('/send-block3',{
                 productQun:qunt,
                 blockID:blockId,
                 totalBoxes:totalBoxes,
-                boxNumber:boxNumbers
+                boxNumber:boxNumbers,
+                date:today
             });
 
-            response.success(function (result) {
-                if(result==200) {
-                    modal.style.display = "none";
-                    alert("Data send");
-                    document.getElementById("setBlockID").value = " ";
-                    document.getElementById("qunt").value = "";
-                    document.getElementById("qunt").style.borderColor = "none";
-                    document.getElementById("total-boxes").value = 0;
-                    document.getElementById("box-number").value = 0;
-                    document.getElementById("getBlockID").disabled = false;
-                    document.getElementById("getBlockID").style.backgroundColor = "#57B846";
-                }else{
-                    for (var i=0;i<30;i++);
-                    modal.style.display = "none";
-                    alert("Some error occurred...pls try again")
-                }
-            });
+            setTimeout(function () {
+                response.success(function (result) {
+                    const resultObj = jQuery.parseJSON(result);
+                    if (resultObj.statusCode=== 200) {
+                        console.log("iffff");
+                        document.getElementById("popup-text").innerText = "Form Submitted";
+                        document.getElementById("popup-text").style.color = "#57B846";
+                        setTimeout(function () {
+                            window.location.replace("/prepare_block2")
+                        },1000);
+                    }else{
+                        document.getElementById("popup-text").innerText = "Server error...try again";
+                        document.getElementById("popup-text").style.color = "#BA0606";
+                        document.getElementById("confirm-btn").style.visibility ="visible";
+                    }
+                });
 
-            response.error(function (jqXHR, textStatus, errorThrown) {
-                for (var i=0;i<30;i++);
-                modal.style.display = "none";
-                alert("Server error...pls wait");
-            })
+                response.error(function (jqXHR, textStatus, errorThrown) {
+                    document.getElementById("popup-text").innerText = "Server error...try again";
+                    document.getElementById("popup-text").style.color = "#BA0606";
+                    document.getElementById("confirm-btn").style.visibility ="visible";
+                })
+            },3000);
+        }else{
+            console.log("not-valid");
         }
+    }
 
+    function validate(blockID,qunt,totalBoxes,boxNumbers) {
+        console.log("validating form");
+        let letters = /^[A-Za-z]+$/;
+        let split = boxNumbers.split("-");
+        if(blockID===""){
+            alert("Please get the blokID");
+            document.getElementById("setBlockID").focus();
+            return false;
+        }
+        if(qunt===""||isNaN(qunt)){
+            alert("Please provide valid quantity");
+            document.getElementById("qunt").focus();
+            return false;
+        }
+        if(qunt<=0){
+            alert("Quantity can not be less then 10");
+            document.getElementById("qunt").focus();
+            return false;
+        }
+        if(totalBoxes<=0){
+            alert("Enter valid total boxes");
+            document.getElementById("total-boxes").focus();
+            return false;
+        }
+        if(boxNumbers.indexOf("-")<=1||boxNumbers===0||boxNumbers.indexOf("-")===(boxNumbers.length-1)||
+            Number(split[1])<=Number(split[0])||split.length!==2){
+            alert("Please provide valid range");
+            document.getElementById("box-number").focus();
+            return false;
+        }
+        return true;
     }
 </script>
 </html>
