@@ -1,36 +1,15 @@
 <%@ page import="javax.swing.*" %>
 <html>
 <head>
+    <title>
+        Prepare Block
+    </title>
     <style>
         body {
             margin: 0;
             background-color: #F1F4F6;
             overflow-x: hidden;
             overflow-y: hidden;
-        }
-
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            padding-top: 150px; /* Location of the box */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        }
-
-        /* Modal Content */
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 35%;
-            height: 80px;
         }
 
         #header {
@@ -183,18 +162,68 @@
             -moz-appearance:textfield;
         }
 
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 14%;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: white;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 25%;
+            height: 120px;
+            border-radius: 20px;
+        }
+
+        #popup-text {
+            font: bold 24px Arial, Helvetica, sans-serif;
+            color: rgba(92, 93, 94, 0.78);
+            text-align: center;
+            width: 100%;
+            height: fit-content;
+            margin-top: 30px;
+        }
+
+        #confirm-btn {
+            background-color: #57B846;
+            border: #57B846;
+            color: white;
+            margin-left: 40%;
+            height: 30px;
+            width: 60px;
+            border-radius: 40px;
+            font: bold 16px Arial, Helvetica, sans-serif;
+            box-shadow: 5px 5px 10px rgba(65, 65, 65, 0.69);
+        }
     </style>
 </head>
-<title>
-    ShipChain
-</title>
 <body>
+<div id="popup-msg" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <p id="popup-text">Patient ID: 58452945</p>
+        <button id="confirm-btn">OK</button>
+    </div>
+</div>
 <div id="header">
     <div id="company_name">
         <b>ShipChain</b>
     </div>
     <div id="people-img">
-        <img src="static/images/person.png" style="width: 55px; height: 55px">
+        <img src="static/images/person.png" style="width: 45px; height: 45px; border-radius: 50%;
+        border: 1px solid grey; margin-top: 5px">
     </div>
 </div>
 <div id="lower_body">
@@ -204,14 +233,6 @@
         </div>
     </div>
     <div id="form-area">
-
-        <div id="myModal" class="modal">
-            <!-- Modal content -->
-            <div class="modal-content">
-                <p>Waiting for response..</p>
-            </div>
-        </div>
-
         <button id="getBlockID" onclick="getBlockID()">GET ID</button>
         <div id="prepare-block">
             <div id="caption">
@@ -224,15 +245,15 @@
             <div id="input-box">
                 <input id="setBlockID" disabled required><br>
                 <select class="minimal" id="product-name">
-                    <option>Select product</option>
-                    <option>Product Name</option>
-                    <option>Product Name</option>
-                    <option>Product Name</option>
-                    <option>Product Name</option>
+                    <option value="1">Select product</option>
+                    <option value="">Product Name</option>
+                    <option value="">Product Name</option>
+                    <option value="">Product Name</option>
+                    <option value="">Product Name</option>
                 </select><br>
                 <input id="qunt" type="number" max="100" min="10" required><br>
                 <select class="minimal" id="supplier-name">
-                    <option>Select supplier</option>
+                    <option value="1">Select supplier</option>
                     <option>Supplier Name</option>
                     <option>Supplier Name</option>
                     <option>Supplier Name</option>
@@ -248,28 +269,52 @@
 <script src="http://code.jquery.com/jquery-latest.min.js "></script>
 <script>
 
-    var modal = document.getElementById("myModal");
-    var btn = document.getElementById("myBtn");
-
+    var modal = document.getElementById("popup-msg");
+    var btn = document.getElementById("confirm-btn");
     document.getElementById("setBlockID").value = "";
+    let conform_btn = document.getElementById("confirm-btn");
+
+    conform_btn.onclick = function(){
+        document.getElementById("popup-text").style.color = "rgba(92, 93, 94, 0.78)";
+        modal.style.display = "none";
+    };
+
     function getBlockID() {
         modal.style.display = "block";
+        document.getElementById("popup-text").innerText = "Getting product id....";
+        conform_btn.style.visibility="hidden";
+
         console.log("called");
-        var response = $.get('/get-id');
-        response.success(function (result) {
-            modal.style.display = "none";
-            alert(result);
-            document.getElementById("setBlockID").value = result;
-            document.getElementById("getBlockID").disabled = true;
-            document.getElementById("getBlockID").style.backgroundColor = "grey";
-        });
-        response.error(function (jqXHR, textStatus, errorThrown) {
-            modal.style.display = "none";
-            alert("Server error...pls wait")
-        })
+        setTimeout(function () {
+            var response = $.get('/get-id');
+            response.success(function (result) {
+                modal.style.display = "none";
+                document.getElementById("setBlockID").value = result;
+                document.getElementById("getBlockID").disabled = true;
+                document.getElementById("getBlockID").style.backgroundColor = "grey";
+            });
+            response.error(function (jqXHR, textStatus, errorThrown) {
+                modal.style.display = "none";
+                alert("Server error...pls wait")
+            })
+        },1500);
     }
     
-    function sendBlockData() {
+    async function sendBlockData() {
+        let today = new Date();
+        let dd = today.getDate();
+        let mm = today.getMonth() + 1; //January is 0!
+
+        let yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        today = dd + '/' + mm + '/' + yyyy;
+        console.log("daate:",today);
+
         var blockId = document.getElementById("setBlockID").value;
         var productName = document.getElementById("product-name").value;
         var qunt = document.getElementById("qunt").value;
@@ -277,7 +322,7 @@
         var price = document.getElementById("price").value;
 
         console.log("block",blockId,productName,qunt,supplier,price);
-        if((blockId.length===0) || (qunt.length===0) || (price.length===0)){
+        /*if((blockId.length===0) || (qunt.length===0) || (price.length===0)){
             console.log("if");
             alert("Fill the form")
         }
@@ -318,7 +363,82 @@
                 alert("Server error...pls wait");
             })
         }
+*/
 
+        let flag = await validateForm(blockId,productName,qunt, supplier,price);
+        if(flag){
+            modal.style.display = "block";
+            document.getElementById("popup-text").innerText = "Submitting record...";
+            document.getElementById("confirm-btn").style.visibility="hidden";
+            
+            console.log("valid")
+            var response = $.post('/send-block',{
+                productQun:qunt,
+                productName:productName,
+                blockID:blockId,
+                supplierName:supplier,
+                price:price,
+                date:today
+            });
+
+            setTimeout(function () {
+                response.success(function (result) {
+                    const resultObj = jQuery.parseJSON(result);
+                    if (resultObj.statusCode=== 200) {
+                        console.log("iffff");
+                        document.getElementById("popup-text").innerText = "Form Submitted";
+                        document.getElementById("popup-text").style.color = "#57B846";
+                        setTimeout(function () {
+                            window.location.replace("/prepare_block")
+                        },1000);
+                    }else{
+                        document.getElementById("popup-text").innerText = "Server error...try again";
+                        document.getElementById("popup-text").style.color = "#BA0606";
+                        document.getElementById("confirm-btn").style.visibility ="visible";
+                    }
+                });
+
+                response.error(function (jqXHR, textStatus, errorThrown) {
+                    document.getElementById("popup-text").innerText = "Server error...try again";
+                    document.getElementById("popup-text").style.color = "#BA0606";
+                    document.getElementById("confirm-btn").style.visibility ="visible";
+                })
+            },3000);
+        }else{
+            console.log("not-valid")
+        }
     }
+
+    function validateForm(blockID, productName, qunt, supplier, price) {
+        console.log("validating form");
+        let letters = /^[A-Za-z]+$/;
+        if(blockID===""){
+            alert("Please get the blokID");
+            document.getElementById("setBlockID").focus();
+            return false;
+        }
+        if(productName==="1"){
+            alert("Please provide product name");
+            document.getElementById("product-name").focus();
+            return false;
+        }
+        if(supplier==="1"){
+            alert("Please provide supplier name");
+            document.getElementById("supplier-name").focus();
+            return false;
+        }
+        if(qunt===""||isNaN(qunt)){
+            alert("Please provide valid quantity");
+            document.getElementById("qunt").focus();
+            return false;
+        }
+        if(price===""||isNaN(price)){
+            alert("Please provide valid price");
+            document.getElementById("price").focus();
+            return false;
+        }
+        return true;
+    }
+
 </script>
 </html>
