@@ -2,7 +2,7 @@ package com.project.server.services;
 
 import com.project.server.entity.ServerKeys;
 
-public interface ConnectDeviceInterface {
+public interface ConnectToDeviceInterface {
 
     boolean connectUsingSocket(int port) throws Exception;
 

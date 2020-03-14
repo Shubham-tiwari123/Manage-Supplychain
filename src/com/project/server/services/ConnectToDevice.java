@@ -3,7 +3,7 @@ package com.project.server.services;
 import com.project.server.dao.MongoDB;
 import com.project.server.entity.ClientKeys;
 import com.project.server.entity.ServerKeys;
-import com.project.server.utils.VariableClass;
+import com.project.server.utils.ConstantClass;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -17,7 +17,7 @@ import java.security.*;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 
-public class ConnectToDevice implements ConnectDeviceInterface {
+public class ConnectToDevice implements ConnectToDeviceInterface {
     public static Socket socket = null;
     private static DataOutputStream out = null;
     private CommonFunctions extraFunction = new CommonFunctions();
@@ -68,10 +68,10 @@ public class ConnectToDevice implements ConnectDeviceInterface {
 
     @Override
     public String getServerKeys() throws Exception {
-        ServerKeys keys = database.getServerKeys(VariableClass.STORE_KEYS);
+        ServerKeys keys = database.getServerKeys(ConstantClass.STORE_KEYS);
         if(keys==null){
             keys = generateKeys();
-            if(!database.storeServerKeys(keys,VariableClass.STORE_KEYS))
+            if(!database.storeServerKeys(keys, ConstantClass.STORE_KEYS))
                 return null;
         }
         String pubModHash = calculateHash(keys.getPublicKeyModules().toString());
@@ -113,7 +113,7 @@ public class ConnectToDevice implements ConnectDeviceInterface {
         keys.setClientPubKeyExpo(new BigInteger(expoValue));
         keys.setClientPubKeyMod(new BigInteger(modValue));
 
-        return database.storeClientKeys(keys,VariableClass.STORE_KEYS,clientSignature);
+        return database.storeClientKeys(keys, ConstantClass.STORE_KEYS,clientSignature);
     }
 
     @Override

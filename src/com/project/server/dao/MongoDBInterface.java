@@ -13,9 +13,9 @@ public interface MongoDBInterface {
 
     boolean checkCollection(String collectionName) throws Exception;
 
-    boolean storeSignature(String signature,long deviceID) throws Exception;
+    boolean storeSignature(String signature, long deviceID) throws Exception;
 
-    boolean storeClientKeys(ClientKeys keys, String collectionName,String signature) throws Exception;
+    boolean storeClientKeys(ClientKeys keys, String collectionName, String signature) throws Exception;
 
     ClientKeys getClientKeys(String collectionName, String deviceSignature) throws Exception;
 
@@ -23,7 +23,7 @@ public interface MongoDBInterface {
 
     ServerKeys getServerKeys(String collectionName) throws Exception;
 
-    boolean saveGenesisBlock(String collectionName, ArrayList<byte[]> data, long productID)
+    boolean saveGenesisBlockDB(String collectionName, ArrayList<byte[]> data, long patientID)
             throws Exception;
 
     boolean updateChain(ArrayList<byte[]> data, long productId, String collectionName) throws Exception;

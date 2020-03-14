@@ -46,48 +46,56 @@ public class SqlDB implements SqlDBInterface {
     @Override
     public Long getProductID(String blockNumber) {
         long productID = -1;
-        String sql;
+        String sql=null;
         try {
             if (createDbConnection()) {
                 System.out.println("Database connected");
                 switch (blockNumber) {
                     case "block2":
+                        System.out.println("block2");
                         sql = "select * from product_id where block1=true and block2=false and block3=false and block4=false";
                         break;
 
                     case "block3":
+                        System.out.println("block3");
                         sql = "select * from product_id where block2=true and block1=true and block3=false and block4=false";
                         break;
 
                     case "block4":
+                        System.out.println("block4");
                         sql = "select * from product_id where block4 = false and block1=true and block2=true and block3=true";
                         break;
-                    default:
-                        throw new IllegalStateException("Unexpected value: " + blockNumber);
+
                 }
+                if(sql==null)
+                    return productID;
                 resultSet = statement.executeQuery(sql);
-                while (resultSet.next()) {
+                if (resultSet.next()) {
                     productID = resultSet.getLong("product_no");
                 }
-
-                switch (blockNumber) {
+                System.out.println("productsssss:"+productID);
+                /*switch (blockNumber) {
                     case "block2":
-                        sql = "update product_id set block2 = true where block1=true and block3=false and block4=false";
+                        System.out.println("2 block2");
+                        sql = "update product_id set block2 = true where product_no="+productID;
                         break;
 
                     case "block3":
-                        sql = "update product_id set block3 = true where block1=true and block2=true and block4=false";
+                        System.out.println("2 block3");
+                        sql = "update product_id set block3 = true where product_no="+productID;
                         break;
 
                     case "block4":
-                        sql = " update product_id set block4 = true where block1=true and block2=true and block3=true";
+                        System.out.println("2 block4");
+                        sql = " update product_id set block4 = true where product_no="+productID;
                         break;
                     default:
                         throw new IllegalStateException("Unexpected value: " + blockNumber);
                 }
                 int status = statement.executeUpdate(sql);
+                System.out.println("status: "+status);
                 if (status != 1)
-                    productID = -1;
+                    productID = -1;*/
                 closeDbConnection(connect);
             } else {
                 System.out.println("error in connection");
@@ -101,17 +109,68 @@ public class SqlDB implements SqlDBInterface {
     }
 
     @Override
-    public void getBlockNumber() {
+    public void updateBlockStatusTrue(long productID,String blockNumber) throws Exception{
+        if (createDbConnection()){
+            String sql;
+            switch (blockNumber) {
+                case "block2":
+                    System.out.println("2 block2");
+                    sql = "update product_id set block2 = true where product_no="+productID;
+                    break;
 
+                case "block3":
+                    System.out.println("2 block3");
+                    sql = "update product_id set block3 = true where product_no="+productID;
+                    break;
+
+                case "block4":
+                    System.out.println("2 block4");
+                    sql = " update product_id set block4 = true where product_no="+productID;
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + blockNumber);
+            }
+            int status = statement.executeUpdate(sql);
+            System.out.println("status: "+status);
+            closeDbConnection(connect);
+        }
     }
 
     @Override
-    public boolean createNewProductID() {
+    public void updateBlockStatusFalse(long productID,String blockNumber) throws Exception{
+        if (createDbConnection()){
+            String sql;
+            switch (blockNumber) {
+                case "block2":
+                    System.out.println("2 block2");
+                    sql = "update product_id set block2 = false where product_no="+productID;
+                    break;
+
+                case "block3":
+                    System.out.println("2 block3");
+                    sql = "update product_id set block3 = false where product_no="+productID;
+                    break;
+
+                case "block4":
+                    System.out.println("2 block4");
+                    sql = " update product_id set block4 = false where product_no="+productID;
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + blockNumber);
+            }
+            int status = statement.executeUpdate(sql);
+            System.out.println("status: "+status);
+            closeDbConnection(connect);
+        }
+    }
+
+    @Override
+    public Long createNewProductID() {
+        long id = -1;
         try {
             if (createDbConnection()) {
                 String searchSql = "select * from productid";
                 resultSet = statement.executeQuery(searchSql);
-                long id = 0;
                 while (resultSet.next()) {
                     id = resultSet.getLong("product_id");
                 }
@@ -119,25 +178,25 @@ public class SqlDB implements SqlDBInterface {
                 connect.setAutoCommit(false);
                 String sql = "insert into product_id(product_no,block1, block2, block3, block4) " +
                         "values (" + id + ",true,false,false,false)";
-                int status1 = statement.executeUpdate(sql);
+                statement.executeUpdate(sql);
                 long newID = id + 1;
                 String updateSql = "update productid set product_id=" + newID;
                 int status2 = statement.executeUpdate(updateSql);
                 connect.commit();
                 closeDbConnection(connect);
-                return (status1 == 1 && status2 == 1);
+                return id;
             }
         } catch (Exception e) {
             closeDbConnection(connect);
             System.out.println("ex:" + e);
             try {
                 connect.rollback();
-                return false;
+                return id;
             } catch (SQLException ex) {
-                return false;
+                return id;
             }
         }
-        return false;
+        return id;
     }
 
 }

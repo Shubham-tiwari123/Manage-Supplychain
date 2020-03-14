@@ -4,16 +4,18 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.UpdateResult;
 import com.project.server.entity.ClientKeys;
 import com.project.server.entity.ServerKeys;
-import com.project.server.utils.VariableClass;
+import com.project.server.utils.ConstantClass;
 import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.types.Binary;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class MongoDB implements MongoDBInterface {
 
@@ -32,8 +34,8 @@ public class MongoDB implements MongoDBInterface {
 
     @Override
     public boolean createDbConnection() throws Exception {
-        client = new MongoClient(VariableClass.IP_ADDRESS, VariableClass.PORT_NUMBER);
-        database = client.getDatabase(VariableClass.DATABASE_NAME);
+        client = new MongoClient(ConstantClass.IP_ADDRESS, ConstantClass.PORT_NUMBER);
+        database = client.getDatabase(ConstantClass.DATABASE_NAME);
         return true;
     }
 
@@ -61,7 +63,7 @@ public class MongoDB implements MongoDBInterface {
     }
 
     @Override
-    public boolean storeClientKeys(ClientKeys keys, String collectionName,String signature)
+    public boolean storeClientKeys(ClientKeys keys, String collectionName, String signature)
             throws Exception {
 
         if (createDbConnection()) {
@@ -94,7 +96,7 @@ public class MongoDB implements MongoDBInterface {
                         String publicKeyModules = val.getString("publicKeyModules");
                         String publicKeyExpo = val.getString("publicKeyExpo");
 
-                        System.out.println("setting server keys");
+                        System.out.println("setting client keys");
                         keys.setClientPubKeyMod(new BigInteger(publicKeyModules));
                         keys.setClientPubKeyExpo(new BigInteger(publicKeyExpo));
                     }
@@ -160,12 +162,32 @@ public class MongoDB implements MongoDBInterface {
     }
 
     @Override
-    public boolean saveGenesisBlock(String collectionName, ArrayList<byte[]> data, long productID) throws Exception {
+    public boolean saveGenesisBlockDB(String collectionName, ArrayList<byte[]> data, long blockID)
+            throws Exception {
+        if (createDbConnection()) {
+            if (checkCollection(collectionName)) {
+                System.out.println("saving genesis block db");
+                Document document = new Document("product_id", blockID)
+                        .append("block", Arrays.asList(data));
+                database.getCollection(collectionName).insertOne(document);
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public boolean updateChain(ArrayList<byte[]> data, long productId, String collectionName) throws Exception {
+        if (createDbConnection()) {
+            if (checkCollection(collectionName)) {
+                System.out.println("appending block in chain db...");
+                collection = database.getCollection(collectionName);
+                Bson filter = Filters.eq("product_id", productId);
+                UpdateResult result = collection.updateOne(filter,
+                        Updates.addToSet("block", data));
+                return result.getMatchedCount() == 1;
+            }
+        }
         return false;
     }
 
@@ -176,6 +198,28 @@ public class MongoDB implements MongoDBInterface {
 
     @Override
     public ArrayList<ArrayList<byte[]>> getSpecificData(long productId, String collectionName) throws Exception {
-        return null;
+        ArrayList<ArrayList<byte[]>> returnValue = new ArrayList<ArrayList<byte[]>>();
+        if (createDbConnection()) {
+            if (checkCollection(collectionName)) {
+                System.out.println("getting patient data db....");
+                collection = database.getCollection(collectionName);
+                List<Document> list = (List<Document>) collection.find(new Document("product_id", productId)).
+                        into(new ArrayList<Document>());
+                System.out.println("list:" + list);
+                for (Document doc : list) {
+                    ArrayList<ArrayList<Binary>> blocks = (ArrayList<ArrayList<Binary>>) doc.get("block");
+                    System.out.println(blocks.size());
+                    for (ArrayList<Binary> blockList : blocks) {
+                        ArrayList<byte[]> subList = new ArrayList<byte[]>();
+                        for (Binary blockPart : blockList) {
+                            subList.add(blockPart.getData());
+                        }
+                        returnValue.add(subList);
+                    }
+                }
+            }
+        }
+        System.out.println("size:" + returnValue.size());
+        return returnValue;
     }
 }
