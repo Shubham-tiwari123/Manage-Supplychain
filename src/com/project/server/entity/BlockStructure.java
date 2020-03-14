@@ -4,21 +4,21 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.io.Serializable;
-import java.sql.Date;
 import java.sql.Time;
 
 @JsonPropertyOrder(value = {
-        "blockID","date","time","quantity","itemName","price","supplierName"
+        "blockID","date","time","quantity","itemName","price","supplierName","currentBlockHash","previousBlockHash"
 })
 public class BlockStructure implements Serializable {
     private long blockID;
-    private Date date;
+    private String date;
     private Time time;
     private long quantity;
     private String itemName;
     private long price;
     private String supplierName;
     private String currentBlockHash;
+    private  String previousBlockHash;
 
     public long getBlockID() {
         return blockID;
@@ -28,11 +28,11 @@ public class BlockStructure implements Serializable {
         this.blockID = blockID;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -76,12 +76,19 @@ public class BlockStructure implements Serializable {
         this.supplierName = supplierName;
     }
 
-    @JsonIgnore
     public String getCurrentBlockHash() {
         return currentBlockHash;
     }
 
     public void setCurrentBlockHash(String currentBlockHash) {
         this.currentBlockHash = currentBlockHash;
+    }
+
+    public String getPreviousBlockHash() {
+        return previousBlockHash;
+    }
+
+    public void setPreviousBlockHash(String previousBlockHash) {
+        this.previousBlockHash = previousBlockHash;
     }
 }

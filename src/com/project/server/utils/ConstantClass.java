@@ -2,7 +2,7 @@ package com.project.server.utils;
 
 import java.math.BigInteger;
 
-public class VariableClass {
+public class ConstantClass {
 
     final static public String DATABASE_NAME="shipChainServer";
     final static public String STORE_DATA_COLLECTION="storeItems";

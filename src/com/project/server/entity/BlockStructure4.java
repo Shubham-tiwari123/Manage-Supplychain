@@ -1,6 +1,5 @@
 package com.project.server.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.io.Serializable;
@@ -8,16 +7,17 @@ import java.sql.Date;
 import java.sql.Time;
 
 @JsonPropertyOrder(value = {
-        "blockID","date","time","totalCarton","cartonNumber","exporterName"
+        "blockID","date","time","totalCarton","cartonNumber","exporterName","currentBlockHash","previousBlockHash"
 })
 public class BlockStructure4 implements Serializable {
     private long blockID;
-    private Date date;
+    private String date;
     private Time time;
     private long totalCarton;
     private String cartonNumber;
     private String exporterName;
     private String currentBlockHash;
+    private  String previousBlockHash;
 
     public long getBlockID() {
         return blockID;
@@ -27,11 +27,11 @@ public class BlockStructure4 implements Serializable {
         this.blockID = blockID;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -67,12 +67,19 @@ public class BlockStructure4 implements Serializable {
         this.exporterName = exporterName;
     }
 
-    @JsonIgnore
     public String getCurrentBlockHash() {
         return currentBlockHash;
     }
 
     public void setCurrentBlockHash(String currentBlockHash) {
         this.currentBlockHash = currentBlockHash;
+    }
+
+    public String getPreviousBlockHash() {
+        return previousBlockHash;
+    }
+
+    public void setPreviousBlockHash(String previousBlockHash) {
+        this.previousBlockHash = previousBlockHash;
     }
 }
