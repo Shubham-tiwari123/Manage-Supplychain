@@ -1,10 +1,12 @@
 package com.project.server.requestAPI;
 
-import com.project.server.entity.BlockStructure;
-import com.project.server.entity.ClientKeys;
 import com.project.server.entity.DeserializeValues;
+import com.project.server.entity.GenesisBlock;
+import com.project.server.entity.ServerKeys;
+import com.project.server.responseAPI.AcceptBlockResAPI;
 import com.project.server.services.AcceptBlock;
 import com.project.server.services.CommonFunctions;
+import com.project.server.utils.ConstantClass;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -15,15 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 
-@WebServlet(name = "AcceptBlockReqAPI", urlPatterns = {"/first-block"})
-public class AcceptBlockReqAPI extends HttpServlet {
-
+@WebServlet(name = "AcceptFirstBlockReqAPI",urlPatterns = {"/first-block"})
+public class AcceptFirstBlockReqAPI extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        System.out.println("server hit");
+        AcceptBlockResAPI resAPI = new AcceptBlockResAPI();
+        System.out.println("server hitssss");
         AcceptBlock acceptBlock = new AcceptBlock();
         CommonFunctions commonFunctions = new CommonFunctions();
         StringBuilder buffer = new StringBuilder();
@@ -33,9 +33,9 @@ public class AcceptBlockReqAPI extends HttpServlet {
             buffer.append(line);
         }
         String data = buffer.toString();
-        System.out.println("data:-"+data);
+        System.out.println("datassss:-"+data);
         JSONParser parser = new JSONParser();
-
+        int statusCode=0;
         try {
             JSONObject jSONObject = (JSONObject) parser.parse(data);
             String encryptedString = (String) jSONObject.get("encryptedData");
@@ -44,30 +44,38 @@ public class AcceptBlockReqAPI extends HttpServlet {
             DeserializeValues deserializeValues = commonFunctions.convertJsonToJava(encryptedString,
                     DeserializeValues.class);
 
-            ClientKeys clientKeys = acceptBlock.getClientKeys(signature);
-            String decryptString = acceptBlock.decryptData(deserializeValues.getEncryptedData(),clientKeys);
+            ServerKeys serverKeys = acceptBlock.getKeysFromDatabase();
+            String decryptString = acceptBlock.decryptData(deserializeValues.getEncryptedData(),serverKeys);
             System.out.println("dec:"+decryptString);
             jSONObject = (JSONObject) parser.parse(decryptString);
             String currentHashBlock = (String) jSONObject.get("currentBlockHash");
-            System.out.println("curr:"+currentHashBlock);
-            PrintWriter writer = response.getWriter();
-            JSONObject resultObj = new JSONObject();
+            Long blockID = (Long) jSONObject.get("blockID");
+            System.out.println("curr:"+currentHashBlock+" block:"+blockID);
 
             if(acceptBlock.verifyData(decryptString,currentHashBlock)){
                 System.out.println("Data is secured");
-                resultObj.put("status",200);
+                //generate genesis block
+                //encrypt it using server private key and store it in db
+                //encrypt the block also using server private key and store it in db against product-id
+                GenesisBlock genesisBlock = acceptBlock.createGenesisBlock(blockID);
+                if(acceptBlock.storeGenesisBlock(genesisBlock,blockID)){
+                    if(acceptBlock.storeProductBlockA(decryptString,blockID,genesisBlock.getPreviousBlockHash()))
+                        statusCode = ConstantClass.SUCCESSFUL;
+                    else
+                        statusCode = ConstantClass.FAILED;
+                }
+                resAPI.sendResponse(statusCode,response);
             }else{
                 System.out.println("Data not secured");
-                resultObj.put("status",400);
+                resAPI.sendResponse(ConstantClass.FAILED,response);
             }
-            writer.print(resultObj);
         }catch (Exception e){
-            System.out.println(e);
+            System.out.println("exception:"+e);
+            resAPI.sendResponse(ConstantClass.FAILED,response);
         }
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
 }

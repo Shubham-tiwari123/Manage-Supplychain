@@ -1,6 +1,5 @@
 package com.project.server.requestAPI;
 
-import com.project.server.services.ConnectToDevice;
 import org.json.simple.JSONObject;
 
 import javax.servlet.ServletException;
@@ -8,9 +7,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet(name = "ConnectDeviceReqAPI",urlPatterns = {"/connect-server"})
 public class ConnectDeviceReqAPI extends HttpServlet {
@@ -28,6 +26,5 @@ public class ConnectDeviceReqAPI extends HttpServlet {
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 }

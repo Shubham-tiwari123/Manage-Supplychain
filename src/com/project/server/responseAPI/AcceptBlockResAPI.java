@@ -1,19 +1,31 @@
 package com.project.server.responseAPI;
 
+import org.json.simple.JSONObject;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet(name = "AcceptBlockResAPI")
 public class AcceptBlockResAPI extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+    private static int statusCode;
+
+    public void sendResponse(int statusCode, HttpServletResponse response)
+            throws IOException {
+        AcceptBlockResAPI.statusCode = statusCode;
+        doPost(response);
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+    private void doPost(HttpServletResponse response) throws IOException {
+        System.out.println("Sending response to client");
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("statusCode",statusCode);
+        PrintWriter writer = response.getWriter();
+        writer.print(jsonObject.toString());
     }
 }

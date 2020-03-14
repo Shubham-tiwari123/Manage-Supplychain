@@ -1,4 +1,4 @@
-package com.project.server.responseAPI;
+package com.project.server.requestAPI;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "SendChainResAPI")
-public class SendChainResAPI extends HttpServlet {
+@WebServlet(name = "AdminLoginReqAPI")
+public class AdminLoginReqAPI extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
