@@ -222,4 +222,35 @@ public class MongoDB implements MongoDBInterface {
         System.out.println("size:" + returnValue.size());
         return returnValue;
     }
+
+    public HashMap<Long,ArrayList<ArrayList<byte[]>>> getAllProductInfo(String collectionName) throws Exception{
+        HashMap<Long,ArrayList<ArrayList<byte[]>>> hashMap = new HashMap<>();
+        Long productID;
+
+        if (createDbConnection()) {
+            if (checkCollection(collectionName)) {
+                System.out.println("getting patient data db....");
+                collection = database.getCollection(collectionName);
+                List<Document> list = (List<Document>) collection.find().into(new ArrayList<Document>());
+                System.out.println("list:" + list);
+                for (Document doc : list) {
+                    ArrayList<ArrayList<byte[]>> returnValue = new ArrayList<ArrayList<byte[]>>();
+                    productID = doc.getLong("product_id");
+                    System.out.println("db: product id:"+productID);
+                    ArrayList<ArrayList<Binary>> blocks = (ArrayList<ArrayList<Binary>>) doc.get("block");
+                    System.out.println(blocks.size());
+                    for (ArrayList<Binary> blockList : blocks) {
+                        ArrayList<byte[]> subList = new ArrayList<byte[]>();
+                        for (Binary blockPart : blockList) {
+                            subList.add(blockPart.getData());
+                        }
+                        returnValue.add(subList);
+                    }
+                    hashMap.put(productID,returnValue);
+                }
+            }
+        }
+        System.out.println("size:" + hashMap.size());
+        return hashMap;
+    }
 }

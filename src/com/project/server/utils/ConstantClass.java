@@ -11,6 +11,8 @@ public class ConstantClass {
     final static public String IP_ADDRESS="127.0.0.1";
     final static public int PORT_NUMBER = 27017;
 
+    final static public String ADMIN_LOGIN_EMAIL = "s@gmail.com";
+    final static public String ADMIN_LOGIN_PASS = "qwertyuiop";
     final static public int SUCCESSFUL= 200;
     final static public int FAILED = 400;
     final static public int BAD_REQUEST=401;

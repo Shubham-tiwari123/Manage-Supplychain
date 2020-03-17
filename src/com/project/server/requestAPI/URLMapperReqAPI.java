@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "URLMapperReqAPI",urlPatterns = {"/dashboard","/team","/prepare_block2",
-        "/prepare_block4","/prepare_block3"})
+@WebServlet(name = "URLMapperReqAPI",urlPatterns = {"/dashboard","/team","/database",
+        "/sign_up","/sign_in","/detail_view"})
 
 public class URLMapperReqAPI extends HttpServlet {
 
@@ -16,13 +16,15 @@ public class URLMapperReqAPI extends HttpServlet {
             throws ServletException, IOException {
         if((request.getRequestURL().toString()).equals("http://localhost:8082/dashboard"))
             request.getRequestDispatcher("/dashboard.jsp").forward(request,response);
-        else if((request.getRequestURL().toString()).equals("http://localhost:8082/prepare_block"))
-            request.getRequestDispatcher("/prepareblock.jsp").forward(request,response);
-        else if((request.getRequestURL().toString()).equals("http://localhost:8082/prepare_block2"))
-            request.getRequestDispatcher("/prepareblock2.jsp").forward(request,response);
-        else if((request.getRequestURL().toString()).equals("http://localhost:8082/prepare_block3"))
-            request.getRequestDispatcher("/prepareblock3.jsp").forward(request,response);
-        else if((request.getRequestURL().toString()).equals("http://localhost:8082/prepare_block4"))
-            request.getRequestDispatcher("/prepareblock4.jsp").forward(request,response);
+        else if((request.getRequestURL().toString()).equals("http://localhost:8082/team"))
+            request.getRequestDispatcher("/team.jsp").forward(request,response);
+        else if((request.getRequestURL().toString()).equals("http://localhost:8082/database"))
+            request.getRequestDispatcher("/database.jsp").forward(request,response);
+        else if((request.getRequestURL().toString()).equals("http://localhost:8082/sign_up"))
+            request.getRequestDispatcher("/").forward(request,response);
+        else if((request.getRequestURL().toString()).equals("http://localhost:8082/sign_in"))
+            request.getRequestDispatcher("/").forward(request,response);
+        else if((request.getRequestURL().toString()).equals("http://localhost:8082/detail_view"))
+            request.getRequestDispatcher("/detailview.jsp").forward(request,response);
     }
 }
