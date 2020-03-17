@@ -1,5 +1,8 @@
 <html>
 <head>
+    <title>
+        ShipChain
+    </title>
     <style>
         body {
             margin: 0;
@@ -113,27 +116,79 @@
             font: bold 16px Arial, Helvetica, sans-serif;
             box-shadow: 5px 5px 10px rgba(65, 65, 65, 0.69);
         }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 14%;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.2);
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: white;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 25%;
+            height: 120px;
+            border-radius: 20px;
+        }
+
+        #popup-text{
+            font:bold 24px Arial, Helvetica, sans-serif;
+            color: rgba(92, 93, 94, 0.78);
+            text-align: center;
+            width: 100%;
+            height: fit-content;
+            margin-top: 30px;
+        }
+
+        #confirm-btn{
+            background-color: #57B846;
+            border: #57B846;
+            color: white;
+            margin-left: 40%;
+            height: 30px;
+            width: 60px;
+            border-radius: 40px;
+            font:bold 16px Arial, Helvetica, sans-serif;
+            box-shadow: 5px 5px 10px rgba(65, 65, 65, 0.69);
+        }
     </style>
 </head>
-<title>
-    ShipChain
-</title>
 <body>
+<div id="popup-msg" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <p id="popup-text" >Patient ID: 58452945</p>
+        <button id="confirm-btn">OK</button>
+    </div>
+</div>
 <div id="header">
     <div id="company_name" >
         <b>ShipChain</b>
     </div>
     <div id="top-navbar">
-        <b style="margin-right: 20px">HOME</b>
-        <b style="margin-right: 20px"><a href="#" style="color: inherit;
+        <b style="margin-right: 20px"><a href="/" style="color: inherit;
+        text-decoration: none">HOME</a></b>
+        <b style="margin-right: 20px"><a href="/about" style="color: inherit;
         text-decoration: none">ABOUT</a></b>
-        <b style="margin-right: 20px"><a href="team.jsp" style="color: inherit;
+        <b style="margin-right: 20px"><a href="/team" style="color: inherit;
         text-decoration: none">TEAM</a></b>
-        <button style="background-color: transparent; height: 35px; width: 100px; border-radius: 80px;
+        <a href="/sign_up" style="text-decoration: none">
+            <button style="background-color: transparent; height: 35px; width: 100px; border-radius: 80px;
         color: white; font: bold 15px Arial, Helvetica, sans-serif; border-color:white;
         border-width: 3px">
-         SIGN UP
-        </button>
+                SIGN UP
+            </button>
+        </a>
     </div>
 </div>
 <div id="lower_body">
@@ -157,7 +212,7 @@
                 <div id="form_fill">
                     <img src="static/images/email.png" style="float: left; height:18px; width: 18px;
                         margin-top: 8px; margin-left: 8px">
-                    <input type="text" id="useremail" placeholder="Email" name="userEmail" style=" width: 200px;
+                    <input type="text" id="userEmail" placeholder="Email" name="userEmail" style=" width: 200px;
                         height: 100%;border: none; background-color: transparent;float: right;
                         margin-right: 10px;color: #464646; font: bold 16px Arial, Helvetica, sans-serif;">
                 </div>
@@ -165,13 +220,12 @@
                 <div id="form_fill">
                     <img src="static/images/pass.png" style="float: left; height:18px; width: 18px;
                         margin-top: 8px; margin-left: 8px">
-                    <input type="password" id="pass" placeholder="Password" style=" width: 200px; height: 100%;
+                    <input type="password" id="userPass" placeholder="Password" style=" width: 200px; height: 100%;
                         border: none; background-color: transparent;float: right; margin-right: 10px;
                         color: #464646; font: bold 16px Arial, Helvetica, sans-serif;" name="userPass">
                 </div>
 
-                <a href="dashboard.jsp" style="color: inherit;
-        text-decoration: none"><button id="submitBtn">LOGIN</button></a>
+                <button onclick="sendResponse()" id="submitBtn">LOGIN</button>
             </div>
         </div>
     </div>
@@ -180,22 +234,89 @@
 <script src="http://code.jquery.com/jquery-latest.min.js "></script>
 <script>
 
-    function loginUser() {
-        console.log(document.getElementById("useremail").value);
-        console.log(document.getElementById("pass").value);
+    let modal = document.getElementById("popup-msg");
+    let conform_btn = document.getElementById("confirm-btn");
 
-        var response = $.post('/login-user',{
-            email:document.getElementById("useremail").value,
-            pass:document.getElementById("pass").value
-        });
+    conform_btn.onclick = function(){
+        document.getElementById("popup-text").style.color = "rgba(92, 93, 94, 0.78)";
+        modal.style.display = "none";
 
-        response.success(function (result) {
-            window.location.replace('/dashboard');
-        });
+    };
 
-        response.error(function (jqXHR, textStatus, errorThrown) {
-            alert("Server error...pls wait")
-        })
+    window.onload = function(){
+        console.log("Loading window");
+        document.getElementById("userEmail").value = "";
+        document.getElementById("userPass").value = "";
+    };
+
+    async function sendResponse() {
+        const email = document.getElementById("userEmail").value;
+        const pass = document.getElementById("userPass").value;
+
+        let flag = await validateForm(email,pass);
+
+        if(flag) {
+            modal.style.display = "block";
+            document.getElementById("popup-text").innerText = "Checking credentials...";
+            document.getElementById("confirm-btn").style.visibility="hidden";
+
+            console.log("values:",email,pass);
+
+            let response = $.post('/admin_login', {
+                email: email,
+                pass: pass
+            });
+
+            setTimeout(function () {
+                response.success(function (result) {
+                    document.getElementById("userEmail").value = "";
+                    document.getElementById("userPass").value = "";
+                    const resultObj = jQuery.parseJSON(result);
+                    if(resultObj.statusCode===200){
+                        // forward to login page
+                        console.log("iffff");
+                        window.location.replace('/dashboard');
+                    }else{
+                        document.getElementById("popup-text").innerText = "Wrong credentials";
+                        document.getElementById("popup-text").style.color = "#BA0606";
+                        document.getElementById("confirm-btn").style.visibility ="visible";
+                    }
+
+                });
+
+                response.error(function (jqXHR, textStatus, errorThrown) {
+                    document.getElementById("popup-text").innerText = "Server Error";
+                    document.getElementById("popup-text").style.color = "#BA0606";
+                    document.getElementById("confirm-btn").style.visibility ="visible";
+                })
+            }, 2000);
+
+        }
+    }
+
+
+    function validateForm(email,pass) {
+        console.log("validating form");
+        if(email===""){
+            alert("Please provide email");
+            document.getElementById("userEmail").focus();
+            return false;
+        }
+        if(email!==""){
+            let atpos = email.indexOf("@");
+            let dotpos = email.indexOf(".");
+            if(atpos<1 || (dotpos-atpos)<2){
+                alert("Please provide valid email");
+                document.getElementById("userEmail").focus();
+                return false;
+            }
+        }
+        if(pass ===""){
+            alert("Please provide password");
+            document.getElementById("userPass").focus();
+            return false;
+        }
+        return true;
     }
 </script>
 </body>

@@ -1,35 +1,12 @@
 <html>
 <head>
+    <title>Database</title>
     <style>
         body {
             margin: 0;
             background-color: #F1F4F6;
             overflow-x: hidden;
             overflow-y: hidden;
-        }
-
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            padding-top: 150px; /* Location of the box */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0, 0, 0); /* Fallback color */
-            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-        }
-
-        /* Modal Content */
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 35%;
-            height: 80px;
         }
 
         #header {
@@ -93,14 +70,14 @@
         }
 
         #topic-name {
-            margin-top: 80px;
+            margin-top: 60px;
             width: 98%;
             height: 12%;
         }
 
         #database-view {
             width: 98%;
-            height: 68%;
+            height: 75%;
             overflow-y: auto;
         }
 
@@ -111,32 +88,70 @@
             background-color: white;
             margin-left: 35px;
             border-radius: 40px;
+            border: 1px solid rgba(122, 122, 122, 0.63);;
             box-shadow: 5px 10px 5px rgba(122, 122, 122, 0.63);
         }
 
         #input-box-data {
             width: 150px;
-            margin-left: 30px;
-            margin-top: 10px;
             height: 40px;
             border: none;
             text-align: center;
             color: #20509E;
-            background-color: transparent;
-            font: bold 15px Arial, Helvetica, sans-serif;
+            float: left;
+            font: bold 18px Arial, Helvetica, sans-serif;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 14%;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: white;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 25%;
+            height: 120px;
+            border-radius: 20px;
+        }
+
+        #popup-text {
+            font: bold 24px Arial, Helvetica, sans-serif;
+            color: rgba(92, 93, 94, 0.78);
+            text-align: center;
+            width: 100%;
+            height: fit-content;
+            margin-top: 30px;
+        }
+
     </style>
 </head>
-<title>
-    Database
-</title>
 <body>
+
+<div id="popup-msg" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <p id="popup-text">Deactivate Patients</p>
+    </div>
+</div>
 <div id="header">
     <div id="company_name">
         <b>ShipChain</b>
     </div>
     <div id="people-img">
-        <img src="static/images/person.png" style="width: 55px; height: 55px; border-radius: 50%">
+        <img src="static/images/person.png" style="width: 45px; height: 45px; border-radius: 50%;
+        border: 1px solid grey; margin-top: 5px">
     </div>
 </div>
 <div id="lower_body">
@@ -146,88 +161,107 @@
         </div>
     </div>
 
-    <div id="myModal" class="modal">
-        <!-- Modal content -->
-        <div class="modal-content">
-            <p>Waiting for response..</p>
-        </div>
-    </div>
-
     <div id="form-area">
         <div id="topic-name">
             <br><br>
+            <b style="color: #20509E; font: bold 20px Arial, Helvetica, sans-serif; margin-left: 80px">
+                Product id</b>
             <b style="color: #20509E; font: bold 20px Arial, Helvetica, sans-serif; margin-left: 100px">
-                Block id</b>
-            <b style="color: #20509E; font: bold 20px Arial, Helvetica, sans-serif; margin-left: 120px">
                 Time</b>
-            <b style="color: #20509E; font: bold 20px Arial, Helvetica, sans-serif;margin-left: 135px">
+            <b style="color: #20509E; font: bold 20px Arial, Helvetica, sans-serif;margin-left: 125px">
                 Date</b>
             <b style="color: #20509E; font: bold 20px Arial, Helvetica, sans-serif;margin-left: 130px">
                 Blocks</b>
         </div>
         <div id="database-view">
-            <%for (int i = 0; i < 5; i++) {%>
-            <div id="display-data">
-                <input disabled id="input-box-data" placeholder="Block Id">
-                <input disabled id="input-box-data" placeholder="Time">
-                <input disabled id="input-box-data" placeholder="Date">
-                <input disabled id="input-box-data" placeholder="Blocks">
-                <a href="detailview.jsp" style="text-decoration: none">
+            <%--<div id="display-data">
+                <div id="input-box-data" style="margin-left: 30px;">
+                    <p>Product ID</p>
+                </div>
+                <div id="input-box-data" style="margin-left: 30px;">
+                    <p>Time</p>
+                </div>
+                <div id="input-box-data" style="margin-left: 30px;">
+                    <p>Date</p>
+                </div>
+                <div id="input-box-data" style="margin-left: 30px;">
+                    <p>4</p>
+                </div>
+                <div id="input-box-data" style="margin-left: 30px; margin-top: 15px">
                     <button style="width: 80px; height: 30px; background-color: #57B846; border: none;
                         box-shadow: 5px 5px 10px rgba(65, 65, 65, 0.69); border-radius: 20px;
                         font: bold 16px Arial, Helvetica, sans-serif; color: white; margin-left: 40px">View
                     </button>
-                </a>
-            </div>
-            <%}%>
+                </div>
+            </div>--%>
         </div>
     </div>
 </div>
 </body>
-
 <script src="http://code.jquery.com/jquery-latest.min.js "></script>
 <script>
 
-    /*var modal = document.getElementById("myModal");
-    var btn = document.getElementById("myBtn");
-    var jsonString = document.cookie.split("=");
+    let modal = document.getElementById("popup-msg");
+    let record;
+    modal.style.display =  "block";
+    document.getElementById("popup-text").innerText = "Getting Records..";
 
-    if(jsonString[1]==='true'){
-        console.log("if");
-        modal.style.display="block";
-        var response = $.get('/get-keys');
-        response.success(function (result) {
-            modal.style.display = "none";
-            var obj = jQuery.parseJSON(result);
-            alert("Setting Keys");
-            document.getElementById("pc-key").innerText = obj.PC;
-            document.getElementById("server-key").innerText = obj.Server;
-            document.getElementById("connectBtn").disabled = true;
-            document.getElementById("connectBtn").style.backgroundColor = "grey";
-        });
-        response.error(function (jqXHR, textStatus, errorThrown) {
-            modal.style.display = "none";
-            alert("Server error...cannot display keys now")
-        })
+    let response = $.post('/product_info',{
+        productID:-1
+    });
+
+    function detailView(jsonValue){
+        localStorage.setItem("jsonValue",record[jsonValue]);
+        window.location.replace("/detail_view")
     }
 
-    function connectToServer() {
-        modal.style.display = "block";
-        console.log("called");
-        var response = $.get('/connect-device');
+    setTimeout(function () {
         response.success(function (result) {
-            modal.style.display = "none";
-            var obj = jQuery.parseJSON(result);
-            alert("Setting Keys");
-            document.getElementById("pc-key").innerText = obj.PC;
-            document.getElementById("server-key").innerText = obj.Server;
-            document.getElementById("connectBtn").disabled = true;
-            document.getElementById("connectBtn").style.backgroundColor = "grey";
+            const resultObj = jQuery.parseJSON(result);
+            if(resultObj.statusCode===200){
+                record = resultObj.result;
+                // set the values
+                var html="";
+                for(var i=0;i<record.length;i++){
+                    var json = jQuery.parseJSON(record[i]);
+                    console.log("json",json);
+                    html +=("<div id=\"display-data\">\n" +
+                        "                <div id=\"input-box-data\" style=\"margin-left: 30px;\">\n" +
+                        "                    <p>"+json.productID+"</p>\n" +
+                        "                </div>\n" +
+                        "                <div id=\"input-box-data\" style=\"margin-left: 30px;\">\n" +
+                        "                    <p>"+json.creationTime+"</p>\n" +
+                        "                </div>\n" +
+                        "                <div id=\"input-box-data\" style=\"margin-left: 30px;\">\n" +
+                        "                    <p>"+json.creationDate+"</p>\n" +
+                        "                </div>\n" +
+                        "                <div id=\"input-box-data\" style=\"margin-left: 30px;\">\n" +
+                        "                    <p>"+json.blockPresent+"</p>\n" +
+                        "                </div>\n" +
+                        "                <div id=\"input-box-data\" style=\"margin-left: 30px; margin-top: 15px\">\n" +
+                        "                    <button onclick=\"detailView(\'"+i+"'\)\" style=\"width: 80px; height: 30px; background-color: #57B846; border: none;\n" +
+                        "                        box-shadow: 5px 5px 10px rgba(65, 65, 65, 0.69); border-radius: 20px;\n" +
+                        "                        font: bold 16px Arial, Helvetica, sans-serif; color: white; margin-left: 40px\">View\n" +
+                        "                    </button>\n" +
+                        "                </div>\n" +
+                        "            </div>")
+                }
+                $("#database-view").append(html);
+                setTimeout(function () {
+                    modal.style.display =  "none";
+                },1000)
+            }else{
+                document.getElementById("popup-text").innerText = "Server error...";
+                document.getElementById("popup-text").style.color = "#BA0606";
+                document.getElementById("confirm-btn").style.visibility ="visible";
+            }
         });
+
         response.error(function (jqXHR, textStatus, errorThrown) {
-            modal.style.display = "none";
-            alert("Server error...pls wait")
+            document.getElementById("popup-text").innerText = "Server error...";
+            document.getElementById("popup-text").style.color = "#BA0606";
+            document.getElementById("confirm-btn").style.visibility ="visible";
         })
-    }*/
+    }, 2000);
 </script>
 </html>

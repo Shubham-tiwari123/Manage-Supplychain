@@ -134,7 +134,8 @@
         <b>ShipChain</b>
     </div>
     <div id="people-img">
-        <img src="static/images/person.png" style="width: 55px; height: 55px; border-radius: 50%">
+        <img src="static/images/person.png" style="width: 45px; height: 45px; border-radius: 50%;
+        border: 1px solid grey; margin-top: 5px">
     </div>
 </div>
 <div id="lower_body">
