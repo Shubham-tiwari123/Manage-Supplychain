@@ -17,7 +17,7 @@
     <img src="/static/images/logout.png" style="width: 35px;height: 35px; float: left; margin-left: 17px;
                 margin-top: 25px">
     <p style="float: right; margin-right: 80px;font: bold 19px Arial, Helvetica, sans-serif;
-            color: #20509E;"><a href="/">Logout</a></p>
+            color: #20509E;"><a href="/logout">Logout</a></p>
 </div>
 <div id="logout-area" style="margin-top: 50px; height: fit-content;
 width: fit-content">

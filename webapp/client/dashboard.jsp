@@ -274,17 +274,21 @@
     setTimeout(function () {
         response.success(function (result) {
             let obj = jQuery.parseJSON(result);
+            console.log("obj: hett keys:",obj);
             if(obj.statusCode===200) {
                 document.getElementById("popup-text").innerText = "Setting Keys";
                 document.getElementById("pc-key").innerText = obj.PC;
                 document.getElementById("server-key").innerText = obj.Server;
                 document.getElementById("connectBtn").disabled = true;
                 document.getElementById("connectBtn").style.backgroundColor = "grey";
+                setTimeout(function () {
+                    modal.style.display = "none";
+                },1500);
+            }else{
+                document.getElementById("popup-text").innerText = "DB error... refresh page";
+                document.getElementById("popup-text").style.color = "#BA0606";
+                document.getElementById("confirm-btn").style.visibility ="visible";
             }
-            setTimeout(function () {
-                modal.style.display = "none";
-            },1500);
-
         });
 
         response.error(function (jqXHR, textStatus, errorThrown) {

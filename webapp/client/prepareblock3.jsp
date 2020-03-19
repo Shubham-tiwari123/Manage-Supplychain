@@ -11,30 +11,6 @@
             overflow-y: hidden;
         }
 
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            padding-top: 150px; /* Location of the box */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        }
-
-        /* Modal Content */
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 35%;
-            height: 80px;
-        }
-
         #header {
             height: 10%;
             width: 100%;
@@ -260,22 +236,16 @@
             <div id="caption">
                 <p style="margin-top: 48px;">Block ID</p>
                 <p style="margin-top: 48px">Quantity</p>
-                <p style="margin-top: 48px">Machine No</p>
-                <p style="margin-top: 48px">Temperature</p>
+                <p style="margin-top: 48px">Total Boxes</p>
+                <p style="margin-top: 48px;">Box Numbers</p>
             </div>
             <div id="input-box">
                 <input id="setBlockID" disabled required><br>
-                <input id="qunt" type="number" max="100" required><br>
-                <select class="minimal" id="machine-number">
-                    <option value="0">Select machine no</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                </select><br>
-                <input type="number" id="temperature" required><br>
+                <input id="qunt" type="number" required><br>
+                <input id="total-boxes" type="number" required><br>
+                <input type="text" id="box-number" placeholder="Eg: 10-100" required><br>
             </div>
-                <button type="submit"  style="margin-left: 15px"
+                <button type="submit" style="margin-left: 15px"
                         onclick="sendBlockData()" id="send-btn">SEND</button>
         </div>
     </div>
@@ -289,8 +259,8 @@
 
     document.getElementById("setBlockID").value = "";
     document.getElementById("qunt").value=0;
-    document.getElementById("machine-number").selectedIndex = 0;
-    document.getElementById("temperature").value=0;
+    document.getElementById("total-boxes").value = 0;
+    document.getElementById("box-number").value=0;
 
     let conform_btn = document.getElementById("confirm-btn");
 
@@ -306,7 +276,9 @@
 
         console.log("called");
         setTimeout(function () {
-            let response = $.get('/get-id');
+            let response = $.post('/get-id',{
+                blockNumber:"block3"
+            });
             response.success(function (result) {
                 const resultObj = jQuery.parseJSON(result);
                 if (resultObj.statusCode=== 200) {
@@ -345,23 +317,23 @@
 
         let blockId = document.getElementById("setBlockID").value;
         let qunt = document.getElementById("qunt").value;
-        let machineNo = document.getElementById("machine-number").value;
-        let temp = document.getElementById("temperature").value;
+        let totalBoxes = document.getElementById("total-boxes").value;
+        let boxNumbers = document.getElementById("box-number").value;
 
-        console.log("block",blockId,qunt,machineNo,temp);
-        let flag = await validate(blockId,qunt,machineNo,temp);
+        console.log("block",blockId,qunt,totalBoxes,boxNumbers);
+        let flag = await validate(blockId,qunt,totalBoxes,boxNumbers);
 
         if(flag){
             modal.style.display = "block";
             document.getElementById("popup-text").innerText = "Submitting record...";
             document.getElementById("confirm-btn").style.visibility="hidden";
-            console.log("valid")
+            console.log("valid");
 
-            let response = $.post('/send-block2',{
+            let response = $.post('/send-block3',{
                 productQun:qunt,
                 blockID:blockId,
-                machineNo:machineNo,
-                temp:temp,
+                totalBoxes:totalBoxes,
+                boxNumber:boxNumbers,
                 date:today
             });
 
@@ -373,7 +345,7 @@
                         document.getElementById("popup-text").innerText = "Form Submitted";
                         document.getElementById("popup-text").style.color = "#57B846";
                         setTimeout(function () {
-                            window.location.replace("/prepare_block2")
+                            window.location.replace("/prepare_block3")
                         },1000);
                     }else{
                         document.getElementById("popup-text").innerText = "Server error...try again";
@@ -393,9 +365,10 @@
         }
     }
 
-    function validate(blockID,qunt,machineNo,temp) {
+    function validate(blockID,qunt,totalBoxes,boxNumbers) {
         console.log("validating form");
         let letters = /^[A-Za-z]+$/;
+        let split = boxNumbers.split("-");
         if(blockID===""){
             alert("Please get the blokID");
             document.getElementById("setBlockID").focus();
@@ -411,14 +384,15 @@
             document.getElementById("qunt").focus();
             return false;
         }
-        if(machineNo==="0"){
-            alert("Enter valid machine number");
-            document.getElementById("machine-number").focus();
+        if(totalBoxes<=0){
+            alert("Enter valid total boxes");
+            document.getElementById("total-boxes").focus();
             return false;
         }
-        if(temp===0||isNaN(temp)){
-            alert("Please provide valid temperature");
-            document.getElementById("temperature").focus();
+        if(boxNumbers.indexOf("-")<=1||boxNumbers===0||boxNumbers.indexOf("-")===(boxNumbers.length-1)||
+            Number(split[1])<=Number(split[0])||split.length!==2){
+            alert("Please provide valid range");
+            document.getElementById("box-number").focus();
             return false;
         }
         return true;

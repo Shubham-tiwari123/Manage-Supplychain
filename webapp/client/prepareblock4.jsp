@@ -1,8 +1,7 @@
-<%@ page import="javax.swing.*" %>
 <html>
 <head>
     <title>
-        Prepare Block
+        Prepare block
     </title>
     <style>
         body {
@@ -73,7 +72,7 @@
         }
         #prepare-block{
             width: 50%;
-            height: 75%;
+            height: 65%;
             margin-top: 120px;
             background-color: white;
             border-radius: 25px;
@@ -133,7 +132,6 @@
             height: 32px;
             width: 90px;
             border-radius: 20px;
-            margin-right: 80px;
             background-color: #57B846;
             border: none;
             color: white;
@@ -229,7 +227,7 @@
 <div id="lower_body">
     <div id="side-nav">
         <div id="navbar" style="position: static">
-            <%@include file="sidenav.jsp" %>
+            <%@include file="sidenav.jsp"%>
         </div>
     </div>
     <div id="form-area">
@@ -237,29 +235,21 @@
         <div id="prepare-block">
             <div id="caption">
                 <p style="margin-top: 48px;">Block ID</p>
-                <p style="margin-top: 48px">Product Name</p>
-                <p style="margin-top: 48px">Quantity</p>
-                <p style="margin-top: 48px">Suplier Name</p>
-                <p style="margin-top: 48px">Price</p>
+                <p style="margin-top: 48px">Total Carton</p>
+                <p style="margin-top: 48px;">Carton Numbers</p>
+                <p style="margin-top: 48px">Exporters</p>
             </div>
             <div id="input-box">
                 <input id="setBlockID" disabled required><br>
-                <select class="minimal" id="product-name">
-                    <option value="1">Select product</option>
-                    <option value="">Product Name</option>
-                    <option value="">Product Name</option>
-                    <option value="">Product Name</option>
-                    <option value="">Product Name</option>
+                <input id="total-cartoon" type="number" required><br>
+                <input type="text" id="cartoon-number" placeholder="Eg: 10-100" required><br>
+                <select class="minimal" id="exporter-name">
+                    <option value="0">Select exporter</option>
+                    <option>Exporter Name</option>
+                    <option>Exporter Name</option>
+                    <option>Exporter Name</option>
+                    <option>Exporter Name</option>
                 </select><br>
-                <input id="qunt" type="number" max="100"  required><br>
-                <select class="minimal" id="supplier-name">
-                    <option value="1">Select supplier</option>
-                    <option>Supplier Name</option>
-                    <option>Supplier Name</option>
-                    <option>Supplier Name</option>
-                    <option>Supplier Name</option>
-                </select><br>
-                <input type="number" id="price" required><br>
             </div>
                 <button type="submit" onclick="sendBlockData()" id="send-btn">SEND</button>
         </div>
@@ -273,10 +263,9 @@
     let btn = document.getElementById("confirm-btn");
 
     document.getElementById("setBlockID").value = "";
-    document.getElementById("product-name").selectedIndex = 0;
-    document.getElementById("qunt").value=0;
-    document.getElementById("supplier-name").selectedIndex = 0;
-    document.getElementById("price").value=0;
+    document.getElementById("total-cartoon").value=0;
+    document.getElementById("exporter-name").selectedIndex = 0;
+    document.getElementById("cartoon-number").value=0;
 
     let conform_btn = document.getElementById("confirm-btn");
 
@@ -292,7 +281,9 @@
 
         console.log("called");
         setTimeout(function () {
-            let response = $.get('/get-id');
+            let response = $.post('/get-id',{
+                blockNumber:"block4"
+            });
             response.success(function (result) {
                 const resultObj = jQuery.parseJSON(result);
                 if (resultObj.statusCode=== 200) {
@@ -327,29 +318,29 @@
             mm = '0' + mm;
         }
         today = dd + '/' + mm + '/' + yyyy;
-        console.log("daate:",today);
+        console.log("date:",today);
+
 
         let blockId = document.getElementById("setBlockID").value;
-        let productName = document.getElementById("product-name").value;
-        let qunt = document.getElementById("qunt").value;
-        let supplier = document.getElementById("supplier-name").value;
-        let price = document.getElementById("price").value;
+        let totalCarton = document.getElementById("total-cartoon").value;
+        let cartonNumbers = document.getElementById("cartoon-number").value;
+        let exporterName = document.getElementById("exporter-name").value;
 
-        console.log("block",blockId,productName,qunt,supplier,price);
+        console.log("block",blockId,totalCarton,cartonNumbers,exporterName);
 
-        let flag = await validateForm(blockId,productName,qunt, supplier,price);
-        if(flag){
+        let flag = await validate(blockId,totalCarton,cartonNumbers,exporterName);
+
+        if(flag) {
             modal.style.display = "block";
             document.getElementById("popup-text").innerText = "Submitting record...";
-            document.getElementById("confirm-btn").style.visibility="hidden";
+            document.getElementById("confirm-btn").style.visibility = "hidden";
+            console.log("valid");
 
-            console.log("valid")
-            let response = $.post('/send-block',{
-                productQun:qunt,
-                productName:productName,
+            let response = $.post('/send-block4',{
+                totalCarton:totalCarton,
                 blockID:blockId,
-                supplierName:supplier,
-                price:price,
+                cartonNumbers:cartonNumbers,
+                exporterName:exporterName,
                 date:today
             });
 
@@ -361,7 +352,7 @@
                         document.getElementById("popup-text").innerText = "Form Submitted";
                         document.getElementById("popup-text").style.color = "#57B846";
                         setTimeout(function () {
-                            window.location.replace("/prepare_block")
+                            window.location.replace("/prepare_block4")
                         },1000);
                     }else{
                         document.getElementById("popup-text").innerText = "Server error...try again";
@@ -377,46 +368,33 @@
                 })
             },3000);
         }else{
-            console.log("not-valid")
+            console.log("not-valid");
         }
     }
 
-    function validateForm(blockID, productName, qunt, supplier, price) {
+    function validate(blockID,totalCarton,cartonNumbers,exporterName){
         console.log("validating form");
         let letters = /^[A-Za-z]+$/;
+        let split = cartonNumbers.split("-");
         if(blockID===""){
             alert("Please get the blokID");
             document.getElementById("setBlockID").focus();
             return false;
         }
-        if(productName==="1"){
-            alert("Please provide product name");
-            document.getElementById("product-name").focus();
+        if(totalCarton<=0){
+            alert("Enter valid total number of cartons");
+            document.getElementById("total-cartoon").focus();
             return false;
         }
-        if(supplier==="1"){
-            alert("Please provide supplier name");
-            document.getElementById("supplier-name").focus();
+        if(cartonNumbers.indexOf("-")<=1||cartonNumbers===0||cartonNumbers.indexOf("-")===(cartonNumbers.length-1)||
+            Number(split[1])<=Number(split[0])||split.length!==2){
+            alert("Please provide valid range");
+            document.getElementById("cartoon-number").focus();
             return false;
         }
-        if(qunt===""||isNaN(qunt)){
-            alert("Please provide valid quantity");
-            document.getElementById("qunt").focus();
-            return false;
-        }
-        if(qunt<=0){
-            alert("Quantity can not be less then 10");
-            document.getElementById("qunt").focus();
-            return false;
-        }
-        if(price===""||isNaN(price)){
-            alert("Please provide valid price");
-            document.getElementById("price").focus();
-            return false;
-        }
-        if(price<=0){
-            alert("Price cannot be less then 1");
-            document.getElementById("price").focus();
+        if(exporterName==="0"){
+            alert("Enter valid exporter name");
+            document.getElementById("exporter-name").focus();
             return false;
         }
         return true;

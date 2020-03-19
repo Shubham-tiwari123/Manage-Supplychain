@@ -146,6 +146,16 @@
             box-shadow: 5px 5px 10px rgba(65, 65, 65, 0.69);
         }
     </style>
+    <script>
+        var x = document.cookie;
+        let cookies = x.split(";");
+        console.log("cookie",cookies);
+        for(var i=0;i<cookies.length;i++){
+            if (cookies[i]===" loginStatus=true" || cookies[i]==="loginStatus=true"){
+                window.location.replace("/dashboard")
+            }
+        }
+    </script>
 </head>
 <title>
     ShipChain
@@ -212,7 +222,6 @@
     conform_btn.onclick = function(){
         document.getElementById("popup-text").style.color = "rgba(92, 93, 94, 0.78)";
         modal.style.display = "none";
-
     };
 
     window.onload = function(){
