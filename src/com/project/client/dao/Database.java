@@ -1,13 +1,16 @@
 package com.project.client.dao;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientURI;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.result.DeleteResult;
 import com.project.client.entity.ClientKeys;
 import com.project.client.entity.ServerKeys;
-import com.project.client.utils.VariableClass;
+import com.project.client.utils.ConstantClass;
 import org.bson.Document;
 
 import java.math.BigInteger;
@@ -23,8 +26,18 @@ public class Database implements DatabaseInterface {
 
     @Override
     public boolean createDbConn(){
-        client = new MongoClient(VariableClass.IP_ADDRESS, VariableClass.PORT_NUMBER);
-        database = client.getDatabase(VariableClass.DATABASE_NAME);
+        ServerAddress serverAddress = new ServerAddress(ConstantClass.IP_ADDRESS,ConstantClass.PORT_NUMBER);
+        MongoClientOptions mongoClientOptions = MongoClientOptions.builder().serverSelectionTimeout(5000)
+                .build();
+        //client = new MongoClient(ConstantClass.IP_ADDRESS, ConstantClass.PORT_NUMBER);
+        client = new MongoClient(serverAddress,mongoClientOptions);
+        database = client.getDatabase(ConstantClass.DATABASE_NAME);
+        /*System.setProperty("jdk.tls.trustNameService","true");
+        MongoClientURI uri = new MongoClientURI(
+                "mongodb+srv://tiwari_23_shubham:st540362@shipchain-0yjdr.mongodb.net/test?retryWrites=true&w=majority");
+
+        client = new MongoClient(uri);
+        database  = client.getDatabase(ConstantClass.DATABASE_NAME);*/
         return true;
     }
 
