@@ -16,7 +16,7 @@ import java.io.PrintWriter;
 
 public class LoginReqAPI extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response){
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             CommonFunction commonFunction = new CommonFunction();
 
@@ -31,14 +31,20 @@ public class LoginReqAPI extends HttpServlet {
                 cookie = new Cookie("loginStatus","true");
                 jsonObject.put("statusCode",200);
             }else{
-                cookie = new Cookie("keyStatus","false");
+                cookie = new Cookie("loginStatus","false");
                 jsonObject.put("statusCode",400);
             }
             response.addCookie(cookie);
             PrintWriter printWriter = response.getWriter();
             printWriter.println(jsonObject.toString());
         }catch (Exception e){
-            System.out.println(e);
+            System.out.println("exception"+e);
+            Cookie cookie = new Cookie("loginStatus","false");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("statusCode",400);
+            response.addCookie(cookie);
+            PrintWriter printWriter = response.getWriter();
+            printWriter.println(jsonObject.toString());
         }
 
     }

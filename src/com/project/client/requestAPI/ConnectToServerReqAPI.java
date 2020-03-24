@@ -1,19 +1,12 @@
 package com.project.client.requestAPI;
 
-import com.project.client.dao.Database;
-import com.project.client.entity.ClientKeys;
-import com.project.client.entity.ServerKeys;
 import com.project.client.services.ConnectToServer;
-import com.project.client.utils.VariableClass;
-import org.json.simple.JSONObject;
+import com.project.client.utils.ConstantClass;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -27,13 +20,13 @@ public class ConnectToServerReqAPI extends HttpServlet {
         int statusCode = 200;
         try {
             System.out.println("client hit");
-            URL url = new URL("http://localhost:8080/connect-server");
+            URL url = new URL(ConstantClass.CONNECT_SERVER_URL1);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
 
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 System.out.println("hit server");
-                if (connect.openSocket("127.0.0.1", 4000)) {
+                if (connect.openSocket(ConstantClass.SOCKET_ADDRESS, ConstantClass.SOCKET_PORT_NUMBER)) {
                     System.out.println("socket");
                     if (connect.sendData(connect.verifyNetwork())) {
                         while (ConnectToServer.socket.isConnected()) {
@@ -127,27 +120,6 @@ public class ConnectToServerReqAPI extends HttpServlet {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-
-        }
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response){
-        try {
-            doPost(request,response);
-            Database database = new Database();
-            ClientKeys clientKeys = database.getClientKeys(VariableClass.STORE_KEYS);
-            ServerKeys serverKeys = database.getServerKeys(VariableClass.STORE_KEYS);
-
-            String server = serverKeys.getPublicKeyModules().toString().substring(0,80);
-            String client = clientKeys.getPublicKeyModules().toString().substring(0,80);
-            JSONObject object = new JSONObject();
-            object.put("PC",client);
-            object.put("Server",server);
-            PrintWriter writer = response.getWriter();
-            writer.println(object.toJSONString());
-
-        }catch (Exception e){
-            System.out.println(e);
         }
     }
 }

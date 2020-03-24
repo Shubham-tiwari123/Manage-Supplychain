@@ -3,10 +3,9 @@ package com.project.client.requestAPI;
 import com.project.client.dao.Database;
 import com.project.client.entity.ClientKeys;
 import com.project.client.entity.ServerKeys;
-import com.project.client.utils.VariableClass;
+import com.project.client.utils.ConstantClass;
 import org.json.simple.JSONObject;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,11 +16,11 @@ import java.io.PrintWriter;
 @WebServlet(name = "GetPublicKeysReqAPI",urlPatterns = {"/get-keys"})
 public class GetPublicKeysReqAPI extends HttpServlet {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response){
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             Database database = new Database();
-            ClientKeys clientKeys = database.getClientKeys(VariableClass.STORE_KEYS);
-            ServerKeys serverKeys = database.getServerKeys(VariableClass.STORE_KEYS);
+            ClientKeys clientKeys = database.getClientKeys(ConstantClass.STORE_KEYS);
+            ServerKeys serverKeys = database.getServerKeys(ConstantClass.STORE_KEYS);
             JSONObject object = new JSONObject();
 
             if(clientKeys!=null || serverKeys!=null) {
@@ -38,6 +37,10 @@ public class GetPublicKeysReqAPI extends HttpServlet {
             writer.println(object.toJSONString());
         }catch (Exception e){
             System.out.println(e);
+            JSONObject object = new JSONObject();
+            object.put("statusCode", 301);
+            PrintWriter writer = response.getWriter();
+            writer.println(object.toJSONString());
         }
     }
 }

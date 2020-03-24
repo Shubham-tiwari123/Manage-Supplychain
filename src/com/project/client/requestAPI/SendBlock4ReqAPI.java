@@ -2,9 +2,11 @@ package com.project.client.requestAPI;
 
 import com.project.client.entity.ClientKeys;
 import com.project.client.entity.SerializeRecord;
+import com.project.client.entity.ServerKeys;
 import com.project.client.responseAPI.SendBlockResAPI;
 import com.project.client.services.CommonFunction;
 import com.project.client.services.TransferBlock;
+import com.project.client.utils.ConstantClass;
 import org.json.simple.JSONObject;
 
 import javax.servlet.ServletException;
@@ -28,7 +30,6 @@ public class SendBlock4ReqAPI extends HttpServlet {
         try {
             TransferBlock transferBlock = new TransferBlock();
             CommonFunction commonFunction = new CommonFunction();
-            PrintWriter writer = response.getWriter();
             // Prepare block
             String totalCarton = request.getParameter("totalCarton");
             String blockId = request.getParameter("blockID");
@@ -39,13 +40,11 @@ public class SendBlock4ReqAPI extends HttpServlet {
             long blockID = Long.parseLong(blockId);
 
             String blockString = transferBlock.prepareBlock4(blockID,totalCartons,exporterName,cartonNumbers,date);
-            String currentBlockHash = transferBlock.calBlockHash(blockString);
-            String manipulateBlock = transferBlock.manipulateBlock(blockString,currentBlockHash);
-            System.out.println(manipulateBlock);
+            System.out.println("blockString3:-"+blockString);
 
             //encrypt block using server public key
-            ClientKeys keys = transferBlock.getKeysFromDatabase();
-            ArrayList<byte[]> encryptedData = transferBlock.encryptBlock(keys,manipulateBlock);
+            ServerKeys keys = transferBlock.getKeysFromDatabase();
+            ArrayList<byte[]> encryptedData = transferBlock.encryptBlock(keys,blockString);
 
             SerializeRecord serializeRecord = new SerializeRecord();
             serializeRecord.setEncryptedData(encryptedData);
@@ -58,9 +57,17 @@ public class SendBlock4ReqAPI extends HttpServlet {
             JSONObject result = new JSONObject();
             result.put("encryptedData",encryptedBlock);
             result.put("signature","signature");
-            //writer.println(result.toJSONString());
 
-            URL url = new URL("http://localhost:8080/fourth-block");
+            URL url;
+            if(ConstantClass.SERVER1_STATUS) {
+                System.out.println("trying server1 block4:"+ConstantClass.SERVER1_TRY);
+                url = new URL(ConstantClass.SEND_BLOCK4_URL1);
+            }
+            else {
+                System.out.println("trying server2 block4: "+ConstantClass.SERVER2_TRY);
+                url = new URL(ConstantClass.SEND_BLOCK4_URL2);
+            }
+
             HttpURLConnection conn= (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
@@ -71,24 +78,35 @@ public class SendBlock4ReqAPI extends HttpServlet {
             outputWriter.close();
             if(conn.getResponseCode()== HttpURLConnection.HTTP_OK) {
                 System.out.println("server hit");
+                SendBlockResAPI resAPI = new SendBlockResAPI();
+                resAPI.readResponse(response,conn);
             }
-
-            SendBlockResAPI resAPI = new SendBlockResAPI();
-            resAPI.readResponse(response,conn);
         }
         catch (Exception e){
+            if(ConstantClass.SERVER1_TRY<2) {
+                if(ConstantClass.SERVER1_TRY==1) {
+                    System.out.println("Switching to server 2");
+                    ConstantClass.SERVER1_STATUS = false;
+                    ConstantClass.SERVER2_STATUS = true;
+                    ConstantClass.SERVER2_TRY=0;
+                }
+                ConstantClass.SERVER1_TRY = ConstantClass.SERVER1_TRY + 1;
+            }
+            else if(ConstantClass.SERVER2_TRY<2 && ConstantClass.SERVER1_TRY==2){
+                if(ConstantClass.SERVER2_TRY==1){
+                    System.out.println("Switching to server 1");
+                    ConstantClass.SERVER2_STATUS=false;
+                    ConstantClass.SERVER1_STATUS=true;
+                    ConstantClass.SERVER1_TRY=0;
+                }
+                ConstantClass.SERVER2_TRY = ConstantClass.SERVER2_TRY+1;
+            }
             System.out.println("Something went wrong try again......");
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("statusCode",400);
             PrintWriter printWriter = response.getWriter();
             printWriter.println(jsonObject.toString());
-
             e.printStackTrace();
         }
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
     }
 }

@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.HttpURLConnection;
 
-@WebServlet(name = "SendBlockResAPI")
-public class SendBlockResAPI extends HttpServlet {
+@WebServlet(name = "GetBlockIDResAPI")
+public class GetBlockIDResAPI extends HttpServlet {
 
     public void readResponse(HttpServletResponse response, HttpURLConnection conn) throws IOException {
         System.out.println("reading response");
@@ -27,22 +27,22 @@ public class SendBlockResAPI extends HttpServlet {
             JSONParser jsonParser = new JSONParser();
             JSONObject object = (JSONObject) jsonParser.parse(output.toString());
             long status = (long) object.get("statusCode");
-
             JSONObject object1 = new JSONObject();
             int statusCode;
             if(status==200){
                 statusCode = 200;
+                Long productID = (Long) object.get("productID");
+                object1.put("productID",productID);
             }else{
                 statusCode = 404;
             }
             object1.put("statusCode", statusCode);
-            System.out.println("statussss:"+statusCode);
             PrintWriter writer = response.getWriter();
             writer.println(object1.toJSONString());
         } catch (Exception e) {
             System.out.println("Something went wrong try again......");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("statusCode",400);
+            jsonObject.put("statusCode",404);
             PrintWriter printWriter = response.getWriter();
             printWriter.println(jsonObject.toString());
             e.printStackTrace();
