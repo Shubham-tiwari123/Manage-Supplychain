@@ -3,11 +3,10 @@ package com.project.client.services;
 import com.project.client.dao.Database;
 import com.project.client.entity.ClientKeys;
 import com.project.client.entity.ServerKeys;
-import com.project.client.utils.VariableClass;
+import com.project.client.utils.ConstantClass;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import javax.ws.rs.client.Client;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -70,10 +69,10 @@ public class ConnectToServer implements ConnectToServerInterface {
     @Override
     public String prepareKeysToSend() throws Exception {
         System.out.println("Sending client keys to server");
-        ClientKeys keys = database.getClientKeys(VariableClass.STORE_KEYS);   //specify collection name
+        ClientKeys keys = database.getClientKeys(ConstantClass.STORE_KEYS);   //specify collection name
         if (keys == null){
             keys = generateKeys();
-            database.storeClientKeys(keys,VariableClass.STORE_KEYS);
+            database.storeClientKeys(keys, ConstantClass.STORE_KEYS);
         }
         /*ClientKeys keys = new ClientKeys();
         keys.setPublicKeyExpo(new BigInteger("65537"));
@@ -118,7 +117,7 @@ public class ConnectToServer implements ConnectToServerInterface {
         ServerKeys keys = new ServerKeys();
         keys.setPublicKeyModules(new BigInteger(modValue));
         keys.setPublicKeyExpo(new BigInteger(expoValue));
-        return database.storeServerKeys(keys, VariableClass.STORE_KEYS);
+        return database.storeServerKeys(keys, ConstantClass.STORE_KEYS);
         //return true;
     }
 
@@ -151,6 +150,6 @@ public class ConnectToServer implements ConnectToServerInterface {
 
     @Override
     public boolean deleteServerKeys() throws Exception {
-        return database.deleteServerKeys(VariableClass.STORE_KEYS);
+        return database.deleteServerKeys(ConstantClass.STORE_KEYS);
     }
 }

@@ -2,11 +2,9 @@ package com.project.client.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.client.dao.Database;
-import com.project.client.entity.ClientKeys;
-import com.project.client.utils.VariableClass;
+import com.project.client.utils.ConstantClass;
 
 import javax.crypto.Cipher;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
@@ -75,6 +73,6 @@ public class CommonFunction implements CommonFunctionInterface {
 
     @Override
     public boolean checkIfKeysExists() throws Exception {
-        return database.checkKeysExists(VariableClass.STORE_KEYS);
+        return database.checkKeysExists(ConstantClass.STORE_KEYS);
     }
 }

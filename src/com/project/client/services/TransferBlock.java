@@ -2,16 +2,12 @@ package com.project.client.services;
 
 import com.project.client.dao.Database;
 import com.project.client.entity.*;
-import com.project.client.utils.VariableClass;
+import com.project.client.utils.ConstantClass;
 
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class TransferBlock implements TransferBlockInterface {
 
@@ -29,6 +25,11 @@ public class TransferBlock implements TransferBlockInterface {
         block.setItemName(itemName);
         block.setSupplierName(supplierName);
         block.setPrice(price);
+        block.setCurrentBlockHash("0");
+        block.setPreviousBlockHash("0");
+
+        String hash = calBlockHash(commonFunction.convertJavaToJson(block));
+        block.setCurrentBlockHash(hash);
         System.out.println(commonFunction.convertJavaToJson(block));
         return commonFunction.convertJavaToJson(block);
     }
@@ -42,6 +43,12 @@ public class TransferBlock implements TransferBlockInterface {
         block.setQuantity(quantity);
         block.setTemperature(temp);
         block.setMachineNumber(machineNo);
+        block.setCurrentBlockHash("0");
+        block.setPreviousBlockHash("0");
+
+        String hash = calBlockHash(commonFunction.convertJavaToJson(block));
+        System.out.println("hashhh:"+hash);
+        block.setCurrentBlockHash(hash);
         System.out.println(commonFunction.convertJavaToJson(block));
         return commonFunction.convertJavaToJson(block);
     }
@@ -55,6 +62,12 @@ public class TransferBlock implements TransferBlockInterface {
         block.setQuantity(quantity);
         block.setBoxNumberRange(boxRange);
         block.setTotalBoxes(totalBoxes);
+        block.setCurrentBlockHash("0");
+        block.setPreviousBlockHash("0");
+
+        String hash = calBlockHash(commonFunction.convertJavaToJson(block));
+        System.out.println("hashhh:"+hash);
+        block.setCurrentBlockHash(hash);
         System.out.println(commonFunction.convertJavaToJson(block));
         return commonFunction.convertJavaToJson(block);
     }
@@ -68,6 +81,11 @@ public class TransferBlock implements TransferBlockInterface {
         block.setTotalCarton(totalCarton);
         block.setExporterName(exporterName);
         block.setCartonNumber(cartonNumber);
+        block.setCurrentBlockHash("0");
+        block.setPreviousBlockHash("0");
+
+        String hash = calBlockHash(commonFunction.convertJavaToJson(block));
+        block.setCurrentBlockHash(hash);
         System.out.println(commonFunction.convertJavaToJson(block));
         return commonFunction.convertJavaToJson(block);
     }
@@ -78,7 +96,7 @@ public class TransferBlock implements TransferBlockInterface {
     }
 
     @Override
-    public ArrayList<byte[]> encryptBlock(ClientKeys keys,String data) throws Exception {
+    public ArrayList<byte[]> encryptBlock(ServerKeys keys,String data) throws Exception {
         int count = 0;
         int start = 0, end = 0;
         System.out.println("datassss:"+data.getBytes(StandardCharsets.UTF_8).length);
@@ -102,7 +120,7 @@ public class TransferBlock implements TransferBlockInterface {
         count = 0;
         while (count != storeSubString.size()) {
             byte[] encryptedData = commonFunction.encryptData(storeSubString.get(count),
-                    keys.getPrivateKeyModules(), keys.getPrivateKeyExpo());
+                    keys.getPublicKeyModules(), keys.getPublicKeyExpo());
             storeEncryptedValue.add(encryptedData);
             count++;
         }
@@ -110,8 +128,8 @@ public class TransferBlock implements TransferBlockInterface {
     }
 
     @Override
-    public ClientKeys getKeysFromDatabase() throws Exception {
-        return database.getClientKeys(VariableClass.STORE_KEYS);
+    public ServerKeys getKeysFromDatabase() throws Exception {
+        return database.getServerKeys(ConstantClass.STORE_KEYS);
         /*ServerKeys keys = new ServerKeys();
         return keys;*/
     }
