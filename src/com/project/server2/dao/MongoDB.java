@@ -1,6 +1,8 @@
 package com.project.server2.dao;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
@@ -34,7 +36,11 @@ public class MongoDB implements MongoDBInterface {
 
     @Override
     public boolean createDbConnection() throws Exception {
-        client = new MongoClient(ConstantClass.IP_ADDRESS, ConstantClass.PORT_NUMBER);
+        ServerAddress serverAddress = new ServerAddress(ConstantClass.IP_ADDRESS,ConstantClass.PORT_NUMBER);
+        MongoClientOptions mongoClientOptions = MongoClientOptions.builder().serverSelectionTimeout(5000)
+                .build();
+        client = new MongoClient(serverAddress,mongoClientOptions);
+        /*client = new MongoClient(ConstantClass.IP_ADDRESS, ConstantClass.PORT_NUMBER);*/
         database = client.getDatabase(ConstantClass.DATABASE_NAME);
         return true;
     }
