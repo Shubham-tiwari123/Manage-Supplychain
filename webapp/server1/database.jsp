@@ -226,7 +226,7 @@
     document.getElementById("popup-text").innerText = "Getting Records..";
     conform_btn.style.visibility = "hidden"
 
-    let response = $.post('http://localhost:8082/product_info',{
+    let response = $.post('http://localhost:8081/product_info',{
         productID:-1
     });
 
