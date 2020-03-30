@@ -1,6 +1,9 @@
 package com.project.server1.dao;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientURI;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
@@ -34,8 +37,19 @@ public class MongoDB implements MongoDBInterface {
 
     @Override
     public boolean createDbConnection() throws Exception {
-        client = new MongoClient(ConstantClass.IP_ADDRESS, ConstantClass.PORT_NUMBER);
+        ServerAddress serverAddress = new ServerAddress(ConstantClass.IP_ADDRESS,ConstantClass.PORT_NUMBER);
+        MongoClientOptions mongoClientOptions = MongoClientOptions.builder().serverSelectionTimeout(5000)
+                .build();
+        client = new MongoClient(serverAddress,mongoClientOptions);
+        //client = new MongoClient(ConstantClass.IP_ADDRESS, ConstantClass.PORT_NUMBER);
         database = client.getDatabase(ConstantClass.DATABASE_NAME);
+
+        /*System.setProperty("jdk.tls.trustNameService","true");
+        MongoClientURI uri = new MongoClientURI(
+                "mongodb+srv://tiwari_23_shubham:st540362@shipchain-0yjdr.mongodb.net/test?retryWrites=true&w=majority");
+
+        client = new MongoClient(uri);
+        database  = client.getDatabase(ConstantClass.DATABASE_NAME);*/
         return true;
     }
 
