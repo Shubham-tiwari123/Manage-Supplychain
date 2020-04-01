@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/home_icon"
+        android:icon="@drawable/home_icon_switch"
+        android:title="Home" />
+    <!--app:labelVisibilityMode="unlabeled"-->
+
+    <item
+        android:id="@+id/user_account"
+        android:icon="@drawable/account_icon_switch"
+        android:title="Profile" />
+
+    <item
+        android:id="@+id/help"
+        android:icon="@drawable/help_icon_switch"
+        android:title="Help" />
+
+</menu>
