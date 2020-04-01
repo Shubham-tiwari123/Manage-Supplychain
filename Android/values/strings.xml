@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ShipChain</string>
+    <string name="product_hint1">Enter ProductID</string>
+    <string name="search">Search</string>
+</resources>
