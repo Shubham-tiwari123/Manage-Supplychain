@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/search_product"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:background="#FFFAFAFA"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/product_id"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/textbox"
+            android:gravity="center_vertical"
+            android:hint="@string/product_hint1"
+            android:inputType="number"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="#025A3C"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/search_btn"
+            android:text="@string/search"
+            android:textColor="#FFFAFAFA"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bg_img"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:background="@drawable/shipchain"
+        android:orientation="vertical"/>
+
+</LinearLayout>
