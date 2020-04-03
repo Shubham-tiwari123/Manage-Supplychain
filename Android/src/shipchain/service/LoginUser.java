@@ -8,9 +8,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.shipchain.R;
+import com.example.shipchain.requestAPI.LoginUserReqAPI;
+
+import java.util.ArrayList;
 
 public class LoginUser extends AppCompatActivity {
 
@@ -27,6 +31,8 @@ public class LoginUser extends AppCompatActivity {
 
         TextView signUpBtn = findViewById(R.id.sign_up);
         Button loginBtn = findViewById(R.id.login_user_btn);
+        final EditText userEmail = findViewById(R.id.user_email);
+        final EditText userPass = findViewById(R.id.user_pass);
 
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,8 +45,15 @@ public class LoginUser extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginUser.this, WelcomeUser.class);
-                startActivity(intent);
+                String email = userEmail.getText().toString();
+                String pass = userPass.getText().toString();
+                ArrayList<String> params = new ArrayList<>();
+                params.add(email);
+                params.add(pass);
+                LoginUserReqAPI reqAPI = new LoginUserReqAPI(LoginUser.this);
+                reqAPI.execute(params);
+                /*Intent intent = new Intent(LoginUser.this, WelcomeUser.class);
+                startActivity(intent);*/
             }
         });
     }

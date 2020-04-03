@@ -12,6 +12,10 @@ import androidx.core.content.ContextCompat;
 
 import com.example.shipchain.R;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -27,6 +31,19 @@ public class MainActivity extends AppCompatActivity {
 
         TextView signInBtn = findViewById(R.id.sign_in);
         Button signUpBtn = findViewById(R.id.getting_started);
+
+        /*File fileEvents = new File(LoginUser.getFilesDir()+"/text/sample");
+        StringBuilder text = new StringBuilder();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(fileEvents));
+            String line;
+            while ((line = br.readLine()) ! = null) {
+                text.append(line);
+                text.append('\n');
+            }
+            br.close();
+        } catch (IOException e) { }
+        String result = text.toString();*/
 
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
