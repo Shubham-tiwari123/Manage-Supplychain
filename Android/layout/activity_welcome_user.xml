@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".WelcomeUser">
+    tools:context=".service.WelcomeUser">
 
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -22,6 +22,8 @@
         android:layout_alignParentBottom="true"
         android:background="?android:attr/windowBackground"
         app:menu="@menu/bottom_nav_menu"
+        app:itemTextColor="@drawable/bottom_navigation_selector"
+        app:itemIconTint="@drawable/bottom_navigation_selector"
         />
     <!--app:itemIconSize="35dp"-->
 </RelativeLayout>

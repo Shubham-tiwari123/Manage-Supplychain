@@ -3,49 +3,75 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/search_product"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5"
-        android:background="#FFFAFAFA"
-        android:orientation="vertical">
+        android:layout_height="60dp"
+        android:text="Home"
+        android:textSize="25sp"
+        android:paddingLeft="15dp"
+        android:textStyle="bold"
+        android:textColor="@color/text_color"
+        android:gravity="center_vertical"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/edit_box_border"
+        />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:background="@drawable/edit_box_layout"
+        >
         <EditText
-            android:id="@+id/product_id"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/textbox"
-            android:gravity="center_vertical"
-            android:hint="@string/product_hint1"
-            android:inputType="number"
+            android:layout_width="265dp"
+            android:layout_height="match_parent"
+            android:hint="Product ID"
+            android:textColor="@color/text_color"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:singleLine="true"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:textColor="#025A3C"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/login_btn"
-            android:layout_width="130dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:background="@color/edit_box_color"
+            />
+        <ImageView
+            android:id="@+id/get_detail"
+            android:layout_width="40dp"
             android:layout_height="40dp"
+            android:src="@drawable/search_icon"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/search_btn"
-            android:text="@string/search"
-            android:textColor="#FFFAFAFA"
-            android:textSize="20sp" />
+            android:clickable="true"
+            />
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/bg_img"
+    <TextView
+        android:id="@+id/result_cap"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9"
-        android:background="@drawable/shipchain"
-        android:orientation="vertical"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        android:textColor="@color/text_color"
+        android:textSize="18sp"
+        android:text="Result"
+        android:paddingLeft="15dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:visibility="invisible"
+        android:background="@color/edit_box_color"
+        />
+
+
 
 </LinearLayout>

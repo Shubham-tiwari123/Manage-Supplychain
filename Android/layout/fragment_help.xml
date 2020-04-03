@@ -1,15 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent">
 
     <TextView
         android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Help"
+        android:textSize="25sp"
+        android:paddingLeft="15dp"
+        android:textStyle="bold"
+        android:textColor="@color/text_color"
+        android:gravity="center_vertical"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/edit_box_border"
+        />
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Fill this form if you don't find any information about any product."
+        android:textSize="16sp"
+        android:textColor="@color/text_color"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textStyle="bold"
+        />
+    <EditText
+        android:id="@+id/product_id"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:hint="Product ID"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_color"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginTop="30dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:singleLine="true"
+        android:background="@drawable/edit_box_layout"
+        />
+
+    <EditText
+        android:id="@+id/show_name"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:hint="Shop Name"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_color"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginTop="12dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:singleLine="true"
+        android:background="@drawable/edit_box_layout"
+        />
+
+    <EditText
+        android:id="@+id/show_area"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:hint="Shop Area"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_color"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginTop="12dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:singleLine="true"
+        android:background="@drawable/edit_box_layout"
+        />
+
+    <EditText
+        android:id="@+id/purchase_date"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:hint="Purchase Date"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_color"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginTop="12dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:inputType="datetime"
+        android:singleLine="true"
+        android:background="@drawable/edit_box_layout"
+    />
+
+    <Button
+        android:id="@+id/login_user_btn"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="Submit"
         android:textSize="30sp"
-        android:text="HELP Frament"
-        android:textAlignment="center"
-        android:gravity="center_horizontal" />
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginTop="40dp"
+        android:textStyle="bold"
+        android:background="@drawable/sign_in"
+        />
 
 </LinearLayout>

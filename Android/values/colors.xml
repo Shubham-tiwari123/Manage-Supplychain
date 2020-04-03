@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2B8564</color>
-    <color name="colorPrimaryDark">#1D5943</color>
+    <color name="colorPrimary">#F2F2F2</color>
+    <color name="colorPrimaryDark">#F26223</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="white">#FFFFFF</color>
     <color name="blue">#3F51B5</color>
+    <color name="text_color">#6B6B6B</color>
+    <color name="btn_color">#F26223</color>
+    <color name="edit_box_color">#F2F2F2</color>
+    <color name="edit_box_border">#B5B5B5</color>
 </resources>

@@ -5,14 +5,68 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center_horizontal"
     android:background="@color/white"
-    tools:context=".MainActivity">
+    tools:context=".service.MainActivity">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/blockchain_logo"
-        android:scaleType="fitCenter"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
+        android:background="@drawable/block_logo"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welcome"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_color"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Let's Build Future Together"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/text_color"
+            />
+
+        <Button
+            android:id="@+id/getting_started"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="Getting Started"
+            android:textSize="25sp"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/sign_in"
+            />
+
+        <TextView
+            android:id="@+id/sign_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign In here"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/text_color"
+            android:clickable="true"
+            />
+
+    </LinearLayout>
 
 </LinearLayout>
