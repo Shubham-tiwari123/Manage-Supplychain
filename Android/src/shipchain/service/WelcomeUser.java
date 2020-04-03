@@ -1,4 +1,4 @@
-package com.example.shipchain;
+package com.example.shipchain.service;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.shipchain.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class WelcomeUser extends AppCompatActivity {
