@@ -28,6 +28,7 @@
         android:layout_marginBottom="25dp"
         />
     <EditText
+        android:id="@+id/register_email"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:hint="Email"
@@ -43,6 +44,7 @@
         />
 
     <EditText
+        android:id="@+id/register_pass"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:hint="Password"
@@ -59,6 +61,7 @@
         />
 
     <EditText
+        android:id="@+id/register_number"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:hint="Phone Number"
@@ -75,6 +78,7 @@
         />
 
     <Button
+        android:id="@+id/sign_up_btn"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:text="Sign Up"
