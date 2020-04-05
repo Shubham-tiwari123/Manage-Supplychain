@@ -32,18 +32,6 @@ public class MainActivity extends AppCompatActivity {
         TextView signInBtn = findViewById(R.id.sign_in);
         Button signUpBtn = findViewById(R.id.getting_started);
 
-        /*File fileEvents = new File(LoginUser.getFilesDir()+"/text/sample");
-        StringBuilder text = new StringBuilder();
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(fileEvents));
-            String line;
-            while ((line = br.readLine()) ! = null) {
-                text.append(line);
-                text.append('\n');
-            }
-            br.close();
-        } catch (IOException e) { }
-        String result = text.toString();*/
 
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,15 +48,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        /*new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent i = new Intent(MainActivity.this, WelcomeUser.class);
-                startActivity(i);
-                finish();
-            }
-        }, 1300);*/
 
     }
 }
