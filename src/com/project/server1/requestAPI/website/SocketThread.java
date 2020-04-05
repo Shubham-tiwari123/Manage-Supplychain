@@ -1,4 +1,4 @@
-package com.project.server1.requestAPI;
+package com.project.server1.requestAPI.website;
 
 import com.project.server1.services.ConnectToDevice;
 

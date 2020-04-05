@@ -1,4 +1,4 @@
-package com.project.server1.responseAPI;
+package com.project.server1.responseAPI.website;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

@@ -1,4 +1,4 @@
-package com.project.server1.requestAPI;
+package com.project.server1.requestAPI.website;
 
 import com.project.server1.utils.ConstantClass;
 import org.json.simple.JSONObject;
@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 public class AdminLoginReqAPI extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
         try {
+            System.out.println("Server hit");
             String email = request.getParameter("email");
             String pass = request.getParameter("pass");
             System.out.println("value" + email + "   " + pass);

@@ -1,4 +1,4 @@
-package com.project.server1.requestAPI;
+package com.project.server1.requestAPI.website;
 
 import org.json.simple.JSONObject;
 

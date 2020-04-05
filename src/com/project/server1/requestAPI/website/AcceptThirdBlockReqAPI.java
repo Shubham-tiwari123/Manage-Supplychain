@@ -1,9 +1,9 @@
-package com.project.server1.requestAPI;
+package com.project.server1.requestAPI.website;
 
+import com.project.server1.dao.SqlDB;
 import com.project.server1.entity.DeserializeValues;
-import com.project.server1.entity.GenesisBlock;
 import com.project.server1.entity.ServerKeys;
-import com.project.server1.responseAPI.AcceptBlockResAPI;
+import com.project.server1.responseAPI.website.AcceptBlockResAPI;
 import com.project.server1.services.AcceptBlock;
 import com.project.server1.services.CommonFunctions;
 import com.project.server1.utils.ConstantClass;
@@ -17,25 +17,28 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet(name = "AcceptFirstBlockReqAPI",urlPatterns = {"/first-block"})
-public class AcceptFirstBlockReqAPI extends HttpServlet {
+@WebServlet(name = "AcceptThirdBlockReqAPI",urlPatterns = {"/third-block"})
+public class AcceptThirdBlockReqAPI extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         AcceptBlockResAPI resAPI = new AcceptBlockResAPI();
-        System.out.println("server hitssss");
+        System.out.println("server hit3");
         AcceptBlock acceptBlock = new AcceptBlock();
         CommonFunctions commonFunctions = new CommonFunctions();
         StringBuilder buffer = new StringBuilder();
         BufferedReader reader = request.getReader();
+        int statusCode = 0;
         String line;
+
         while((line = reader.readLine())!= null) {
             buffer.append(line);
         }
         String data = buffer.toString();
-        System.out.println("datassss:-"+data);
+        System.out.println("data3:-"+data);
         JSONParser parser = new JSONParser();
-        int statusCode=0;
+
         try {
             JSONObject jSONObject = (JSONObject) parser.parse(data);
             String encryptedString = (String) jSONObject.get("encryptedData");
@@ -50,32 +53,39 @@ public class AcceptFirstBlockReqAPI extends HttpServlet {
             jSONObject = (JSONObject) parser.parse(decryptString);
             String currentHashBlock = (String) jSONObject.get("currentBlockHash");
             Long blockID = (Long) jSONObject.get("blockID");
-            System.out.println("curr:"+currentHashBlock+" block:"+blockID);
+            System.out.println("curr:" + currentHashBlock + " block:" + blockID);
 
-            if(acceptBlock.verifyData(decryptString,currentHashBlock)){
+            if(acceptBlock.verifyData3(decryptString,currentHashBlock)){
                 System.out.println("Data is secured");
-                //generate genesis block
-                //encrypt it using server private key and store it in db
-                //encrypt the block also using server private key and store it in db against product-id
-                GenesisBlock genesisBlock = acceptBlock.createGenesisBlock(blockID);
-                if(acceptBlock.storeGenesisBlock(genesisBlock,blockID)){
-                    if(acceptBlock.storeProductBlockA(decryptString,blockID,genesisBlock.getPreviousBlockHash()))
+
+                List blockData = acceptBlock.getLastBlockHashDb(blockID);
+                String updatedBlock = acceptBlock.updateBlock(blockData, decryptString);
+                int listSize = (int) blockData.get(1);
+                if(listSize==3) {
+                    if (acceptBlock.appendBlockInChain(blockID, updatedBlock)) {
                         statusCode = ConstantClass.SUCCESSFUL;
-                    else
+                        System.out.println("data saved");
+                        SqlDB sqlDB = new SqlDB();
+                        sqlDB.updateBlockStatusTrue(blockID,"block3");
+                    } else {
                         statusCode = ConstantClass.FAILED;
+                        System.out.println("not saved");
+                    }
+                }else{
+                    SqlDB sqlDB = new SqlDB();
+                    sqlDB.updateBlockStatusFalse(blockID,"block3");
+                    statusCode = ConstantClass.FAILED;
+                    System.out.println("trying to save block 3 before block 2 is saved");
                 }
-                resAPI.sendResponse(statusCode,response);
-            }else{
+            } else {
                 System.out.println("Data not secured");
-                resAPI.sendResponse(ConstantClass.FAILED,response);
+                statusCode = ConstantClass.BAD_REQUEST;
             }
-        }catch (Exception e){
-            System.out.println("exception:"+e);
-            resAPI.sendResponse(ConstantClass.FAILED,response);
+            resAPI.sendResponse(statusCode, response);
+        } catch (Exception e) {
+            System.out.println(e);
+            resAPI.sendResponse(ConstantClass.FAILED, response);
         }
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
 }

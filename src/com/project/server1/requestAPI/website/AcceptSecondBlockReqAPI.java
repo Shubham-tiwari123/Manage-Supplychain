@@ -1,9 +1,9 @@
-package com.project.server1.requestAPI;
+package com.project.server1.requestAPI.website;
 
 import com.project.server1.dao.SqlDB;
 import com.project.server1.entity.DeserializeValues;
 import com.project.server1.entity.ServerKeys;
-import com.project.server1.responseAPI.AcceptBlockResAPI;
+import com.project.server1.responseAPI.website.AcceptBlockResAPI;
 import com.project.server1.services.AcceptBlock;
 import com.project.server1.services.CommonFunctions;
 import com.project.server1.utils.ConstantClass;
@@ -19,23 +19,22 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "AcceptFourthBlockReqAPI", urlPatterns = {"/fourth-block"})
-public class AcceptFourthBlockReqAPI extends HttpServlet {
-
+@WebServlet(name = "AcceptSecondBlockReqAPI",urlPatterns = {"/second-block"})
+public class AcceptSecondBlockReqAPI extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         AcceptBlockResAPI resAPI = new AcceptBlockResAPI();
-        SqlDB sqlDB = new SqlDB();
-        System.out.println("server hit4");
+        System.out.println("server hit2");
         AcceptBlock acceptBlock = new AcceptBlock();
         CommonFunctions commonFunctions = new CommonFunctions();
         StringBuilder buffer = new StringBuilder();
         BufferedReader reader = request.getReader();
+        int statusCode = 0;
         String line;
         while ((line = reader.readLine()) != null) {
             buffer.append(line);
         }
         String data = buffer.toString();
-        System.out.println("data4:-" + data);
+        System.out.println("data2:-" + data);
         JSONParser parser = new JSONParser();
 
         try {
@@ -54,28 +53,28 @@ public class AcceptFourthBlockReqAPI extends HttpServlet {
             Long blockID = (Long) jSONObject.get("blockID");
             System.out.println("curr:" + currentHashBlock + " block:" + blockID);
 
-            int statusCode=0;
-            if(acceptBlock.verifyData4(decryptString,currentHashBlock)){
+            if (acceptBlock.verifyData2(decryptString, currentHashBlock)) {
                 System.out.println("Data is secured");
 
                 List blockData = acceptBlock.getLastBlockHashDb(blockID);
                 String updatedBlock = acceptBlock.updateBlock(blockData, decryptString);
                 int listSize = (int) blockData.get(1);
-                if(listSize==4) {
+                if(listSize==2) {
                     if (acceptBlock.appendBlockInChain(blockID, updatedBlock)) {
                         statusCode = ConstantClass.SUCCESSFUL;
-                        sqlDB.updateBlockStatusTrue(blockID,"block4");
                         System.out.println("data saved");
+                        SqlDB sqlDB = new SqlDB();
+                        sqlDB.updateBlockStatusTrue(blockID,"block2");
                     } else {
                         statusCode = ConstantClass.FAILED;
                         System.out.println("not saved");
                     }
                 }else{
-                    sqlDB.updateBlockStatusFalse(blockID,"block4");
+                    SqlDB sqlDB = new SqlDB();
+                    sqlDB.updateBlockStatusFalse(blockID,"block2");
                     statusCode = ConstantClass.FAILED;
-                    System.out.println("trying to save block 4 before block three is saved");
-                 }
-
+                    System.out.println("trying to save block 3 before block 2 is saved");
+                }
             } else {
                 System.out.println("Data not secured");
                 statusCode = ConstantClass.BAD_REQUEST;

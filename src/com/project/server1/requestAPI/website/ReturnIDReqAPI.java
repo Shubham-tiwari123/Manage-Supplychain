@@ -1,7 +1,7 @@
-package com.project.server1.requestAPI;
+package com.project.server1.requestAPI.website;
 
 import com.project.server1.dao.SqlDB;
-import com.project.server1.responseAPI.ReturnIDResAPI;
+import com.project.server1.responseAPI.website.ReturnIDResAPI;
 import com.project.server1.services.CommonFunctions;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
