@@ -5,15 +5,15 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import androidx.annotation.RequiresApi;
-import com.example.shipchain.responseAPI.LoginUserResAPI;
-import com.example.shipchain.service.WelcomeUser;
+import com.example.shipchain.R;
+import com.example.shipchain.responseAPI.HelpUserResAPI;
 import com.example.shipchain.utils.Constant;
 import org.json.JSONObject;
 import java.io.OutputStream;
@@ -23,18 +23,17 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static android.content.Context.MODE_PRIVATE;
-
-public class LoginUserReqAPI extends AsyncTask<List<String>,Void, Void> {
+public class HelpUserReqAPI extends AsyncTask<List<String>,Void, Void> {
 
     @SuppressLint("StaticFieldLeak")
     private Context context;
+    private View rootView;
     private ProgressDialog dialog;
     private static Long status;
-    private static String userEmail;
 
-    public LoginUserReqAPI(Context context) {
+    public HelpUserReqAPI(Context context, View rootView) {
         this.context = context;
+        this.rootView = rootView;
         dialog = new ProgressDialog(context);
     }
 
@@ -47,14 +46,20 @@ public class LoginUserReqAPI extends AsyncTask<List<String>,Void, Void> {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected Void doInBackground(List<String>... params) {
-        String email = params[0].get(0);
-        String pass = params[0].get(1);
-        userEmail = email;
+        String productID = params[0].get(0);
+        String shopName = params[0].get(1);
+        String shopArea = params[0].get(2);
+        String submitDate = params[0].get(3);
+        String userName = params[0].get(4);
         try {
             JSONObject resultObj = new JSONObject();
-            resultObj.put("email",email);
-            resultObj.put("pass",pass);
-            URL url = new URL(Constant.LOGIN_URL);
+            resultObj.put("productID",productID);
+            resultObj.put("shopName",shopName);
+            resultObj.put("shopArea",shopArea);
+            resultObj.put("submitDate",submitDate);
+            resultObj.put("userName",userName);
+
+            URL url = new URL(Constant.SUBMIT_USER_COMPLAIN_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
@@ -63,11 +68,10 @@ public class LoginUserReqAPI extends AsyncTask<List<String>,Void, Void> {
             outputWriter.write(resultObj.toString());
             outputWriter.flush();
             outputWriter.close();
-            Log.e("Server...","CALLED:"+email+" pass:"+pass);
             if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
                 Log.e("Server...","Server Hit success");
-                LoginUserResAPI resAPI = new LoginUserResAPI();
-                status = resAPI.readResponse(conn,context);
+                HelpUserResAPI resAPI = new HelpUserResAPI();
+                status = resAPI.readResponse(conn);
             }
         } catch (Exception e) {
             System.out.println("exception:\n"+e);
@@ -84,19 +88,26 @@ public class LoginUserReqAPI extends AsyncTask<List<String>,Void, Void> {
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                     if(status == 200) {
-                        SharedPreferences sharedPreferences = context
-                                .getSharedPreferences("LoginUserStatus", Context.MODE_PRIVATE);
-
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean("LoginStatus",true);
-                        editor.putString("email",userEmail);
-                        editor.apply();
-                        Intent intent = new Intent(context, WelcomeUser.class);
-                        context.startActivity(intent);
+                        new AlertDialog.Builder(context)
+                            .setTitle("")
+                            .setMessage("Complain submitted")
+                            .setCancelable(false)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    final EditText productID = rootView.findViewById(R.id.product_id);
+                                    final EditText shopName = rootView.findViewById(R.id.shop_name);
+                                    final EditText shopArea = rootView.findViewById(R.id.shop_area);
+                                    productID.getText().clear();
+                                    shopArea.getText().clear();
+                                    shopName.getText().clear();
+                                    dialog.dismiss();
+                                }
+                            }).show();
                     }else{
                         new AlertDialog.Builder(context)
                             .setTitle("")
-                            .setMessage("Invalid Credentials")
+                            .setMessage("Data not submitted...try again")
                             .setCancelable(false)
                             .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                 @Override
@@ -108,5 +119,6 @@ public class LoginUserReqAPI extends AsyncTask<List<String>,Void, Void> {
                 }
             }
         }, 2000);
+
     }
 }
