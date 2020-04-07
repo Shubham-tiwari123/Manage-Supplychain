@@ -1,6 +1,8 @@
 package com.project.server1.dao;
 
 import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 public class SqlDB implements SqlDBInterface {
@@ -175,6 +177,60 @@ public class SqlDB implements SqlDBInterface {
             return id;
         }
         return id;
+    }
+
+    @Override
+    public boolean verifyAndroidUserLogin(String email, String pass) throws Exception {
+        boolean status = false;
+        if (createDbConnection()){
+            resultSet = statement.executeQuery("SELECT pass FROM registerUser WHERE email='"+email+"'");
+            while (resultSet.next()){
+                String password = resultSet.getString("pass");
+                if(pass.equals(password))
+                    status=true;
+            }
+        }
+        closeDbConnection(connect);
+        return status;
+    }
+
+    @Override
+    public boolean registerAndroidUser(String email, String pass, Long phoneNumber) throws Exception {
+        int status=0;
+        if(createDbConnection()){
+            status = statement.executeUpdate("INSERT INTO registerUser(email, pass, phoneNumber) " +
+                    "VALUES ('"+email+"','"+pass+"',"+phoneNumber+")");
+        }
+        closeDbConnection(connect);
+        return status == 1;
+    }
+
+    @Override
+    public List<String> getUserDetails(String email) throws Exception {
+        List<String> result = new LinkedList<>();
+        if (createDbConnection()){
+            resultSet = statement.executeQuery("SELECT * FROM registerUser WHERE email='"+email+"'");
+            while (resultSet.next()){
+                String password = resultSet.getString("pass");
+                Long phoneNumber = resultSet.getLong("phoneNumber");
+                result.add(email);
+                result.add(password);
+                result.add(String.valueOf(phoneNumber));
+            }
+        }
+        closeDbConnection(connect);
+        return result;
+    }
+
+    @Override
+    public boolean registerComplain(Long productId, String shopName, String shopArea, String complainDate, String email) throws Exception {
+        int status=0;
+        if(createDbConnection()){
+            status = statement.executeUpdate("insert into userComplain(productID, shopName, shopArea, complainDate, email) " +
+                    "VALUES ("+productId+",'"+shopName+"','"+shopArea+"','"+complainDate+"','"+email+"')");
+        }
+        closeDbConnection(connect);
+        return status == 1;
     }
 
 }
