@@ -50,7 +50,7 @@
         />
 
     <EditText
-        android:id="@+id/show_name"
+        android:id="@+id/shop_name"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:hint="Shop Name"
@@ -67,7 +67,7 @@
         />
 
     <EditText
-        android:id="@+id/show_area"
+        android:id="@+id/shop_area"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:hint="Shop Area"
@@ -83,11 +83,12 @@
         android:background="@drawable/edit_box_layout"
         />
 
-    <EditText
+    <TextView
         android:id="@+id/purchase_date"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:hint="Purchase Date"
+        android:text="Purchase Date"
+        android:gravity="center_vertical"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@color/text_color"
@@ -96,13 +97,12 @@
         android:layout_marginTop="12dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:inputType="datetime"
         android:singleLine="true"
         android:background="@drawable/edit_box_layout"
     />
 
     <Button
-        android:id="@+id/login_user_btn"
+        android:id="@+id/submit_form"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:text="Submit"

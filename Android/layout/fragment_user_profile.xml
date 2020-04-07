@@ -29,9 +29,10 @@
             android:layout_marginTop="30dp"
             />
     <TextView
+        android:id="@+id/user_email_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Name : Shubham"
+        android:text="Email : Shubham"
         android:textColor="@color/text_color"
         android:textSize="22sp"
         android:textStyle="bold"
@@ -40,9 +41,10 @@
         />
 
     <TextView
+        android:id="@+id/user_email_pass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email : s@gmail.com"
+        android:text="Password : s@gmail.com"
         android:textColor="@color/text_color"
         android:textSize="22sp"
         android:textStyle="bold"
@@ -51,9 +53,10 @@
         />
 
     <TextView
+        android:id="@+id/user_phoneNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Password : qwertyuiop"
+        android:text="Phone  : 9004318447"
         android:textColor="@color/text_color"
         android:textSize="22sp"
         android:textStyle="bold"
