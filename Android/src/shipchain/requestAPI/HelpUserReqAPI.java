@@ -14,7 +14,7 @@ import android.widget.EditText;
 import androidx.annotation.RequiresApi;
 import com.example.shipchain.R;
 import com.example.shipchain.responseAPI.HelpUserResAPI;
-import com.example.shipchain.utils.Constant;
+import com.example.shipchain.utils.ConstantClass;
 import org.json.JSONObject;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -59,7 +59,7 @@ public class HelpUserReqAPI extends AsyncTask<List<String>,Void, Void> {
             resultObj.put("submitDate",submitDate);
             resultObj.put("userName",userName);
 
-            URL url = new URL(Constant.SUBMIT_USER_COMPLAIN_URL);
+            URL url = new URL(ConstantClass.SUBMIT_USER_COMPLAIN_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);

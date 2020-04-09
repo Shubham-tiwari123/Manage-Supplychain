@@ -14,7 +14,7 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 import com.example.shipchain.responseAPI.LoginUserResAPI;
 import com.example.shipchain.service.WelcomeUser;
-import com.example.shipchain.utils.Constant;
+import com.example.shipchain.utils.ConstantClass;
 import org.json.JSONObject;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -22,8 +22,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class LoginUserReqAPI extends AsyncTask<List<String>,Void, Void> {
 
@@ -54,7 +52,7 @@ public class LoginUserReqAPI extends AsyncTask<List<String>,Void, Void> {
             JSONObject resultObj = new JSONObject();
             resultObj.put("email",email);
             resultObj.put("pass",pass);
-            URL url = new URL(Constant.LOGIN_URL);
+            URL url = new URL(ConstantClass.LOGIN_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
