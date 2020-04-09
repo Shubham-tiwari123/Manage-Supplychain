@@ -6,75 +6,140 @@
     android:background="@color/white"
     android:layout_height="match_parent">
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="Profile"
-        android:textSize="25sp"
-        android:paddingLeft="15dp"
-        android:textStyle="bold"
-        android:textColor="@color/text_color"
-        android:gravity="center_vertical"
-        />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/edit_box_border"
-        />
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/person_avtar"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
-            />
-    <TextView
-        android:id="@+id/user_email_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email : Shubham"
-        android:textColor="@color/text_color"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/user_email_pass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Password : s@gmail.com"
-        android:textColor="@color/text_color"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="20dp"
-        />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Profile"
+                android:textSize="25sp"
+                android:paddingLeft="15dp"
+                android:textStyle="bold"
+                android:textColor="@color/text_color"
+                android:gravity="center_vertical"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/edit_box_border"
+                />
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/person_avtar"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                />
+            <TextView
+                android:id="@+id/user_email_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email : Shubham"
+                android:textColor="@color/text_color"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                />
 
-    <TextView
-        android:id="@+id/user_phoneNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Phone  : 9004318447"
-        android:textColor="@color/text_color"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="20dp"
-        />
+            <TextView
+                android:id="@+id/user_email_pass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Password : s@gmail.com"
+                android:textColor="@color/text_color"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                />
 
-    <TextView
-        android:id="@+id/logout_user"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Logout"
-        android:textColor="@color/text_color"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:clickable="true"
-        />
+            <TextView
+                android:id="@+id/user_phoneNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone  : 9004318447"
+                android:textColor="@color/text_color"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                />
+
+            <TextView
+                android:id="@+id/publicKey_expo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Public Key Expo  : 9004318447"
+                android:textColor="@color/text_color"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                />
+
+            <TextView
+                android:id="@+id/publicKey_mod"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Public Key Mod  : 9004318447"
+                android:textColor="@color/text_color"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                />
+
+            <TextView
+                android:id="@+id/privateKey_expo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Private Key Expo  : 9004318447"
+                android:textColor="@color/text_color"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                />
+
+            <TextView
+                android:id="@+id/privateKey_mod"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Private Key Mod  : 9004318447"
+                android:textColor="@color/text_color"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                />
+
+            <TextView
+                android:id="@+id/logout_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logout"
+                android:textColor="@color/text_color"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:clickable="true"
+                android:layout_marginBottom="20dp"
+                />
+        </LinearLayout>
+    </ScrollView>
+
 
 </LinearLayout>
