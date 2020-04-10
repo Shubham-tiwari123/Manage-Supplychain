@@ -223,7 +223,8 @@ public class SqlDB implements SqlDBInterface {
     }
 
     @Override
-    public boolean registerComplain(Long productId, String shopName, String shopArea, String complainDate, String email) throws Exception {
+    public boolean registerComplain(Long productId, String shopName, String shopArea, String complainDate, String email)
+            throws Exception {
         int status=0;
         if(createDbConnection()){
             status = statement.executeUpdate("insert into userComplain(productID, shopName, shopArea, complainDate, email) " +

@@ -10,6 +10,7 @@ import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.UpdateResult;
+import com.project.server1.entity.AndroidUserKeys;
 import com.project.server1.entity.ClientKeys;
 import com.project.server1.entity.ServerKeys;
 import com.project.server1.utils.ConstantClass;
@@ -86,6 +87,23 @@ public class MongoDB implements MongoDBInterface {
                 Document document = new Document("userName", signature)
                         .append("publicKeyModules", keys.getClientPubKeyMod().toString())
                         .append("publicKeyExpo", keys.getClientPubKeyExpo().toString());
+                database.getCollection(collectionName).insertOne(document);
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean storeAndroidClientKeys(AndroidUserKeys keys, String collectionName, String email)
+            throws Exception {
+        if (createDbConnection()) {
+            if (checkCollection(collectionName)) {
+                System.out.println("Storing Android keys");
+                Document document = new Document("userName", email)
+                        .append("publicKeyModules", keys.getPublicKeyModules().toString())
+                        .append("publicKeyExpo", keys.getPublicKeyExpo().toString());
                 database.getCollection(collectionName).insertOne(document);
                 return true;
             }

@@ -8,8 +8,7 @@ import java.math.BigInteger;
 @JsonPropertyOrder({
         "publicKeyModules","publicKeyExpo","privateKeyModules","privateKeyExpo"
 })
-public class ServerKeys implements Serializable {
-    //server keys:
+public class AndroidUserKeys implements Serializable {
     private BigInteger publicKeyModules ;
     private BigInteger publicKeyExpo ;
     private BigInteger privateKeyModules;

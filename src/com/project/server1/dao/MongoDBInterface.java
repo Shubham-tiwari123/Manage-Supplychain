@@ -1,5 +1,6 @@
 package com.project.server1.dao;
 
+import com.project.server1.entity.AndroidUserKeys;
 import com.project.server1.entity.ClientKeys;
 import com.project.server1.entity.ServerKeys;
 
@@ -31,5 +32,7 @@ public interface MongoDBInterface {
     boolean getServerPrivateKeys(String collectionName) throws Exception;
 
     ArrayList<ArrayList<byte[]>> getSpecificData(long productId, String collectionName) throws Exception;
+
+    boolean storeAndroidClientKeys(AndroidUserKeys keys, String collectionName, String email) throws Exception;
 
 }

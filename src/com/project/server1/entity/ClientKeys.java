@@ -1,8 +1,14 @@
 package com.project.server1.entity;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import java.io.Serializable;
 import java.math.BigInteger;
 
-public class ClientKeys {
+@JsonPropertyOrder({
+        "clientPubKeyMod","clientPubKeyExpo"
+})
+public class ClientKeys implements Serializable {
 
     private BigInteger clientPubKeyMod ;
     private BigInteger clientPubKeyExpo ;
