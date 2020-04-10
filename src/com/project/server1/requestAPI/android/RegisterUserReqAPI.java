@@ -1,6 +1,10 @@
 package com.project.server1.requestAPI.android;
 
+import com.project.server1.entity.AndroidUserKeys;
+import com.project.server1.entity.RegisterUser;
 import com.project.server1.responseAPI.android.RegisterUserResAPI;
+import com.project.server1.services.AndroidFunction;
+import com.project.server1.services.CommonFunctions;
 import com.project.server1.utils.ConstantClass;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,7 +21,9 @@ public class RegisterUserReqAPI extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
+            CommonFunctions commonFunctions = new CommonFunctions();
             RegisterUserResAPI resAPI = new RegisterUserResAPI();
+            AndroidFunction androidFunction = new AndroidFunction();
             StringBuilder buffer = new StringBuilder();
             BufferedReader reader = request.getReader();
             String line;
@@ -26,27 +32,23 @@ public class RegisterUserReqAPI extends HttpServlet {
             }
             String data = buffer.toString();
             System.out.println("datassss:-" + data);
-            JSONParser jsonParser = new JSONParser();
-            JSONObject jSONObject = (JSONObject) jsonParser.parse(data);
-            String email = (String) jSONObject.get("email");
-            String pass = (String) jSONObject.get("pass");
-            String phoneNumber = (String) jSONObject.get("phoneNumber");
-            System.out.println("email:"+email+" pass:"+pass);
 
-            /**
-             * Store the data in db
-             * Generate a random key of some length and store public key in db against userEmail
-             * Send keys to client with statusCode in response.
-             */
-
-            if(email.equals("s@gmail.com") && pass.equals("qwe"))
-                resAPI.sendResponse(response, ConstantClass.SUCCESSFUL);
+            RegisterUser registerUser = commonFunctions.convertJsonToJava(data,RegisterUser.class);
+            if(androidFunction.registerUser(registerUser)){
+                AndroidUserKeys userKeys = androidFunction.generateKeys(registerUser.getEmail());
+                String clientKeys = commonFunctions.convertJavaToJson(userKeys);
+                if(androidFunction.storeKeys(registerUser.getEmail(),userKeys))
+                    resAPI.sendResponse(response,ConstantClass.SUCCESSFUL,clientKeys);
+                else
+                    resAPI.sendResponse(response,ConstantClass.FAILED,null);
+            }
             else
-                resAPI.sendResponse(response, ConstantClass.FAILED);
+                resAPI.sendResponse(response,ConstantClass.FAILED,null);
+
         }catch (Exception e){
             System.out.println(e);
             RegisterUserResAPI resAPI = new RegisterUserResAPI();
-            resAPI.sendResponse(response,ConstantClass.BAD_REQUEST);
+            resAPI.sendResponse(response,ConstantClass.BAD_REQUEST,null);
         }
     }
 

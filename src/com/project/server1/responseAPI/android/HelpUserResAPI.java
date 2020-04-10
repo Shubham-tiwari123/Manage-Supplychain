@@ -7,14 +7,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "RegisterUserResAPI")
-public class RegisterUserResAPI extends HttpServlet {
-    public void sendResponse(HttpServletResponse response, int statusCode, String keys)
-            throws IOException {
+@WebServlet(name = "HelpUserResAPI")
+public class HelpUserResAPI extends HttpServlet {
+    public void sendResponse(HttpServletResponse response,int statusCode) throws IOException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("statusCode",statusCode);
-        if(keys!=null)
-            jsonObject.put("clientKeys",keys);
         PrintWriter writer = response.getWriter();
         writer.println(jsonObject.toString());
     }

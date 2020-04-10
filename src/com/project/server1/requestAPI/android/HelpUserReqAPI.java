@@ -1,13 +1,13 @@
 package com.project.server1.requestAPI.android;
 
-import com.project.server1.entity.RegisterUser;
-import com.project.server1.responseAPI.android.LoginUserResAPI;
+import com.project.server1.entity.RegisterComplain;
+import com.project.server1.responseAPI.android.HelpUserResAPI;
+import com.project.server1.responseAPI.android.RegisterUserResAPI;
 import com.project.server1.services.AndroidFunction;
 import com.project.server1.services.CommonFunctions;
 import com.project.server1.utils.ConstantClass;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,15 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-@WebServlet(name = "LoginUserReqAPI",urlPatterns = {"/login_android_user"})
-public class LoginUserReqAPI extends HttpServlet {
-
+@WebServlet(name = "HelpUserReqAPI", urlPatterns = {"/submit_complain"})
+public class HelpUserReqAPI extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
+            HelpUserResAPI resAPI = new HelpUserResAPI();
             AndroidFunction androidFunction = new AndroidFunction();
             CommonFunctions commonFunctions = new CommonFunctions();
-            LoginUserResAPI resAPI = new LoginUserResAPI();
-
             StringBuilder buffer = new StringBuilder();
             BufferedReader reader = request.getReader();
             String line;
@@ -32,22 +30,15 @@ public class LoginUserReqAPI extends HttpServlet {
             }
             String data = buffer.toString();
             System.out.println("datassss:-" + data);
-            JSONParser jsonParser = new JSONParser();
-            JSONObject jSONObject = (JSONObject) jsonParser.parse(data);
-            String email = (String) jSONObject.get("email");
-            String pass = (String) jSONObject.get("pass");
-            System.out.println("email:"+email+" pass:"+pass);
-            if(androidFunction.verifyUserLogin(email,pass)) {
-                RegisterUser userDetails = androidFunction.getUserDetails(email);
-                String userDetail = commonFunctions.convertJavaToJson(userDetails);
-                resAPI.sendResponse(response, ConstantClass.SUCCESSFUL,userDetail);
-            }
+            RegisterComplain registerComplain = commonFunctions.convertJsonToJava(data,RegisterComplain.class);
+            if(androidFunction.registerComplain(registerComplain))
+                resAPI.sendResponse(response,ConstantClass.SUCCESSFUL);
             else
-                resAPI.sendResponse(response, ConstantClass.FAILED,null);
+                resAPI.sendResponse(response, ConstantClass.FAILED);
         }catch (Exception e){
             System.out.println(e);
-            LoginUserResAPI resAPI = new LoginUserResAPI();
-            resAPI.sendResponse(response,ConstantClass.BAD_REQUEST,null);
+            HelpUserResAPI resAPI = new HelpUserResAPI();
+            resAPI.sendResponse(response,ConstantClass.BAD_REQUEST);
         }
     }
 }
