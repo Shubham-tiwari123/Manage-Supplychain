@@ -116,6 +116,7 @@ public class ConnectToDevice implements ConnectToDeviceInterface {
         return database.storeClientKeys(keys, ConstantClass.STORE_KEYS,clientSignature);
     }
 
+
     @Override
     public String calculateHash(String data) throws Exception {
         return extraFunction.calculateHash(data);
