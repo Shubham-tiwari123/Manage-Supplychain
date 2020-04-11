@@ -18,6 +18,8 @@ public interface AndroidFunctionInterface {
 
     AndroidUserKeys generateKeys(String email) throws Exception;
 
+    AndroidUserKeys getKeys(String email) throws Exception;
+
     boolean storeKeys(String email,AndroidUserKeys keys) throws Exception;
 
     ArrayList<ArrayList<byte[]>> getProductInfo(long productID) throws Exception;

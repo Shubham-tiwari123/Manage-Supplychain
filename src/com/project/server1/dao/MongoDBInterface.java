@@ -20,6 +20,8 @@ public interface MongoDBInterface {
 
     ClientKeys getClientKeys(String collectionName, String deviceSignature) throws Exception;
 
+    AndroidUserKeys getAndroidClientKeys(String collectionName, String email) throws Exception;
+
     boolean storeServerKeys(ServerKeys keys, String collectionName) throws Exception;
 
     ServerKeys getServerKeys(String collectionName) throws Exception;

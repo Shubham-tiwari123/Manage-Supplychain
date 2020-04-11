@@ -66,6 +66,11 @@ public class AndroidFunction implements AndroidFunctionInterface {
     }
 
     @Override
+    public AndroidUserKeys getKeys(String email) throws Exception {
+        return mongoDB.getAndroidClientKeys(ConstantClass.STORE_KEYS,email);
+    }
+
+    @Override
     public boolean storeKeys(String email, AndroidUserKeys keys) throws Exception {
         return mongoDB.storeAndroidClientKeys(keys, ConstantClass.STORE_KEYS, email);
     }
@@ -122,6 +127,7 @@ public class AndroidFunction implements AndroidFunctionInterface {
         sendData.setTotalCarton(block4.getTotalCarton());
         sendData.setCartonNumberRange(block4.getCartonNumber());
         sendData.setExporterName(block4.getExporterName());
+        sendData.setBlockPresent(list.size()-1);
         return sendData;
     }
 }

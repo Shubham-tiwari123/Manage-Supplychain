@@ -103,7 +103,9 @@ public class MongoDB implements MongoDBInterface {
                 System.out.println("Storing Android keys");
                 Document document = new Document("userName", email)
                         .append("publicKeyModules", keys.getPublicKeyModules().toString())
-                        .append("publicKeyExpo", keys.getPublicKeyExpo().toString());
+                        .append("publicKeyExpo", keys.getPublicKeyExpo().toString())
+                        .append("privateKeyModules", keys.getPrivateKeyModules().toString())
+                        .append("privateKeyExpo", keys.getPrivateKeyExpo().toString());
                 database.getCollection(collectionName).insertOne(document);
                 return true;
             }
@@ -121,7 +123,6 @@ public class MongoDB implements MongoDBInterface {
                 System.out.println("getting client keys from db");
                 List<Document> list = collection.find(new Document("userName", deviceSignature))
                         .into(new ArrayList<Document>());
-
                 System.out.println("list:" + list.size());
                 if (!list.isEmpty()) {
                     for (Document val : list) {
@@ -131,6 +132,38 @@ public class MongoDB implements MongoDBInterface {
                         System.out.println("setting client keys");
                         keys.setClientPubKeyMod(new BigInteger(publicKeyModules));
                         keys.setClientPubKeyExpo(new BigInteger(publicKeyExpo));
+                    }
+                    return keys;
+                }
+                return null;
+            }
+            return null;
+        }
+        return null;
+    }
+
+    @Override
+    public AndroidUserKeys getAndroidClientKeys(String collectionName, String email) throws Exception {
+        AndroidUserKeys keys = new AndroidUserKeys();
+        if (createDbConnection()) {
+            if (checkCollection(collectionName)) {
+                MongoCollection<Document> collection = database.getCollection(collectionName);
+                System.out.println("getting client keys from db");
+                List<Document> list = collection.find(new Document("userName", email))
+                        .into(new ArrayList<Document>());
+                System.out.println("list:" + list.size());
+                if (!list.isEmpty()) {
+                    for (Document val : list) {
+                        String publicKeyModules = val.getString("publicKeyModules");
+                        String publicKeyExpo = val.getString("publicKeyExpo");
+                        String privateKeyModules = val.getString("privateKeyModules");
+                        String privateKeyExpo = val.getString("privateKeyExpo");
+
+                        System.out.println("setting client keys");
+                        keys.setPublicKeyModules(new BigInteger(publicKeyModules));
+                        keys.setPublicKeyExpo(new BigInteger(publicKeyExpo));
+                        keys.setPrivateKeyModules(new BigInteger(privateKeyModules));
+                        keys.setPrivateKeyExpo(new BigInteger(privateKeyExpo));
                     }
                     return keys;
                 }
