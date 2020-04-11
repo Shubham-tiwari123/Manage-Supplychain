@@ -1,5 +1,6 @@
 package com.project.server1.requestAPI.android;
 
+import com.project.server1.entity.AndroidUserKeys;
 import com.project.server1.entity.RegisterUser;
 import com.project.server1.responseAPI.android.LoginUserResAPI;
 import com.project.server1.services.AndroidFunction;
@@ -38,16 +39,18 @@ public class LoginUserReqAPI extends HttpServlet {
             String pass = (String) jSONObject.get("pass");
             System.out.println("email:"+email+" pass:"+pass);
             if(androidFunction.verifyUserLogin(email,pass)) {
+                AndroidUserKeys keys = androidFunction.getKeys(email);
                 RegisterUser userDetails = androidFunction.getUserDetails(email);
                 String userDetail = commonFunctions.convertJavaToJson(userDetails);
-                resAPI.sendResponse(response, ConstantClass.SUCCESSFUL,userDetail);
+                String clientKeys = commonFunctions.convertJavaToJson(keys);
+                resAPI.sendResponse(response, ConstantClass.SUCCESSFUL,userDetail,clientKeys);
             }
             else
-                resAPI.sendResponse(response, ConstantClass.FAILED,null);
+                resAPI.sendResponse(response, ConstantClass.FAILED,null,null);
         }catch (Exception e){
             System.out.println(e);
             LoginUserResAPI resAPI = new LoginUserResAPI();
-            resAPI.sendResponse(response,ConstantClass.BAD_REQUEST,null);
+            resAPI.sendResponse(response,ConstantClass.BAD_REQUEST,null,null);
         }
     }
 }
