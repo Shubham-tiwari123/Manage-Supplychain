@@ -1,5 +1,6 @@
 package com.project.client.responseAPI;
 
+import com.project.client.utils.ConstantClass;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -30,11 +31,11 @@ public class GetBlockIDResAPI extends HttpServlet {
             JSONObject object1 = new JSONObject();
             int statusCode;
             if(status==200){
-                statusCode = 200;
+                statusCode = ConstantClass.SUCCESSFUL;
                 Long productID = (Long) object.get("productID");
                 object1.put("productID",productID);
             }else{
-                statusCode = 404;
+                statusCode = ConstantClass.FAILED;
             }
             object1.put("statusCode", statusCode);
             PrintWriter writer = response.getWriter();
@@ -42,7 +43,7 @@ public class GetBlockIDResAPI extends HttpServlet {
         } catch (Exception e) {
             System.out.println("Something went wrong try again......");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("statusCode",404);
+            jsonObject.put("statusCode", ConstantClass.FAILED);
             PrintWriter printWriter = response.getWriter();
             printWriter.println(jsonObject.toString());
             e.printStackTrace();
