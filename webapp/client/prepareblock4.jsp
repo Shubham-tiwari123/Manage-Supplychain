@@ -281,7 +281,7 @@
 
         console.log("called");
         setTimeout(function () {
-            let response = $.post('/get-id',{
+            let response = $.post('/get_blockId',{
                 blockNumber:"block4"
             });
             response.success(function (result) {
@@ -336,7 +336,7 @@
             document.getElementById("confirm-btn").style.visibility = "hidden";
             console.log("valid");
 
-            let response = $.post('/send-block4',{
+            let response = $.post('/send_block4',{
                 totalCarton:totalCarton,
                 blockID:blockId,
                 cartonNumbers:cartonNumbers,

@@ -276,7 +276,7 @@
 
         console.log("called");
         setTimeout(function () {
-            let response = $.post('/get-id',{
+            let response = $.post('/get_blockId',{
                 blockNumber:"block3"
             });
             response.success(function (result) {
@@ -329,7 +329,7 @@
             document.getElementById("confirm-btn").style.visibility="hidden";
             console.log("valid");
 
-            let response = $.post('/send-block3',{
+            let response = $.post('/send_block3',{
                 productQun:qunt,
                 blockID:blockId,
                 totalBoxes:totalBoxes,

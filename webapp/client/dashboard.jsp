@@ -269,7 +269,7 @@
 
     };
 
-    let response = $.get('/get-keys');
+    let response = $.get('/get_keys');
 
     setTimeout(function () {
         response.success(function (result) {
@@ -304,7 +304,7 @@
         document.getElementById("popup-text").innerText = "Connecting to server";
         document.getElementById("confirm-btn").style.visibility="hidden";
         console.log("called");
-        let res = $.get('/connect-server');
+        let res = $.post('/connect_device');
 
         setTimeout(function () {
             res.success(function (result) {

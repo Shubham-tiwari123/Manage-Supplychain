@@ -306,7 +306,7 @@
 
         console.log("called");
         setTimeout(function () {
-            let response = $.post('/get-id',{
+            let response = $.post('/get_blockId',{
                 blockNumber:"block2"
             });
             response.success(function (result) {
@@ -359,7 +359,7 @@
             document.getElementById("confirm-btn").style.visibility="hidden";
             console.log("valid")
 
-            let response = $.post('/send-block2',{
+            let response = $.post('/send_block2',{
                 productQun:qunt,
                 blockID:blockId,
                 machineNo:machineNo,
