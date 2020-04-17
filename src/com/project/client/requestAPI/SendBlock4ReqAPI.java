@@ -23,7 +23,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-@WebServlet(name = "SendBlock4ReqAPI", urlPatterns = {"/send-block4"})
+@WebServlet(name = "SendBlock4ReqAPI")
 public class SendBlock4ReqAPI extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
