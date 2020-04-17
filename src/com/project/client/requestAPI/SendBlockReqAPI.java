@@ -22,7 +22,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-@WebServlet(name = "SendBlockReqAPI", urlPatterns = {"/send-block"})
+@WebServlet(name = "SendBlockReqAPI")
 public class SendBlockReqAPI extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -110,11 +110,5 @@ public class SendBlockReqAPI extends HttpServlet {
             printWriter.println(jsonObject.toString());
             e.printStackTrace();
         }
-
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
     }
 }

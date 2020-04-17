@@ -2,8 +2,6 @@ package com.project.client.requestAPI;
 
 import com.project.client.services.CommonFunction;
 import org.json.simple.JSONObject;
-
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -12,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "LoginReqAPI",urlPatterns = {"/login"})
+@WebServlet(name = "LoginReqAPI")
 
 public class LoginReqAPI extends HttpServlet {
 
@@ -47,8 +45,5 @@ public class LoginReqAPI extends HttpServlet {
             printWriter.println(jsonObject.toString());
         }
 
-    }
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
     }
 }

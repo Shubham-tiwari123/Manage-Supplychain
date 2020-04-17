@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-@WebServlet(name = "ConnectToServerReqAPI",urlPatterns = {"/connect-device"})
+@WebServlet(name = "ConnectToServerReqAPI")
 public class ConnectToServerReqAPI extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
@@ -41,12 +41,12 @@ public class ConnectToServerReqAPI extends HttpServlet {
                                             System.out.println("Client keys send...");
                                             count++;
                                         } else {
-                                            statusCode = 400;
+                                            statusCode = ConstantClass.FAILED;
                                             connect.closeConnections();
                                         }
                                     } else {
                                         System.out.println("Issue in network....try again");
-                                        statusCode = 400;
+                                        statusCode = ConstantClass.FAILED;
                                         connect.closeConnections();
                                     }
                                     break;
@@ -68,24 +68,24 @@ public class ConnectToServerReqAPI extends HttpServlet {
                                                     if(connect.deleteServerKeys())
                                                         System.out.println("server keys deleted");
                                                     System.out.println("Issue in server storing");
-                                                    statusCode = 400;
+                                                    statusCode = ConstantClass.FAILED;
                                                     connect.closeConnections();
                                                 }
                                             }else{
                                                 System.out.println("keys not stored...db error");
-                                                statusCode = 400;
+                                                statusCode = ConstantClass.FAILED;
                                                 connect.sendData("400");
                                                 connect.closeConnections();
                                             }
                                         } else {
                                             System.out.println("keys not verified");
-                                            statusCode = 400;
+                                            statusCode = ConstantClass.FAILED;
                                             connect.sendData("400");
                                             connect.closeConnections();
                                         }
                                     }else {
                                         System.out.println("Tampered client keys ....try again");
-                                        statusCode = 400;
+                                        statusCode = ConstantClass.FAILED;
                                         connect.closeConnections();
                                     }
                                     break;
@@ -96,16 +96,16 @@ public class ConnectToServerReqAPI extends HttpServlet {
                             }
                         }
                     } else {
-                        statusCode = 400;
+                        statusCode = ConstantClass.FAILED;
                         System.out.println("Something went wrong....try again");
                         connect.closeConnections();
                     }
                 } else {
-                    statusCode = 400;
+                    statusCode = ConstantClass.FAILED;
                     System.out.println("Something went wrong....try again");
                 }
 
-                if (statusCode == 200) {
+                if (statusCode == ConstantClass.SUCCESSFUL) {
                     System.out.println("Keys exchanged and stored in db");
                 }
             }

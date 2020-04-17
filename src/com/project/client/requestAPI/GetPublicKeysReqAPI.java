@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "GetPublicKeysReqAPI",urlPatterns = {"/get-keys"})
+@WebServlet(name = "GetPublicKeysReqAPI")
 public class GetPublicKeysReqAPI extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -28,17 +28,17 @@ public class GetPublicKeysReqAPI extends HttpServlet {
                 String client = clientKeys.getPublicKeyModules().toString().substring(0, 80);
                 object.put("PC", client);
                 object.put("Server", server);
-                object.put("statusCode", 200);
+                object.put("statusCode", ConstantClass.SUCCESSFUL);
             }
             else {
-                object.put("statusCode", 301);
+                object.put("statusCode", ConstantClass.BAD_REQUEST);
             }
             PrintWriter writer = response.getWriter();
             writer.println(object.toJSONString());
         }catch (Exception e){
             System.out.println(e);
             JSONObject object = new JSONObject();
-            object.put("statusCode", 301);
+            object.put("statusCode", ConstantClass.BAD_REQUEST);
             PrintWriter writer = response.getWriter();
             writer.println(object.toJSONString());
         }

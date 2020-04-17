@@ -18,13 +18,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-@WebServlet(name = "GetBlockIDReqAPI",urlPatterns = {"/get-id"})
+@WebServlet(name = "GetBlockIDReqAPI")
 
 public class GetBlockIDReqAPI extends HttpServlet {
-    static int count=4;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
         String blockNumber = request.getParameter("blockNumber");
         JSONObject result = new JSONObject();
         result.put("blockNumber",blockNumber);
@@ -74,7 +73,7 @@ public class GetBlockIDReqAPI extends HttpServlet {
             }
             System.out.println("Something went wrong try again......");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("statusCode",400);
+            jsonObject.put("statusCode",ConstantClass.FAILED);
             PrintWriter printWriter = response.getWriter();
             printWriter.println(jsonObject.toString());
             e.printStackTrace();
