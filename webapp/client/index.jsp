@@ -88,6 +88,9 @@
             box-shadow: 5px 5px 10px rgba(65, 65, 65, 0.69);
         }
 
+        #form_fill input:focus{
+            outline: none;
+        }
         #submitBtn {
             margin-left: 65px;
             margin-top: 30px;
@@ -196,7 +199,8 @@
                         margin-top: 8px; margin-left: 8px">
                         <input type="text" id="userEmail" placeholder="Email" name="userEmail" style=" width: 200px;
                         height: 100%;border: none; background-color: transparent;float: right;
-                        margin-right: 10px;color: #464646; font: bold 16px Arial, Helvetica, sans-serif;">
+                        margin-right: 10px;color: #464646; font: bold 16px Arial, Helvetica, sans-serif;"
+                        onfocus="this.placeholder=''" onblur="this.placeholder='Email'">
                     </div>
 
                     <div id="form_fill">
@@ -204,7 +208,8 @@
                         margin-top: 8px; margin-left: 8px">
                         <input type="password" id="userPass" placeholder="Password" style=" width: 200px; height: 100%;
                         border: none; background-color: transparent;float: right; margin-right: 10px;
-                        color: #464646; font: bold 16px Arial, Helvetica, sans-serif;" name="userPass">
+                        color: #464646; font: bold 16px Arial, Helvetica, sans-serif;" name="userPass"
+                               onfocus="this.placeholder=''" onblur="this.placeholder='Password'">
                     </div>
 
                     <button onclick="sendResponse()" id="submitBtn">LOGIN</button>
@@ -270,7 +275,7 @@
                     document.getElementById("popup-text").style.color = "#BA0606";
                     document.getElementById("confirm-btn").style.visibility ="visible";
                 })
-            }, 2000);
+            }, 1500);
 
         }
     }

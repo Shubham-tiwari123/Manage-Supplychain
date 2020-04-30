@@ -9,7 +9,7 @@
         }
 
         #header {
-            height: 10%;
+            height: 65px;
             width: 100%;
             background-color: #E6E6E6;
             box-shadow: 5px 5px 10px rgba(122, 122, 122, 0.63);
@@ -42,6 +42,7 @@
             width: 78%;
             height: 100%;
             float: right;
+            overflow: auto;
         }
 
         #pc-img {
@@ -56,23 +57,22 @@
             width: fit-content;
             height: fit-content;
             margin-top: 140px;
-            margin-right: 120px;
-            float: right;
+            margin-left: 120px;
+            float: left;
         }
 
         #connectBtn {
-            position: absolute;
             height: 40px;
             width: 130px;
-            bottom: 0;
             border-radius: 20px;
-            margin-bottom: 380px;
             margin-left: 80px;
             background-color: #57B846;
             border: none;
             color: white;
             font: bold 18px Arial, Helvetica, sans-serif;
             box-shadow: 5px 5px 10px rgba(65, 65, 65, 0.69);
+            float: left;
+            margin-top: 220px;
         }
 
         #server-cap {
@@ -89,7 +89,7 @@
         }
 
         #table-style {
-            margin-top: 400px;
+            margin-top: 440px;
             width: 90%;
             height: fit-content;
             margin-left: 40px;
@@ -101,6 +101,7 @@
         #public-keys {
             border-collapse: collapse;
             width: 100%;
+            margin-bottom: 60px;
         }
 
         #public-keys th {
@@ -225,11 +226,11 @@
             <img src="static/images/server.png" style="width: 280px; height: 250px">
             <div id="server-cap">SERVER</div>
         </div>
+        <button id="connectBtn" onclick="connectToServer()">CONNECT</button>
         <div id="client-img">
             <img src="static/images/client.png" style="width: 220px; height: 180px">
             <div id="client-cap">CLIENT</div>
         </div>
-        <button id="connectBtn" onclick="connectToServer()">CONNECT</button>
         <div id="table-style">
             <table id="public-keys">
                 <tr>
@@ -242,8 +243,7 @@
                 </tr>
                 <tr>
                     <td style="border-radius: 0px 0px 16px 16px">Server</td>
-                    <td id = "server-key" style="border-radius: 0px 0px 16px 16px">
-                    </td>
+                    <td id = "server-key" style="border-radius: 0px 0px 16px 16px"></td>
                 </tr>
             </table>
         </div>
@@ -274,7 +274,7 @@
     setTimeout(function () {
         response.success(function (result) {
             let obj = jQuery.parseJSON(result);
-            console.log("obj: hett keys:",obj);
+            console.log("obj: hit keys:",obj);
             if(obj.statusCode===200) {
                 document.getElementById("popup-text").innerText = "Setting Keys";
                 document.getElementById("pc-key").innerText = obj.PC;
@@ -283,9 +283,15 @@
                 document.getElementById("connectBtn").style.backgroundColor = "grey";
                 setTimeout(function () {
                     modal.style.display = "none";
-                },1500);
+                },1000);
+            }else if (obj.statusCode===500){
+                document.getElementById("popup-text").innerText = "Db error..refresh page";
+                document.getElementById("popup-text").style.color = "#BA0606";
+                document.getElementById("connectBtn").disabled = true;
+                document.getElementById("connectBtn").style.backgroundColor = "grey";
+                document.getElementById("confirm-btn").style.visibility ="visible";
             }else{
-                document.getElementById("popup-text").innerText = "DB error... refresh page";
+                document.getElementById("popup-text").innerText = "Please connect to server";
                 document.getElementById("popup-text").style.color = "#BA0606";
                 document.getElementById("confirm-btn").style.visibility ="visible";
             }
@@ -294,9 +300,11 @@
         response.error(function (jqXHR, textStatus, errorThrown) {
             document.getElementById("popup-text").innerText = "Server error... refresh page";
             document.getElementById("popup-text").style.color = "#BA0606";
+            document.getElementById("connectBtn").disabled = true;
+            document.getElementById("connectBtn").style.backgroundColor = "grey";
             document.getElementById("confirm-btn").style.visibility ="visible";
         })
-    },3000);
+    },2000);
 
 
     function connectToServer() {
@@ -309,22 +317,35 @@
         setTimeout(function () {
             res.success(function (result) {
                 var obj = jQuery.parseJSON(result);
-                document.getElementById("popup-text").innerText = "Setting keys";
-                document.getElementById("pc-key").innerText = obj.PC;
-                document.getElementById("server-key").innerText = obj.Server;
-                document.getElementById("connectBtn").disabled = true;
-                document.getElementById("connectBtn").style.backgroundColor = "grey";
-                setTimeout(function () {
-                    modal.style.display = "none";
-                },1000);
+                if(obj.statusCode===200) {
+                    document.getElementById("popup-text").innerText = "Setting Keys";
+                    document.getElementById("pc-key").innerText = obj.PC;
+                    document.getElementById("server-key").innerText = obj.Server;
+                    document.getElementById("connectBtn").disabled = true;
+                    document.getElementById("connectBtn").style.backgroundColor = "grey";
+                    setTimeout(function () {
+                        modal.style.display = "none";
+                    },1000);
+                }else if (obj.statusCode===500){
+                    document.getElementById("popup-text").innerText = "Db error..refresh page";
+                    document.getElementById("popup-text").style.color = "#BA0606";
+                    document.getElementById("connectBtn").disabled = true;
+                    document.getElementById("connectBtn").style.backgroundColor = "grey";
+                    document.getElementById("confirm-btn").style.visibility ="visible";
+                }else{
+                    document.getElementById("popup-text").innerText = "Server error... try again";
+                    document.getElementById("popup-text").style.color = "#BA0606";
+                    document.getElementById("confirm-btn").style.visibility ="visible";
+                }
             });
+
             res.error(function (jqXHR, textStatus, errorThrown) {
                 document.getElementById("popup-text").innerText = "Server error... try again";
                 document.getElementById("popup-text").style.color = "#BA0606";
                 document.getElementById("confirm-btn").style.visibility ="visible";
             })
 
-        },3000)
+        },2000)
     }
 </script>
 </html>
