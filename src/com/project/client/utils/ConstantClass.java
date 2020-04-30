@@ -20,4 +20,21 @@ public final class ConstantClass {
     final static public int BAD_REQUEST = 401;
     final static public int INTERNAL_SERVER_ERROR = 500;
 
+    final static public String GET_PRODUCT_ID_URL1 = "http://localhost:8081/request_productID";
+    final static public String GET_PRODUCT_ID_URL2 = "http://localhost:8082/request_productID";
+
+    final static public String SEND_BLOCK1_URL1 = "http://localhost:8081/first_block";
+    final static public String SEND_BLOCK1_URL2 = "http://localhost:8082/first_block";
+
+    final static public String SEND_BLOCK2_URL1 = "http://localhost:8081/second_block";
+    final static public String SEND_BLOCK2_URL2 = "http://localhost:8082/second_block";
+
+    final static public String SEND_BLOCK3_URL1 = "http://localhost:8081/third_block";
+    final static public String SEND_BLOCK3_URL2 = "http://localhost:8082/third_block";
+
+    final static public String SEND_BLOCK4_URL1 = "http://localhost:8081/fourth_block";
+    final static public String SEND_BLOCK4_URL2 = "http://localhost:8082/fourth_block";
+
+    final static public String CONNECT_SERVER_URL1 = "http://localhost:8081/connect_server";
+    final static public String CONNECT_SERVER_URL2 = "http://localhost:8082/connect_server";
 }

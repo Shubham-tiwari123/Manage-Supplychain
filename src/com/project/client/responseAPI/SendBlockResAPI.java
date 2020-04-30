@@ -1,5 +1,6 @@
 package com.project.client.responseAPI;
 
+import com.project.client.utils.ConstantClass;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -31,9 +32,9 @@ public class SendBlockResAPI extends HttpServlet {
             JSONObject object1 = new JSONObject();
             int statusCode;
             if(status==200){
-                statusCode = 200;
+                statusCode = ConstantClass.SUCCESSFUL;
             }else{
-                statusCode = 404;
+                statusCode = ConstantClass.FAILED;
             }
             object1.put("statusCode", statusCode);
             System.out.println("statussss:"+statusCode);
@@ -42,7 +43,7 @@ public class SendBlockResAPI extends HttpServlet {
         } catch (Exception e) {
             System.out.println("Something went wrong try again......");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("statusCode",400);
+            jsonObject.put("statusCode",ConstantClass.BAD_REQUEST);
             PrintWriter printWriter = response.getWriter();
             printWriter.println(jsonObject.toString());
             e.printStackTrace();

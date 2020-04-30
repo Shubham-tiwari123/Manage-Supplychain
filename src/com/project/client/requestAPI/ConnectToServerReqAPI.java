@@ -1,23 +1,27 @@
 package com.project.client.requestAPI;
 
+import com.project.client.responseAPI.ConnectToServerResAPI;
 import com.project.client.services.ConnectToServer;
 import com.project.client.utils.ConstantClass;
+import org.json.simple.JSONObject;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 @WebServlet(name = "ConnectToServerReqAPI")
 public class ConnectToServerReqAPI extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response){
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ConnectToServer connect = new ConnectToServer();
         int count = 0;
         String resString = "";
-        int statusCode = 200;
+        int statusCode = ConstantClass.SUCCESSFUL;
         try {
             System.out.println("client hit");
             URL url = new URL(ConstantClass.CONNECT_SERVER_URL1);
@@ -104,21 +108,27 @@ public class ConnectToServerReqAPI extends HttpServlet {
                     statusCode = ConstantClass.FAILED;
                     System.out.println("Something went wrong....try again");
                 }
-
-                if (statusCode == ConstantClass.SUCCESSFUL) {
-                    System.out.println("Keys exchanged and stored in db");
-                }
+                connect.closeConnections();
+                ConnectToServerResAPI resAPI = new ConnectToServerResAPI();
+                resAPI.readResponse(response,request,statusCode);
             }
             else{
+                connect.closeConnections();
                 System.out.println("socket is closed try again");
+                ConnectToServerResAPI resAPI = new ConnectToServerResAPI();
+                resAPI.readResponse(response,request,ConstantClass.FAILED);
             }
         }catch (Exception e){
             //System.out.println(e);
             try {
                 connect.closeConnections();
                 System.out.println("catch throwing....closing connection");
+                ConnectToServerResAPI resAPI = new ConnectToServerResAPI();
+                resAPI.readResponse(response,request,ConstantClass.BAD_REQUEST);
             } catch (Exception ex) {
                 ex.printStackTrace();
+                ConnectToServerResAPI resAPI = new ConnectToServerResAPI();
+                resAPI.readResponse(response,request,ConstantClass.BAD_REQUEST);
             }
         }
     }

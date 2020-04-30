@@ -172,6 +172,18 @@ public class Database implements DatabaseInterface {
         }
         return false;
     }
+    @Override
+    public boolean deleteClientKeys(String collectionName) throws Exception {
+        if (createDbConn()) {
+            if (checkCollection(collectionName)) {
+                System.out.println("deleting database");
+                MongoCollection collection = database.getCollection(collectionName);
+                DeleteResult result = collection.deleteOne(new Document("clientKeys","Client Keys"));
+                return result.getDeletedCount() != 0;
+            }
+        }
+        return false;
+    }
 
     @Override
     public boolean checkKeysExists(String collectionName) throws Exception {

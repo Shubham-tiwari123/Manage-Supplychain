@@ -1,6 +1,7 @@
 package com.project.client.requestAPI;
 
 import com.project.client.services.CommonFunction;
+import com.project.client.utils.ConstantClass;
 import org.json.simple.JSONObject;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -24,13 +25,14 @@ public class LoginReqAPI extends HttpServlet {
 
             Cookie cookie;
             JSONObject jsonObject = new JSONObject();
-            //check if keys or not exists
-            if (commonFunction.checkIfKeysExists()) {
+            //check if keys exists or not exists
+            //if (commonFunction.checkIfKeysExists()) {
+            if (email.equals("s@gmail.com") && pass.equals("qwert")){
                 cookie = new Cookie("loginStatus","true");
-                jsonObject.put("statusCode",200);
+                jsonObject.put("statusCode", ConstantClass.SUCCESSFUL);
             }else{
                 cookie = new Cookie("loginStatus","false");
-                jsonObject.put("statusCode",400);
+                jsonObject.put("statusCode",ConstantClass.FAILED);
             }
             response.addCookie(cookie);
             PrintWriter printWriter = response.getWriter();
@@ -39,7 +41,7 @@ public class LoginReqAPI extends HttpServlet {
             System.out.println("exception"+e);
             Cookie cookie = new Cookie("loginStatus","false");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("statusCode",400);
+            jsonObject.put("statusCode",ConstantClass.BAD_REQUEST);
             response.addCookie(cookie);
             PrintWriter printWriter = response.getWriter();
             printWriter.println(jsonObject.toString());

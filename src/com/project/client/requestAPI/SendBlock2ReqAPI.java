@@ -106,7 +106,7 @@ public class SendBlock2ReqAPI extends HttpServlet {
             }
             System.out.println("Something went wrong try again......");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("statusCode",400);
+            jsonObject.put("statusCode",ConstantClass.BAD_REQUEST);
             PrintWriter printWriter = response.getWriter();
             printWriter.println(jsonObject.toString());
             e.printStackTrace();
