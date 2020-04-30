@@ -313,7 +313,7 @@
             document.getElementById("temp").value = jsonParse.temperature;
 
         }else if(Number(size)===3){
-            console.log("3")
+            console.log("3");
             /*document.getElementById("block1").style.visibility = "visible";
             document.getElementById("block2").style.visibility = "visible";
             document.getElementById("block3").style.visibility = "visible";*/
@@ -334,7 +334,7 @@
             document.getElementById("boxRange").value = jsonParse.boxNumberRange;
 
         }else if(Number(size)===4){
-            console.log("4")
+            console.log("4");
             /*document.getElementById("block1").style.visibility = "visible";
             document.getElementById("block2").style.visibility = "visible";
             document.getElementById("block3").style.visibility = "visible";
