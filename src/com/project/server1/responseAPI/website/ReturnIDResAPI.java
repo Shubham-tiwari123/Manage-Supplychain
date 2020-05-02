@@ -1,5 +1,6 @@
 package com.project.server1.responseAPI.website;
 
+import com.project.server1.utils.ConstantClass;
 import org.json.simple.JSONObject;
 
 import javax.servlet.annotation.WebServlet;
@@ -14,11 +15,13 @@ public class ReturnIDResAPI extends HttpServlet {
     public void sendResponse(HttpServletResponse response,long productID) throws IOException {
         JSONObject jsonObject = new JSONObject();
         if (productID==-1)
-            jsonObject.put("statusCode",400);
+            jsonObject.put("statusCode", ConstantClass.FAILED);
         else {
-            jsonObject.put("statusCode",200);
+            jsonObject.put("statusCode",ConstantClass.SUCCESSFUL);
             jsonObject.put("productID", productID);
         }
+
+        System.out.println("JSON:"+jsonObject.toString());
         PrintWriter writer = response.getWriter();
         writer.println(jsonObject.toString());
     }
