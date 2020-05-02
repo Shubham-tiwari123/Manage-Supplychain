@@ -19,7 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "AcceptFourthBlockReqAPI", urlPatterns = {"/fourth-block"})
+@WebServlet(name = "AcceptFourthBlockReqAPI")
 public class AcceptFourthBlockReqAPI extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -83,7 +83,7 @@ public class AcceptFourthBlockReqAPI extends HttpServlet {
             resAPI.sendResponse(statusCode, response);
         } catch (Exception e) {
             System.out.println(e);
-            resAPI.sendResponse(ConstantClass.FAILED, response);
+            resAPI.sendResponse(ConstantClass.BAD_REQUEST, response);
         }
     }
 }

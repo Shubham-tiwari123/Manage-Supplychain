@@ -8,8 +8,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "URLMapperReqAPI",urlPatterns = {"/dashboard","/team","/database",
-        "/sign_up","/sign_in","/detail_view","/page_not_found","/error_page","/logout"})
+@WebServlet(name = "URLMapperReqAPI",urlPatterns = {
+        "/dashboard",
+        "/team",
+        "/database",
+        "/sign_up",
+        "/sign_in",
+        "/detail_view",
+        "/page_not_found",
+        "/error_page",
+        "/logout",
+
+        "/first_block",
+        "/second_block",
+        "/third_block",
+        "/fourth_block",
+        "/admin_login",
+        "/connect_server",
+        "/request_productID",
+        "/product_info",                //SendProductChainReqAPI
+
+})
 
 public class URLMapperReqAPI extends HttpServlet {
 
@@ -69,6 +88,44 @@ public class URLMapperReqAPI extends HttpServlet {
             cookie = new Cookie("adminLoginStatus","false");
             response.addCookie(cookie);
             response.sendRedirect("/");
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        if((request.getRequestURL().toString()).equals("http://localhost:8081/first_block")) {
+            AcceptFirstBlockReqAPI reqAPI = new AcceptFirstBlockReqAPI();
+            reqAPI.doPost(request,response);
+        }
+        else if((request.getRequestURL().toString()).equals("http://localhost:8081/second_block")) {
+            AcceptSecondBlockReqAPI reqAPI = new AcceptSecondBlockReqAPI();
+            reqAPI.doPost(request,response);
+        }
+        else if((request.getRequestURL().toString()).equals("http://localhost:8081/third_block")) {
+            AcceptThirdBlockReqAPI reqAPI = new AcceptThirdBlockReqAPI();
+            reqAPI.doPost(request,response);
+        }
+        else if((request.getRequestURL().toString()).equals("http://localhost:8081/fourth_block")) {
+            AcceptFourthBlockReqAPI reqAPI = new AcceptFourthBlockReqAPI();
+            reqAPI.doPost(request,response);
+        }
+        else if((request.getRequestURL().toString()).equals("http://localhost:8081/admin_login")) {
+            AdminLoginReqAPI reqAPI = new AdminLoginReqAPI();
+            reqAPI.doPost(request,response);
+        }
+        else if((request.getRequestURL().toString()).equals("http://localhost:8081/connect_server")) {
+            ConnectDeviceReqAPI reqAPI = new ConnectDeviceReqAPI();
+            reqAPI.doPost(request,response);
+        }
+        else if((request.getRequestURL().toString()).equals("http://localhost:8081/request_productID")) {
+            ReturnIDReqAPI reqAPI = new ReturnIDReqAPI();
+            reqAPI.doPost(request,response);
+        }
+        else if((request.getRequestURL().toString()).equals("http://localhost:8081/product_info")) {
+            SendProductChainReqAPI reqAPI = new SendProductChainReqAPI();
+            reqAPI.doPost(request,response);
         }
     }
 }

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-@WebServlet(name = "ReturnIDReqAPI",urlPatterns = {"/request-productID"})
+@WebServlet(name = "ReturnIDReqAPI")
 
 public class ReturnIDReqAPI extends HttpServlet {
 

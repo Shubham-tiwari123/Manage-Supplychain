@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-@WebServlet(name = "AcceptFirstBlockReqAPI",urlPatterns = {"/first-block"})
+@WebServlet(name = "AcceptFirstBlockReqAPI")
 public class AcceptFirstBlockReqAPI extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -71,11 +71,7 @@ public class AcceptFirstBlockReqAPI extends HttpServlet {
             }
         }catch (Exception e){
             System.out.println("exception:"+e);
-            resAPI.sendResponse(ConstantClass.FAILED,response);
+            resAPI.sendResponse(ConstantClass.BAD_REQUEST,response);
         }
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
     }
 }

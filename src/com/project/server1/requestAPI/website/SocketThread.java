@@ -1,9 +1,19 @@
 package com.project.server1.requestAPI.website;
 
+import com.project.server1.responseAPI.website.ConnectDeviceResAPI;
 import com.project.server1.services.ConnectToDevice;
+import com.project.server1.utils.ConstantClass;
+
+import javax.servlet.http.HttpServletResponse;
 
 public class SocketThread extends Thread {
-    private ConnectToDevice connect = new ConnectToDevice();
+    private HttpServletResponse response;
+    private final ConnectToDevice connect = new ConnectToDevice();
+
+    public SocketThread(HttpServletResponse response) {
+        this.response = response;
+    }
+
     @Override
     public void run(){
         try {
@@ -25,11 +35,11 @@ public class SocketThread extends Thread {
                                 if (connect.sendData("200"))
                                     count++;
                                 else {
-                                    statusCode = 400;
+                                    statusCode = ConstantClass.FAILED;
                                     connect.closeConnections();
                                 }
                             } else {
-                                statusCode = 400;
+                                statusCode = ConstantClass.FAILED;
                                 connect.sendData("400");
                                 connect.closeConnections();
                                 System.out.println("Error in network.....Closing socket");
@@ -46,15 +56,15 @@ public class SocketThread extends Thread {
                                     if (connect.sendData(serverKeys)) {
                                         count++;
                                     } else {
-                                        statusCode = 400;
+                                        statusCode = ConstantClass.FAILED;
                                         connect.closeConnections();
                                     }
                                 } else {
-                                    statusCode = 400;
+                                    statusCode = ConstantClass.FAILED;
                                     connect.closeConnections();
                                 }
                             } else {
-                                statusCode = 400;
+                                statusCode = ConstantClass.FAILED;
                                 connect.sendData("400");
                                 connect.closeConnections();
                                 System.out.println("Client keys are tampered...Closing socket");
@@ -72,12 +82,12 @@ public class SocketThread extends Thread {
                                 else{
                                     System.out.println("Error in db");
                                     connect.sendData("400");
-                                    statusCode = 400;
+                                    statusCode = ConstantClass.FAILED;
                                     connect.closeConnections();
                                 }
                             }else{
                                 System.out.println("Server keys are tampered");
-                                statusCode = 400;
+                                statusCode = ConstantClass.FAILED;
                                 connect.closeConnections();
                             }
                     }
@@ -90,12 +100,17 @@ public class SocketThread extends Thread {
                     }
                 }
             } else {
-                statusCode = 400;
+                statusCode = ConstantClass.FAILED;
                 System.out.println("Something went wrong....try again");
             }
 
-            if (statusCode == 200) {
+            if (statusCode == ConstantClass.SUCCESSFUL) {
                 System.out.println("Keys exchanged and stored in db");
+                ConnectDeviceResAPI resAPI = new ConnectDeviceResAPI();
+                resAPI.sendResponse(response,ConstantClass.SUCCESSFUL);
+            }else{
+                ConnectDeviceResAPI resAPI = new ConnectDeviceResAPI();
+                resAPI.sendResponse(response,ConstantClass.FAILED);
             }
 
         }catch (Exception e){
@@ -103,6 +118,8 @@ public class SocketThread extends Thread {
             System.out.println("catch socket...closing con");
             try {
                 connect.closeConnections();
+                ConnectDeviceResAPI resAPI = new ConnectDeviceResAPI();
+                resAPI.sendResponse(response,ConstantClass.FAILED);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

@@ -19,7 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "AcceptThirdBlockReqAPI",urlPatterns = {"/third-block"})
+@WebServlet(name = "AcceptThirdBlockReqAPI")
 public class AcceptThirdBlockReqAPI extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -84,7 +84,7 @@ public class AcceptThirdBlockReqAPI extends HttpServlet {
             resAPI.sendResponse(statusCode, response);
         } catch (Exception e) {
             System.out.println(e);
-            resAPI.sendResponse(ConstantClass.FAILED, response);
+            resAPI.sendResponse(ConstantClass.BAD_REQUEST, response);
         }
     }
 

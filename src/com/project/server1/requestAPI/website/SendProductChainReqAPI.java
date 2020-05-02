@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@WebServlet(name = "SendProductChainReqAPI",urlPatterns = {"/product_info"})
+@WebServlet(name = "SendProductChainReqAPI")
 public class SendProductChainReqAPI extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
