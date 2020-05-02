@@ -16,9 +16,9 @@ public class SqlDB implements SqlDBInterface {
         String dbClassName = "com.mysql.cj.jdbc.Driver";
         Class.forName(dbClassName);
         Properties property = new Properties();
-        property.put("user", "shipchain");
-        property.put("password", "passpass");
-        String CONNECTION = "jdbc:mysql://127.0.0.1/shipchainServer";
+        property.put("user", "root");
+        property.put("password", "");
+        String CONNECTION = "jdbc:mysql://127.0.0.1/shipChainServer?serverTimezone=UTC";
         connect = DriverManager.getConnection(CONNECTION, property);
         statement = connect.createStatement();
         statement1 = connect.createStatement();
